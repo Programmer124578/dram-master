@@ -3,40 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Dram Master Pro</title>
+    <title>Dram Master Ultimate</title>
     <style>
-        body { background: #000b1a; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 70px; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
-        .header { background: rgba(0,0,0,0.8); padding: 10px; text-align: center; border-bottom: 2px solid #1a3a5a; }
+        body { background: #000b1a; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 80px; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+        .header { background: rgba(0,0,0,0.9); padding: 15px; text-align: center; border-bottom: 2px solid #1a3a5a; }
         
-        .progress-container { width: 80%; background: #1a3a5a; height: 8px; border-radius: 4px; margin: 8px auto; overflow: hidden; }
-        #progress-bar { width: 0%; height: 100%; background: #00ffcc; transition: width 0.3s; }
+        .progress-container { width: 85%; background: #1a3a5a; height: 10px; border-radius: 5px; margin: 10px auto; overflow: hidden; border: 1px solid #00ffcc33; }
+        #progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #00ffcc, #0088cc); transition: width 0.3s; }
         
-        #score { font-size: 40px; color: #ffcc00; font-weight: bold; }
-        #level-info { color: #00ffcc; font-size: 14px; font-weight: bold; }
+        #score { font-size: 42px; color: #ffcc00; font-weight: bold; text-shadow: 0 0 20px rgba(255,204,0,0.4); }
+        #level-info { color: #00ffcc; font-size: 16px; font-weight: bold; }
 
         .tab { display: none; flex: 1; padding: 20px; overflow-y: auto; }
-        .active-tab { display: flex; flex-direction: column; }
+        .active-tab { display: flex; flex-direction: column; align-items: center; }
 
-        /* Սեղմելու կոճակը՝ բարձր և ֏ նշանով */
-        #main { justify-content: center; align-items: center; }
+        /* Գլխավոր կոճակը՝ կենտրոնացված և մեծ */
+        #main { justify-content: center; }
         #coin-btn {
-            width: 240px; height: 240px;
+            width: 260px; height: 260px;
             background: radial-gradient(circle, #ffcc00 0%, #cc9900 100%);
             border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
-            font-size: 100px; font-weight: bold; color: #5c4400;
-            box-shadow: 0 0 40px rgba(255,204,0,0.4), inset 0 0 20px rgba(0,0,0,0.2);
-            cursor: pointer; transition: 0.1s; user-select: none;
-            border: 8px solid #b38600;
+            font-size: 120px; font-weight: bold; color: #5c4400;
+            box-shadow: 0 0 50px rgba(255,204,0,0.5), inset 0 0 30px rgba(0,0,0,0.2);
+            cursor: pointer; transition: transform 0.1s; user-select: none;
+            border: 10px solid #b38600;
+            margin-bottom: 50px; /* Բարձրացված է ներքևից */
         }
-        #coin-btn:active { transform: scale(0.9); box-shadow: 0 0 20px rgba(255,204,0,0.6); }
+        #coin-btn:active { transform: scale(0.92); }
 
-        .item { background: #0a192f; display: flex; justify-content: space-between; align-items: center; padding: 12px; margin-bottom: 8px; border-radius: 12px; border: 1px solid #1e2d44; }
-        button.buy-btn { background: #0088cc; color: white; border: none; padding: 8px 12px; border-radius: 8px; font-weight: bold; }
+        /* Խանութի ոճը */
+        .shop-list { width: 100%; }
+        .item { background: #0a192f; display: flex; justify-content: space-between; align-items: center; padding: 15px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #1e2d44; }
+        .item-info b { font-size: 16px; display: block; }
+        .item-info span { color: #ffcc00; font-size: 14px; }
+        button.buy-btn { background: #0088cc; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; }
 
-        .nav { position: fixed; bottom: 0; width: 100%; background: #051024; display: flex; justify-content: space-around; padding: 10px 0; border-top: 2px solid #1a3a5a; }
-        .nav button { background: none; border: none; color: white; font-size: 11px; display: flex; flex-direction: column; align-items: center; opacity: 0.5; }
+        .nav { position: fixed; bottom: 0; width: 100%; background: #051024; display: flex; justify-content: space-around; padding: 12px 0; border-top: 2px solid #1a3a5a; }
+        .nav button { background: none; border: none; color: white; font-size: 12px; display: flex; flex-direction: column; align-items: center; opacity: 0.5; }
         .nav button.active { opacity: 1; color: #ffcc00; }
+        .nav button span { font-size: 24px; }
     </style>
 </head>
 <body>
@@ -45,28 +51,36 @@
         <div id="level-info">Level 1</div>
         <div class="progress-container"><div id="progress-bar"></div></div>
         <div id="score">0 ֏</div>
-        <div id="income" style="font-size: 13px; color: #00ffcc;">+0/վրկ</div>
+        <div id="income" style="color: #00ffcc; font-size: 14px;">+0/վրկ</div>
     </div>
 
     <div id="main" class="tab active-tab">
         <div id="coin-btn">֏</div>
     </div>
 
-    <div id="cars" class="tab">
-        <div class="item"><span>🚗 Opel Vectra (10k)</span><button class="buy-btn" onclick="buy(10000, 2)">Գնել</button></div>
-        <div class="item"><span>🚘 Mercedes G550 (50k)</span><button class="buy-btn" onclick="buy(50000, 10)">Գնել</button></div>
-        <div class="item"><span>🏎️ BMW M5 F90 (100k)</span><button class="buy-btn" onclick="buy(100000, 25)">Գնել</button></div>
+    <div id="cars" class="tab shop-list">
+        <div class="item"><div class="item-info"><b>🚗 Opel Vectra</b><span>10,000 ֏ (+2/վ)</span></div><button class="buy-btn" onclick="buy(10000, 2)">Գնել</button></div>
+        <div class="item"><div class="item-info"><b>🚘 BMW 550i</b><span>50,000 ֏ (+10/վ)</span></div><button class="buy-btn" onclick="buy(50000, 10)">Գնել</button></div>
+        <div class="item"><div class="item-info"><b>🔥 Mercedes CLS 63</b><span>100,000 ֏ (+25/վ)</span></div><button class="buy-btn" onclick="buy(100000, 25)">Գնել</button></div>
+        <div class="item"><div class="item-info"><b>💎 Bugatti</b><span>500,000 ֏ (+150/վ)</span></div><button class="buy-btn" onclick="buy(500000, 150)">Գնել</button></div>
     </div>
 
-    <div id="houses" class="tab">
-        <div class="item"><span>🏠 1 սենյակ (20k)</span><button class="buy-btn" onclick="buy(20000, 5)">Գնել</button></div>
-        <div class="item"><span>🏘️ 3 սենյակ (60k)</span><button class="buy-btn" onclick="buy(60000, 15)">Գնել</button></div>
+    <div id="houses" class="tab shop-list">
+        <div class="item"><div class="item-info"><b>🏠 1 Սենյակ</b><span>20,000 ֏ (+5/վ)</span></div><button class="buy-btn" onclick="buy(20000, 5)">Գնել</button></div>
+        <div class="item"><div class="item-info"><b>🏡 2 Սենյակ</b><span>40,000 ֏ (+10/վ)</span></div><button class="buy-btn" onclick="buy(40000, 10)">Գնել</button></div>
+        <div class="item"><div class="item-info"><b>🏰 4 Սենյակ</b><span>80,000 ֏ (+25/վ)</span></div><button class="buy-btn" onclick="buy(80000, 25)">Գնել</button></div>
+    </div>
+
+    <div id="biz" class="tab shop-list">
+        <div class="item"><div class="item-info"><b>🏪 Խանութ</b><span>100,000 ֏ (+50/վ)</span></div><button class="buy-btn" onclick="buy(100000, 50)">Գնել</button></div>
+        <div class="item"><div class="item-info"><b>🏬 Մոլ</b><span>1,000,000 ֏ (+600/վ)</span></div><button class="buy-btn" onclick="buy(1000000, 600)">Գնել</button></div>
     </div>
 
     <div class="nav">
-        <button id="n-main" class="active" onclick="showTab('main', 'n-main')"><span>🪙</span>Խաղալ</button>
-        <button id="n-cars" onclick="showTab('cars', 'n-cars')"><span>🚗</span>Մեքենա</button>
+        <button id="n-main" class="active" onclick="showTab('main', 'n-main')"><span>🪙</span>Խաղ</button>
+        <button id="n-cars" onclick="showTab('cars', 'n-cars')"><span>🚗</span>Ավտո</button>
         <button id="n-houses" onclick="showTab('houses', 'n-houses')"><span>🏠</span>Տուն</button>
+        <button id="n-biz" onclick="showTab('biz', 'n-biz')"><span>🏢</span>Բիզնես</button>
     </div>
 
     <script>
@@ -76,26 +90,36 @@
 
         function update() {
             if (score > maxS) { maxS = score; localStorage.setItem('dm_max', maxS); }
-            let level = maxS >= 1000000 ? 5 : maxS >= 150000 ? 4 : maxS >= 50000 ? 3 : maxS >= 1000 ? 2 : 1;
-            let click = [1, 5, 20, 100, 500][level-1];
-            let target = [1000, 50000, 150000, 1000000, 10000000][level-1];
-            let prev = level > 1 ? [0, 1000, 50000, 150000, 1000000][level-1] : 0;
+            
+            let lvls = [
+                {t: 1000, c: 1}, {t: 50000, c: 5}, {t: 150000, c: 20}, {t: 1000000, c: 100}, {t: Infinity, c: 500}
+            ];
+            let lvlIdx = lvls.findIndex(l => maxS < l.t);
+            if (lvlIdx === -1) lvlIdx = 4;
+
+            let currentLvl = lvlIdx + 1;
+            let clickVal = lvls[lvlIdx].c;
+            let target = lvls[lvlIdx].t;
+            let prev = lvlIdx > 0 ? lvls[lvlIdx-1].t : 0;
 
             document.getElementById('progress-bar').style.width = Math.min(((maxS - prev) / (target - prev)) * 100, 100) + "%";
-            document.getElementById('level-info').textContent = "Level " + level + " (" + click + "֏/click)";
+            document.getElementById('level-info').textContent = "Level " + currentLvl + " (" + clickVal + "֏)";
             document.getElementById('score').textContent = Math.floor(score).toLocaleString() + " ֏";
             document.getElementById('income').textContent = "+" + passive + "/վրկ";
+            
             localStorage.setItem('dm_score', score);
             localStorage.setItem('dm_passive', passive);
         }
 
         document.getElementById('coin-btn').onclick = () => { 
-            let level = maxS >= 1000000 ? 5 : maxS >= 150000 ? 4 : maxS >= 50000 ? 3 : maxS >= 1000 ? 2 : 1;
-            score += [1, 5, 20, 100, 500][level-1]; 
+            let lvls = [1, 5, 20, 100, 500];
+            let lvlIdx = [1000, 50000, 150000, 1000000, Infinity].findIndex(l => maxS < l);
+            score += lvls[lvlIdx === -1 ? 4 : lvlIdx];
             update(); 
         };
 
-        function buy(p, pr) { if (score >= p) { score -= p; passive += pr; update(); } else alert("Փող չկա!"); }
+        function buy(p, pr) { if(score >= p) { score -= p; passive += pr; update(); } else alert("Փող չկա!"); }
+        
         function showTab(id, b) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active-tab'));
             document.getElementById(id).classList.add('active-tab');
