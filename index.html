@@ -2,74 +2,134 @@
 <html lang="hy">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dram Master Pro</title>
     <style>
-        body { background-color: #0d0d0d; color: #fff; font-family: sans-serif; margin: 0; padding: 0; text-align: center; overflow: hidden; user-select: none; }
-        #login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #111; z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        #nick-input { padding: 15px; width: 250px; font-size: 18px; border-radius: 10px; border: none; text-align: center; margin-bottom: 20px; outline: none; }
-        .btn { padding: 15px 40px; font-size: 20px; font-weight: bold; background: #f3c623; color: #000; border: none; border-radius: 10px; cursor: pointer; }
+        /* Ընդհանուր դիզայն */
+        body { background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; text-align: center; overflow: hidden; user-select: none; -webkit-tap-highlight-color: transparent; }
+        
+        /* Կեղծանվան պատուհան */
+        #login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        #login-screen h1 { color: #f1c40f; text-shadow: 0 0 20px #f1c40f; font-size: 36px; margin-bottom: 10px; }
+        #nick-input { padding: 15px 20px; width: 250px; font-size: 18px; border-radius: 25px; border: 2px solid #f1c40f; background: transparent; color: white; text-align: center; margin-bottom: 20px; outline: none; }
+        .btn { padding: 15px 40px; font-size: 18px; font-weight: bold; background: linear-gradient(45deg, #f1c40f, #e67e22); color: #000; border: none; border-radius: 25px; cursor: pointer; box-shadow: 0 5px 15px rgba(241, 196, 15, 0.4); transition: transform 0.2s; }
+        .btn:active { transform: scale(0.95); }
+
+        /* Գլխավոր էջ */
         #main-game { display: none; height: 100vh; flex-direction: column; }
-        .header { display: flex; align-items: center; padding: 15px; background: #1a1a1a; border-bottom: 1px solid #333; }
-        .profile-pic { width: 50px; height: 50px; background: #f3c623; color: #000; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; margin-right: 15px; }
-        .score-display { font-size: 40px; font-weight: bold; margin: 25px 0; color: #00ff00; }
-        .coin-circle { width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, #444 0%, #000 100%); margin: 0 auto; border: 8px solid #222; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.05s; }
-        .coin-circle:active { transform: scale(0.92); }
-        .character-emoji { font-size: 100px; }
-        .bottom-nav { display: flex; background: #1a1a1a; border-top: 1px solid #333; padding: 10px 0; position: fixed; bottom: 0; width: 100%; }
-        .nav-btn { flex: 1; color: #888; font-size: 12px; cursor: pointer; }
-        .modal { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0d0d0d; z-index: 50; flex-direction: column; }
-        .modal-header { padding: 20px; font-size: 20px; border-bottom: 1px solid #333; color: #f3c623; display: flex; justify-content: space-between; }
-        .modal-content { padding: 20px; flex: 1; overflow-y: auto; text-align: left; padding-bottom: 80px; }
-        .item-row { background: #1a1a1a; padding: 10px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .header { display: flex; align-items: center; padding: 15px 20px; background: rgba(0,0,0,0.5); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .profile-pic { width: 50px; height: 50px; background: linear-gradient(45deg, #f1c40f, #e67e22); color: #000; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; margin-right: 15px; box-shadow: 0 0 10px rgba(241, 196, 15, 0.5); }
+        .level-info { text-align: left; }
+        .level-name { font-size: 16px; font-weight: bold; color: #aaa; margin-bottom: 5px; }
+        .progress-bar { width: 150px; height: 8px; background: #333; border-radius: 5px; overflow: hidden; }
+        .progress-fill { height: 100%; background: #f1c40f; width: 0%; transition: width 0.3s; }
+
+        .score-display { font-size: 50px; font-weight: 900; margin: 30px 0; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.5); display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .coin-icon { width: 40px; height: 40px; background: #f1c40f; border-radius: 50%; border: 3px solid #d4ac0d; display: flex; justify-content: center; align-items: center; font-size: 24px; color: #000; }
+
+        /* Կլոր կոճակը */
+        .click-area { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; }
+        .coin-circle { width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle, #2c3e50, #000000); box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 20px rgba(241, 196, 15, 0.2); border: 8px solid #1a1a1a; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: transform 0.05s; position: relative; z-index: 10; }
+        .coin-circle:active { transform: scale(0.93); box-shadow: 0 5px 15px rgba(0,0,0,0.8); }
+        .character-emoji { font-size: 130px; pointer-events: none; text-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+
+        /* +1 Անիմացիա */
+        .floating-text { position: absolute; color: #fff; font-size: 30px; font-weight: bold; pointer-events: none; text-shadow: 0 0 10px #f1c40f; animation: floatUp 0.8s ease-out forwards; z-index: 20; }
+        @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-100px) scale(1.5); opacity: 0; } }
+
+        /* Ներքևի ընտրացանկ */
+        .bottom-nav { display: flex; background: rgba(0,0,0,0.8); padding: 15px 0 25px 0; border-top: 1px solid rgba(255,255,255,0.1); }
+        .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; color: #888; font-size: 13px; cursor: pointer; transition: 0.2s; }
+        .nav-btn:hover, .nav-btn.active { color: #f1c40f; transform: translateY(-3px); }
+        .nav-icon { font-size: 26px; margin-bottom: 5px; }
+
+        /* Պատուհաններ (Խանութ, Ընկերներ, Թոփ) */
+        .modal { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0f0c29; z-index: 50; flex-direction: column; animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .modal-header { padding: 20px; font-size: 22px; font-weight: bold; background: rgba(0,0,0,0.5); color: #f1c40f; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .close-btn { color: #fff; cursor: pointer; font-size: 28px; background: rgba(255,255,255,0.1); width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
+        .modal-content { padding: 20px; flex: 1; overflow-y: auto; text-align: left; padding-bottom: 100px; }
+        
+        /* Ցուցակների դիզայն */
+        .item-card { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.1); }
+        .item-info h4 { margin: 0 0 5px 0; font-size: 18px; color: #fff; }
+        .item-price { color: #00ff88; font-weight: bold; }
+        .buy-btn { background: #f1c40f; color: #000; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+
+        /* Ընկերներ բաժին */
+        .invite-box { background: rgba(241, 196, 15, 0.1); border: 1px dashed #f1c40f; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; }
+        .invite-box h3 { margin-top: 0; color: #f1c40f; }
+        .share-btn { width: 100%; padding: 15px; background: #0088cc; color: white; border: none; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
-        <h1 style="color:#f3c623;">DRAM MASTER</h1>
-        <input type="text" id="nick-input" placeholder="Կեղծանուն...">
-        <button class="btn" onclick="startGame()">OK</button>
+        <h1>DRAM MASTER</h1>
+        <p style="color: #aaa; margin-bottom: 20px;">Ստեղծիր քո կայսրությունը</p>
+        <input type="text" id="nick-input" placeholder="Գրիր անունդ..." maxlength="12">
+        <button class="btn" onclick="startGame()">Մուտք Խաղ</button>
     </div>
 
     <div id="main-game">
         <div class="header">
             <div class="profile-pic" id="profile-pic">?</div>
-            <div id="level-name">Լեվել 1: Աղքատ</div>
+            <div class="level-info">
+                <div class="level-name" id="level-name">Լեվել 1: Աղքատ</div>
+                <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+            </div>
         </div>
-        <div class="score-display">֏ <span id="score">0</span></div>
-        <div class="coin-circle" onclick="clickCoin()">
-            <div class="character-emoji" id="character-emoji">🧑‍🌾</div>
+
+        <div class="score-display">
+            <div class="coin-icon">֏</div>
+            <span id="score">0</span>
         </div>
+
+        <div class="click-area" id="click-area">
+            <div class="coin-circle" onpointerdown="clickCoin(event)">
+                <div class="character-emoji" id="character-emoji">🧑‍🌾</div>
+            </div>
+        </div>
+
         <div class="bottom-nav">
-            <div class="nav-btn" onclick="closeModals()">🎮<br>Խաղ</div>
-            <div class="nav-btn" onclick="openShop()">🛒<br>Խանութ</div>
-            <div class="nav-btn" onclick="openLeaderboard()">🏆<br>Top 10</div>
+            <div class="nav-btn active" onclick="closeModals()"><div class="nav-icon">🎮</div><div>Խաղ</div></div>
+            <div class="nav-btn" onclick="openModal('shop-modal')"><div class="nav-icon">🛒</div><div>Խանութ</div></div>
+            <div class="nav-btn" onclick="openModal('friends-modal')"><div class="nav-icon">👥</div><div>Ընկերներ</div></div>
+            <div class="nav-btn" onclick="openLeaderboard()"><div class="nav-icon">🏆</div><div>Top 10</div></div>
+        </div>
+    </div>
+
+    <div id="shop-modal" class="modal">
+        <div class="modal-header"><span>🛒 Խանութ</span><span class="close-btn" onclick="closeModals()">✖</span></div>
+        <div class="modal-content">
+            <h3 style="color:#aaa;">Ավտոտնակ</h3>
+            <div class="item-card"><div class="item-info"><h4>🚗 MERSEDES G550</h4><span class="item-price">45,000 ֏</span></div><button class="buy-btn">Գնել</button></div>
+            <div class="item-card"><div class="item-info"><h4>🏎️ Ferrari</h4><span class="item-price">450,000 ֏</span></div><button class="buy-btn">Գնել</button></div>
+            
+            <h3 style="color:#aaa; margin-top:20px;">Բիզնեսներ</h3>
+            <div class="item-card"><div class="item-info"><h4>✂️ Բառբեր շոփ</h4><span class="item-price">2,000,000 ֏</span></div><button class="buy-btn">Գնել</button></div>
+            <div class="item-card"><div class="item-info"><h4>📉 Կրիպտո շուկա</h4><span class="item-price">3,000,000 ֏</span></div><button class="buy-btn">Գնել</button></div>
+            <div class="item-card"><div class="item-info"><h4>🌍 Համաշխարհային շուկա</h4><span class="item-price">100,000,000 ֏</span></div><button class="buy-btn">Գնել</button></div>
+        </div>
+    </div>
+
+    <div id="friends-modal" class="modal">
+        <div class="modal-header"><span>👥 Ընկերներ</span><span class="close-btn" onclick="closeModals()">✖</span></div>
+        <div class="modal-content">
+            <div class="invite-box">
+                <h3>Հրավիրիր և վաստակիր</h3>
+                <p style="color: #ccc; font-size: 14px; margin-bottom: 20px;">Ամեն հրավիրված ընկերոջ համար ստացիր +50,000 ֏ նվեր!</p>
+                <button class="share-btn" onclick="shareGame()">✈️ Հրավիրել Ընկերոջը</button>
+            </div>
+            <h4 style="color: #aaa;">Քո հրավիրած ընկերները (0)</h4>
+            <div style="text-align: center; color: #666; margin-top: 30px;">Դու դեռ ոչ ոքի չես հրավիրել</div>
         </div>
     </div>
 
     <div id="leaderboard-modal" class="modal">
-        <div class="modal-header">🏆 Top 10 Առաջատարներ <span onclick="closeModals()">✖</span></div>
-        <div class="modal-content" id="lb-content"></div>
-    </div>
-
-    <div id="shop-modal" class="modal">
-        <div class="modal-header">🛒 Խանութ <span onclick="closeModals()">✖</span></div>
-        <div class="modal-content">
-            <h3 style="color:#f3c623;">Մեքենաներ</h3>
-            <div class="item-row"><span>🚗 BMW M8 COMPETITION</span> <span>100,000 ֏</span></div>
-            <div class="item-row"><span>🚗 MERSEDES CLS 63 AMG</span> <span>50,000 ֏</span></div>
-            <div class="item-row"><span>🚗 BMW M5F90</span> <span>50,000 ֏</span></div>
-            <div class="item-row"><span>🚗 MERSEDES G550</span> <span>45,000 ֏</span></div>
-            <div class="item-row"><span>🏎️ Ferrari</span> <span>450,000 ֏</span></div>
-            <div class="item-row"><span>🚙 Rolls Royce</span> <span>1,500,000 ֏</span></div>
-            
-            <h3 style="color:#f3c623; margin-top:20px;">Բիզնեսներ</h3>
-            <div class="item-row"><span>✂️ Բառբեր շոփ</span> <span>2,000,000 ֏</span></div>
-            <div class="item-row"><span>🚕 Տաքսի ծառայություն</span> <span>2,000,000 ֏</span></div>
-            <div class="item-row"><span>📉 Կրիպտո շուկա</span> <span>3,000,000 ֏</span></div>
-            <div class="item-row"><span>🚘 Ավտոսալոն</span> <span>5,000,000 ֏</span></div>
-            <div class="item-row"><span>🌍 Համաշխարհային շուկա</span> <span>100,000,000 ֏</span></div>
+        <div class="modal-header"><span>🏆 Top 10</span><span class="close-btn" onclick="closeModals()">✖</span></div>
+        <div class="modal-content" id="lb-content">
+            <div style="text-align:center; padding: 20px; color: #888;">Բեռնվում է իրական ցուցակը...<br>(Պահանջվում է բազայի միացում)</div>
         </div>
     </div>
 
@@ -77,6 +137,7 @@
         let score = 0;
         let nickName = "";
 
+        // Մուտք խաղ
         function startGame() {
             let nick = document.getElementById("nick-input").value.trim();
             if(nick.length >= 2) {
@@ -87,34 +148,79 @@
             }
         }
 
-        function clickCoin() {
-            score += 5000;
+        // Սեղմում (ԱՎԵԼԱՆՈՒՄ Է ՄԻԱՅՆ 1 ԴՐԱՄՈՎ ԵՎ ԹՌՉՈՒՄ Է +1)
+        function clickCoin(event) {
+            score += 1; 
             updateUI();
+            
+            // +1 Էֆեկտի ստեղծում
+            const plus = document.createElement('div');
+            plus.classList.add('floating-text');
+            plus.innerHTML = '+1';
+            
+            // Գտնում ենք սեղմման կոորդինատները (մկնիկ կամ մատ)
+            let x = event.clientX || (event.touches && event.touches[0].clientX) || window.innerWidth / 2;
+            let y = event.clientY || (event.touches && event.touches[0].clientY) || window.innerHeight / 2;
+            
+            // Պատահական մի փոքր շեղում, որ շատ սեղմելուց գեղեցիկ ցրվեն
+            x += (Math.random() - 0.5) * 40;
+            
+            plus.style.left = `${x}px`;
+            plus.style.top = `${y}px`;
+            
+            document.getElementById("click-area").appendChild(plus);
+            
+            // Ջնջում ենք էլեմենտը անիմացիայից հետո
+            setTimeout(() => { plus.remove(); }, 800);
         }
 
+        // Թարմացնել էկրանը և Level-ը
         function updateUI() {
             document.getElementById("score").innerText = score.toLocaleString();
             let char = document.getElementById("character-emoji");
             let lvl = document.getElementById("level-name");
-            if(score >= 100000000) { lvl.innerText = "Լեվել 5: Օլիգարխ"; char.innerText = "👑"; }
-            else if(score >= 5000000) { lvl.innerText = "Լեվել 4: Բիզնեսմեն"; char.innerText = "💼"; }
-            else if(score >= 2000000) { lvl.innerText = "Լեվել 3: Հարուստ"; char.innerText = "🤵"; }
-            else if(score >= 500000) { lvl.innerText = "Լեվել 2: Մի քիչ հարուստ"; char.innerText = "👷"; }
+            let fill = document.getElementById("progress-fill");
+            
+            // Level-ների տրամաբանություն
+            if(score >= 500) { lvl.innerText = "Լեվել 5: Օլիգարխ"; char.innerText = "👑"; fill.style.width = "100%"; }
+            else if(score >= 200) { lvl.innerText = "Լեվել 4: Բիզնեսմեն"; char.innerText = "💼"; fill.style.width = (score/500)*100 + "%"; }
+            else if(score >= 50) { lvl.innerText = "Լեվել 3: Հարուստ"; char.innerText = "🤵"; fill.style.width = (score/200)*100 + "%"; }
+            else if(score >= 10) { lvl.innerText = "Լեվել 2: Միջին"; char.innerText = "👷"; fill.style.width = (score/50)*100 + "%"; }
+            else { lvl.innerText = "Լեվել 1: Աղքատ"; char.innerText = "🧑‍🌾"; fill.style.width = (score/10)*100 + "%"; }
+            // Նշում: Level-ի անցման թվերը փոքրացրել եմ, քանի որ հիմա +1 ով է բարձրանում
         }
 
-        function openLeaderboard() {
-            let content = document.getElementById("lb-content");
-            let users = [
-                {n: "Արամ", s: 500000000}, {n: "Դավիթ", s: 350000000}, {n: "Գոռ", s: 150000000},
-                {n: "Աննա", s: 90000000}, {n: "Հայկ", s: 70000000}, {n: "Կարեն", s: 50000000},
-                {n: "Էրիկ", s: 20000000}, {n: "Սամվել", s: 10000000}, {n: "Ալեն", s: 5000000},
-                {n: nickName + " (Դու)", s: score}
-            ].sort((a,b) => b.s - a.s);
-            content.innerHTML = users.map((u, i) => `<div class="item-row"><span>#${i+1} ${u.n}</span> <span style="color:#0f0;">${u.s.toLocaleString()} ֏</span></div>`).join('');
-            document.getElementById("leaderboard-modal").style.display = "flex";
+        // Հրավիրել ընկերոջը Telegram-ով
+        function shareGame() {
+            // Այստեղ դրվում է քո բոտի հղումը
+            let botUsername = "QO_BOTI_ANUNY_BOT"; 
+            let text = "Արի խաղանք Dram Master և դառնանք օլիգարխ! Խաղա ինձ հետ և ստացիր նվերներ:";
+            window.location.href = `https://t.me/share/url?url=https://t.me/${botUsername}&text=${encodeURIComponent(text)}`;
         }
-        function openShop() { document.getElementById("shop-modal").style.display = "flex"; }
-        function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
+
+        // Պատուհանների կառավարում
+        function openModal(id) {
+            closeModals();
+            document.getElementById(id).style.display = "flex";
+        }
+        function closeModals() {
+            document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+        }
+
+        // Ժամանակավոր Top 10 մինչև Բազան միացնելը
+        function openLeaderboard() {
+            openModal('leaderboard-modal');
+            let content = document.getElementById("lb-content");
+            content.innerHTML = `
+                <div style="background:rgba(255,0,0,0.1); padding:15px; border-radius:10px; margin-bottom:20px; color:#ffaa00; font-size:14px;">
+                    ⚠️ Իրական մարդկանց ցուցակը կհայտնվի այստեղ այն ժամանակ, երբ մենք Python բոտին կմիացնենք Տվյալների Բազա (Database):
+                </div>
+                <div class="item-card" style="border-left: 5px solid #00ff88;">
+                    <div class="item-info"><h4>#1 👑 ${nickName} (Դու)</h4></div>
+                    <span class="item-price">${score.toLocaleString()} ֏</span>
+                </div>
+            `;
+        }
     </script>
 </body>
 </html>
