@@ -3,105 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Dram Master</title>
+    <title>Dram Master Pro</title>
     <style>
         body { background-color: #0d0d0d; color: #fff; font-family: sans-serif; margin: 0; padding: 0; text-align: center; overflow: hidden; user-select: none; }
-        
-        /* 1. Կեղծանվան պատուհան */
         #login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #111; z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        #login-screen h1 { color: #f3c623; }
         #nick-input { padding: 15px; width: 250px; font-size: 18px; border-radius: 10px; border: none; text-align: center; margin-bottom: 20px; outline: none; }
         .btn { padding: 15px 40px; font-size: 20px; font-weight: bold; background: #f3c623; color: #000; border: none; border-radius: 10px; cursor: pointer; }
-        
-        /* 2. Գլխավոր էջ (Պրոֆիլ, Կլորակ) */
         #main-game { display: none; height: 100vh; flex-direction: column; }
         .header { display: flex; align-items: center; padding: 15px; background: #1a1a1a; border-bottom: 1px solid #333; }
-        .profile-pic { width: 50px; height: 50px; background: #f3c623; color: #000; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; margin-right: 15px; border: 2px solid white; }
-        .level-info { text-align: left; }
-        .level-name { font-size: 18px; font-weight: bold; color: #fff; }
-        .score-display { font-size: 45px; font-weight: bold; margin: 30px 0; color: #00ff00; }
-        
-        /* Կենտրոնական կլորակը */
-        .click-area { flex: 1; display: flex; justify-content: center; align-items: center; }
-        .coin-circle { width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle, #333 0%, #000 100%); box-shadow: 0 0 30px rgba(243, 198, 35, 0.3); border: 8px solid #222; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: transform 0.05s; }
-        .coin-circle:active { transform: scale(0.95); }
-        .character-emoji { font-size: 120px; pointer-events: none; }
-        
-        /* 3. Ներքևի ընտրացանկ */
-        .bottom-nav { display: flex; background: #1a1a1a; border-top: 1px solid #333; padding: 10px 0; padding-bottom: 20px; }
-        .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; color: #888; font-size: 14px; cursor: pointer; }
-        .nav-btn.active { color: #f3c623; }
-        .nav-icon { font-size: 24px; margin-bottom: 5px; }
-        
-        /* Էջեր (Թոփ 10 և Խանութ) */
+        .profile-pic { width: 50px; height: 50px; background: #f3c623; color: #000; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; margin-right: 15px; }
+        .score-display { font-size: 40px; font-weight: bold; margin: 25px 0; color: #00ff00; }
+        .coin-circle { width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, #444 0%, #000 100%); margin: 0 auto; border: 8px solid #222; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.05s; }
+        .coin-circle:active { transform: scale(0.92); }
+        .character-emoji { font-size: 100px; }
+        .bottom-nav { display: flex; background: #1a1a1a; border-top: 1px solid #333; padding: 10px 0; position: fixed; bottom: 0; width: 100%; }
+        .nav-btn { flex: 1; color: #888; font-size: 12px; cursor: pointer; }
         .modal { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0d0d0d; z-index: 50; flex-direction: column; }
-        .modal-header { padding: 20px; font-size: 22px; font-weight: bold; border-bottom: 1px solid #333; color: #f3c623; display: flex; justify-content: space-between; }
-        .close-btn { color: #fff; cursor: pointer; font-size: 24px; }
-        .modal-content { padding: 20px; flex: 1; overflow-y: auto; text-align: left; }
-        
-        /* Թոփ 10 դիզայն */
-        .lb-item { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #222; font-size: 18px; }
-        .lb-rank { font-weight: bold; color: #f3c623; width: 35px; }
+        .modal-header { padding: 20px; font-size: 20px; border-bottom: 1px solid #333; color: #f3c623; display: flex; justify-content: space-between; }
+        .modal-content { padding: 20px; flex: 1; overflow-y: auto; text-align: left; padding-bottom: 80px; }
+        .item-row { background: #1a1a1a; padding: 10px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
-        <h1>DRAM MASTER</h1>
-        <input type="text" id="nick-input" placeholder="Մուտքագրեք Ձեր կեղծանունը">
+        <h1 style="color:#f3c623;">DRAM MASTER</h1>
+        <input type="text" id="nick-input" placeholder="Կեղծանուն...">
         <button class="btn" onclick="startGame()">OK</button>
     </div>
 
     <div id="main-game">
         <div class="header">
             <div class="profile-pic" id="profile-pic">?</div>
-            <div class="level-info">
-                <div class="level-name" id="level-name">Լեվել 1: Աղքատ</div>
-            </div>
+            <div id="level-name">Լեվել 1: Աղքատ</div>
         </div>
-
         <div class="score-display">֏ <span id="score">0</span></div>
-
-        <div class="click-area">
-            <div class="coin-circle" onclick="clickCoin()">
-                <div class="character-emoji" id="character-emoji">🧑‍🌾</div>
-            </div>
+        <div class="coin-circle" onclick="clickCoin()">
+            <div class="character-emoji" id="character-emoji">🧑‍🌾</div>
         </div>
-
         <div class="bottom-nav">
-            <div class="nav-btn active" onclick="closeModals()">
-                <div class="nav-icon">🎮</div><div>Խաղ</div>
-            </div>
-            <div class="nav-btn" onclick="openShop()">
-                <div class="nav-icon">🛒</div><div>Խանութ</div>
-            </div>
-            <div class="nav-btn" onclick="openLeaderboard()">
-                <div class="nav-icon">🏆</div><div>Առաջատարներ</div>
-            </div>
+            <div class="nav-btn" onclick="closeModals()">🎮<br>Խաղ</div>
+            <div class="nav-btn" onclick="openShop()">🛒<br>Խանութ</div>
+            <div class="nav-btn" onclick="openLeaderboard()">🏆<br>Top 10</div>
         </div>
     </div>
 
     <div id="leaderboard-modal" class="modal">
-        <div class="modal-header">
-            <span>🏆 Թոփ 10 Առաջատարներ</span>
-            <span class="close-btn" onclick="closeModals()">✖</span>
-        </div>
+        <div class="modal-header">🏆 Top 10 Առաջատարներ <span onclick="closeModals()">✖</span></div>
         <div class="modal-content" id="lb-content"></div>
     </div>
 
     <div id="shop-modal" class="modal">
-        <div class="modal-header">
-            <span>🛒 Խանութ</span>
-            <span class="close-btn" onclick="closeModals()">✖</span>
-        </div>
+        <div class="modal-header">🛒 Խանութ <span onclick="closeModals()">✖</span></div>
         <div class="modal-content">
-            <h3 style="color:#aaa;">Մեքենաներ</h3>
-            <p>🏎️ Ֆերրարի - 450,000 ֏</p>
-            <p>🚙 Ռոլս Ռոյս - 1,500,000 ֏</p>
-            <h3 style="color:#aaa; margin-top:20px;">Բիզնեսներ</h3>
-            <p>✂️ Բառբեր շոփ - 2,000,000 ֏</p>
-            <p>🚘 Ավտոսալոն - 5,000,000 ֏</p>
-            <p>🌍 Համաշխարհային շուկա - 100,000,000 ֏</p>
+            <h3 style="color:#f3c623;">Մեքենաներ</h3>
+            <div class="item-row"><span>🚗 BMW M8 COMPETITION</span> <span>100,000 ֏</span></div>
+            <div class="item-row"><span>🚗 MERSEDES CLS 63 AMG</span> <span>50,000 ֏</span></div>
+            <div class="item-row"><span>🚗 BMW M5F90</span> <span>50,000 ֏</span></div>
+            <div class="item-row"><span>🚗 MERSEDES G550</span> <span>45,000 ֏</span></div>
+            <div class="item-row"><span>🏎️ Ferrari</span> <span>450,000 ֏</span></div>
+            <div class="item-row"><span>🚙 Rolls Royce</span> <span>1,500,000 ֏</span></div>
+            
+            <h3 style="color:#f3c623; margin-top:20px;">Բիզնեսներ</h3>
+            <div class="item-row"><span>✂️ Բառբեր շոփ</span> <span>2,000,000 ֏</span></div>
+            <div class="item-row"><span>🚕 Տաքսի ծառայություն</span> <span>2,000,000 ֏</span></div>
+            <div class="item-row"><span>📉 Կրիպտո շուկա</span> <span>3,000,000 ֏</span></div>
+            <div class="item-row"><span>🚘 Ավտոսալոն</span> <span>5,000,000 ֏</span></div>
+            <div class="item-row"><span>🌍 Համաշխարհային շուկա</span> <span>100,000,000 ֏</span></div>
         </div>
     </div>
 
@@ -111,68 +79,42 @@
 
         function startGame() {
             let nick = document.getElementById("nick-input").value.trim();
-            if(nick.length > 0) {
+            if(nick.length >= 2) {
                 nickName = nick;
-                document.getElementById("profile-pic").innerText = nick.charAt(0).toUpperCase();
+                document.getElementById("profile-pic").innerText = nick[0].toUpperCase();
                 document.getElementById("login-screen").style.display = "none";
                 document.getElementById("main-game").style.display = "flex";
             }
         }
 
         function clickCoin() {
-            score += 1000; // Ամեն քլիքից փողը շատանում է, որ շուտ հասնես լեվելների
+            score += 5000;
             updateUI();
         }
 
         function updateUI() {
             document.getElementById("score").innerText = score.toLocaleString();
-            
-            let charEmoji = document.getElementById("character-emoji");
-            let levelName = document.getElementById("level-name");
-            
-            // ՔՈ ՈՒԶԱԾ ԼԵՎԵԼՆԵՐԸ ԵՎ ԱՆՈՒՆՆԵՐԸ
-            if(score >= 10000000) { levelName.innerText = "Լեվել 5: Օլիգարխ"; charEmoji.innerText = "👑"; }
-            else if(score >= 5000000) { levelName.innerText = "Լեվել 4: Բիզնեսմեն"; charEmoji.innerText = "💼"; }
-            else if(score >= 2000000) { levelName.innerText = "Լեվել 3: Հարուստ"; charEmoji.innerText = "🤵"; }
-            else if(score >= 500000) { levelName.innerText = "Լեվել 2: Մի քիչ ավելի հարուստ"; charEmoji.innerText = "👷"; }
-            else { levelName.innerText = "Լեվել 1: Աղքատ"; charEmoji.innerText = "🧑‍🌾"; }
+            let char = document.getElementById("character-emoji");
+            let lvl = document.getElementById("level-name");
+            if(score >= 100000000) { lvl.innerText = "Լեվել 5: Օլիգարխ"; char.innerText = "👑"; }
+            else if(score >= 5000000) { lvl.innerText = "Լեվել 4: Բիզնեսմեն"; char.innerText = "💼"; }
+            else if(score >= 2000000) { lvl.innerText = "Լեվել 3: Հարուստ"; char.innerText = "🤵"; }
+            else if(score >= 500000) { lvl.innerText = "Լեվել 2: Մի քիչ հարուստ"; char.innerText = "👷"; }
         }
 
         function openLeaderboard() {
             let content = document.getElementById("lb-content");
-            // Այստեղ երևում է 1-ից 10-րդ տեղերը
-            let fakeData = [
-                {name: "Aram", score: 150000000}, {name: "Karen", score: 120000000},
-                {name: "Hakob", score: 95000000}, {name: "Tigran", score: 80000000},
-                {name: "Gor", score: 45000000}, {name: "Vardan", score: 20000000},
-                {name: "Narek", score: 5000000}, {name: "Levon", score: 2500000},
-                {name: "Davit", score: 1000000}, {name: nickName + " (Դու)", score: score}
-            ];
-            fakeData.sort((a, b) => b.score - a.score); // Դասավորում ենք ըստ միավորների
-            
-            let html = "";
-            for(let i=0; i<10; i++) {
-                html += `<div class="lb-item">
-                            <span><span class="lb-rank">#${i+1}</span> ${fakeData[i].name}</span>
-                            <span style="color:#00ff00;">${fakeData[i].score.toLocaleString()} ֏</span>
-                         </div>`;
-            }
-            content.innerHTML = html;
-            
-            document.getElementById("main-game").style.display = "none";
+            let users = [
+                {n: "Արամ", s: 500000000}, {n: "Դավիթ", s: 350000000}, {n: "Գոռ", s: 150000000},
+                {n: "Աննա", s: 90000000}, {n: "Հայկ", s: 70000000}, {n: "Կարեն", s: 50000000},
+                {n: "Էրիկ", s: 20000000}, {n: "Սամվել", s: 10000000}, {n: "Ալեն", s: 5000000},
+                {n: nickName + " (Դու)", s: score}
+            ].sort((a,b) => b.s - a.s);
+            content.innerHTML = users.map((u, i) => `<div class="item-row"><span>#${i+1} ${u.n}</span> <span style="color:#0f0;">${u.s.toLocaleString()} ֏</span></div>`).join('');
             document.getElementById("leaderboard-modal").style.display = "flex";
         }
-
-        function openShop() {
-            document.getElementById("main-game").style.display = "none";
-            document.getElementById("shop-modal").style.display = "flex";
-        }
-
-        function closeModals() {
-            document.getElementById("leaderboard-modal").style.display = "none";
-            document.getElementById("shop-modal").style.display = "none";
-            document.getElementById("main-game").style.display = "flex";
-        }
+        function openShop() { document.getElementById("shop-modal").style.display = "flex"; }
+        function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
     </script>
 </body>
 </html>
