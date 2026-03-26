@@ -2,167 +2,97 @@
 <html lang="hy">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dram Master Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dram Master Game</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* ՔՈ ՕՐԻԳԻՆԱԼ ԴԻԶԱՅՆԸ */
-        body { background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; text-align: center; overflow: hidden; user-select: none; -webkit-tap-highlight-color: transparent; }
-        
-        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
-        #login-screen h1 { color: #f1c40f; text-shadow: 0 0 20px #f1c40f; font-size: 38px; margin-bottom: 5px; }
-        #nick-input { padding: 15px 20px; width: 260px; font-size: 18px; border-radius: 25px; border: 2px solid #f1c40f; background: transparent; color: white; text-align: center; margin-bottom: 20px; outline: none; }
-        
-        #main-game { display: none; height: 100vh; flex-direction: column; }
-        
-        .header { display: flex; align-items: center; padding: 15px; background: rgba(0,0,0,0.4); border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .profile-pic { width: 45px; height: 45px; background: #f1c40f; color: #000; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px; font-weight: bold; margin-right: 12px; }
-        .level-info { text-align: left; flex: 1; }
-        .level-name { font-size: 14px; font-weight: bold; color: #f1c40f; }
-        .progress-bar { width: 100%; height: 6px; background: #333; border-radius: 10px; margin-top: 5px; overflow: hidden; }
-        .progress-fill { height: 100%; background: #f1c40f; width: 0%; transition: width 0.3s; }
-
-        .score-display { font-size: 45px; font-weight: 900; margin: 25px 0; color: #fff; display: flex; justify-content: center; align-items: center; gap: 8px; }
-        
-        .click-area { flex: 1; display: flex; justify-content: center; align-items: center; }
-        .coin-circle { width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, #2c3e50, #000); box-shadow: 0 0 30px rgba(0,0,0,0.5); border: 6px solid #1a1a1a; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: transform 0.05s; }
-        .coin-circle:active { transform: scale(0.92); }
-        .character-emoji { font-size: 110px; pointer-events: none; }
-
-        .floating-text { position: absolute; color: #fff; font-size: 28px; font-weight: bold; pointer-events: none; animation: floatUp 0.7s ease-out forwards; }
-        @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-120px); opacity: 0; } }
-
-        .bottom-nav { display: flex; background: rgba(0,0,0,0.9); padding: 12px 0 25px 0; border-top: 1px solid rgba(255,255,255,0.1); }
-        .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; color: #666; font-size: 12px; }
-        .nav-btn.active { color: #f1c40f; }
-        .nav-icon { font-size: 24px; }
-
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f0c29; z-index: 500; flex-direction: column; }
-        .modal-header { padding: 20px; font-size: 20px; display: flex; justify-content: space-between; align-items: center; background: #000; }
-        .item-card { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .btn-buy { background: #f1c40f; color: #000; border: none; padding: 8px 15px; border-radius: 15px; font-weight: bold; }
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #1a1a1a; color: white; margin: 0; padding: 20px; }
+        .screen { display: none; }
+        .active { display: block; }
+        input { padding: 10px; font-size: 16px; border-radius: 5px; border: none; margin-bottom: 10px; width: 80%; }
+        button { padding: 12px 25px; font-size: 18px; color: white; background-color: #28a745; border: none; border-radius: 5px; cursor: pointer; }
+        button:active { background-color: #218838; }
+        .car-card { border: 1px solid #444; padding: 15px; margin: 10px; border-radius: 10px; background: #2a2a2a; }
+        .balance { font-size: 24px; color: #ffd700; margin: 20px 0; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen">
-        <h1>DRAM MASTER</h1>
-        <p style="color: #666; margin-bottom: 20px;">Ստեղծիր քո կայսրությունը</p>
-        <input type="text" id="nick-input" placeholder="Անուն կամ Մականուն">
-        <button class="btn-buy" style="padding: 15px 50px; font-size: 18px;" onclick="startGame()">Մուտք Խաղ</button>
+    <div id="welcome-screen" class="screen active">
+        <h1>💰 Dram Master 💰</h1>
+        <p>Գրիր անունդ և սկսիր հարստանալ</p>
+        <input type="text" id="player-name" placeholder="Քո անունը...">
+        <br>
+        <button onclick="startGame()">Մուտք Խաղ</button>
     </div>
 
-    <div id="main-game">
-        <div class="header">
-            <div class="profile-pic" id="prof-initial">?</div>
-            <div class="level-info">
-                <div class="level-name" id="lvl-label">Լեվել 1: Աղքատ</div>
-                <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
-            </div>
+    <div id="game-screen" class="screen">
+        <h2 id="display-name">Բարի գալուստ!</h2>
+        <div class="balance">Հաշվեկշիռ: <span id="balance">0</span> ֏</div>
+        
+        <div class="car-card">
+            <h3>🚗 Քո մեքենաները</h3>
+            <p id="car-list">Դեռ մեքենա չունես</p>
+            <button onclick="clickMoney()">Աշխատել 100 ֏</button>
         </div>
 
-        <div class="score-display">֏ <span id="score-text">0</span></div>
-
-        <div class="click-area">
-            <div class="coin-circle" onpointerdown="doClick(event)">
-                <div class="character-emoji" id="emoji">🧑‍🌾</div>
-            </div>
-        </div>
-
-        <div class="bottom-nav">
-            <div class="nav-btn active" onclick="closeModals()"><div class="nav-icon">🎮</div><div>Խաղ</div></div>
-            <div class="nav-btn" onclick="openModal('shop')"><div class="nav-icon">🛒</div><div>Խանութ</div></div>
-            <div class="nav-btn" onclick="openModal('friends')"><div class="nav-icon">👥</div><div>Ընկերներ</div></div>
-        </div>
-    </div>
-
-    <div id="shop" class="modal">
-        <div class="modal-header"><span>🛒 Խանութ</span><span onclick="closeModals()">✖</span></div>
-        <div class="item-card"><div><h4>🚗 Opel Vectra</h4><p>10,000 ֏</p></div><button class="btn-buy">Գնել</button></div>
-    </div>
-
-    <div id="friends" class="modal">
-        <div class="modal-header"><span>👥 Ընկերներ</span><span onclick="closeModals()">✖</span></div>
-        <div style="padding: 30px;">
-            <p>Հրավիրիր ընկերներիդ և ստացիր **50,000 ֏** երբ նրանք դառնան Լեվել 2!</p>
-            <button class="btn-buy" style="width: 100%; padding: 15px;" onclick="share()">Հրավիրել</button>
+        <div class="shop">
+            <h3>🛒 Խանութ</h3>
+            <button onclick="buyCar('Opel Vectra', 5000)">Գնել Opel (5,000 ֏)</button>
         </div>
     </div>
 
     <script>
-        let tg = window.Telegram.WebApp;
-        tg.ready();
-        tg.expand();
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Բացում ենք խաղը ամբողջ էկրանով
 
-        let score = 0;
-        let lv2sent = false;
-
-        // --- ՖՈՒՆԿՑԻԱՆԵՐ ---
+        let balance = 0;
+        let cars = [];
 
         function startGame() {
-    let nick = document.getElementById("nick-input").value.trim();
-    if(nick.length >= 2) {
-        document.getElementById("prof-initial").innerText = nick[0].toUpperCase();
-        document.getElementById("login-screen").style.display = "none";
-        document.getElementById("main-game").style.display = "flex";
-
-        // Ավելացրու ԱՅՍ ՏՈՂԸ. հենց մտնում է խաղ, բոտին լուր է գնում
-        tg.sendData(JSON.stringify({action: "new_player_joined"}));
-        
-    } else { alert("Անունը պետք է լինի առնվազն 2 տառ:"); }
-}
-            let nick = document.getElementById("nick-input").value.trim();
-            if(nick.length >= 2) {
-                document.getElementById("prof-initial").innerText = nick[0].toUpperCase();
-                document.getElementById("login-screen").style.display = "none";
-                document.getElementById("main-game").style.display = "flex";
-            } else {
-                alert("Անունը կարճ է:");
+            const nameInput = document.getElementById('player-name').value;
+            if (nameInput.trim() === "") {
+                alert("Խնդրում եմ, գրիր անունդ:");
+                return;
             }
+
+            // ԿԱՐԵՎՈՐ. Լուր ենք ուղարկում Բոտին (Python-ին), որ խաղացողը միացավ
+            // Սա կաշխատեցնի 5,000 ֏ բոնուսի համակարգը
+            tg.sendData(JSON.stringify({
+                action: "new_player_joined",
+                name: nameInput
+            }));
+
+            // Անցնում ենք խաղի էկրանին
+            document.getElementById('welcome-screen').classList.remove('active');
+            document.getElementById('game-screen').classList.add('active');
+            document.getElementById('display-name').innerText = "Խաղացող: " + nameInput;
+            
+            // Փակում ենք WebApp-ը (ընտրովի, եթե ուզում ես կոճակը սեղմելուց հետո բոտը պատասխանի)
+            // tg.close(); 
         }
 
-        function doClick(event) {
-            score++;
+        function clickMoney() {
+            balance += 100;
             updateUI();
-            
-            // Floating Text
-            let p = document.createElement("div");
-            p.className = "floating-text";
-            p.innerText = "+1";
-            p.style.left = (event.clientX || event.touches[0].clientX) + "px";
-            p.style.top = (event.clientY || event.touches[0].clientY) + "px";
-            document.body.appendChild(p);
-            setTimeout(() => p.remove(), 700);
+        }
+
+        function buyCar(model, price) {
+            if (balance >= price) {
+                balance -= price;
+                cars.push(model);
+                updateUI();
+                alert("Շնորհավոր! Դու գնեցիր " + model);
+            } else {
+                alert("Փողդ չի հերիքում!");
+            }
         }
 
         function updateUI() {
-            document.getElementById("score-text").innerText = score.toLocaleString();
-            let l = document.getElementById("lvl-label");
-            let e = document.getElementById("emoji");
-            let f = document.getElementById("fill");
-
-            if(score >= 1500000) { l.innerText = "Լեվել 6: Մագնատ 👑"; e.innerText = "💰"; f.style.width = "100%"; }
-            else if(score >= 500000) { l.innerText = "Լեվել 5: Օլիգարխ"; e.innerText = "💎"; f.style.width = (score/1500000)*100+"%"; }
-            else if(score >= 100000) { l.innerText = "Լեվել 4: Բիզնեսմեն"; e.innerText = "💼"; f.style.width = (score/500000)*100+"%"; }
-            else if(score >= 50000) { l.innerText = "Լեվել 3: Հարուստ"; e.innerText = "🤵"; f.style.width = (score/100000)*100+"%"; }
-            else if(score >= 10000) { 
-                l.innerText = "Լեվել 2: Միջին"; e.innerText = "👷"; f.style.width = (score/50000)*100+"%"; 
-                if(!lv2sent) {
-                    tg.sendData(JSON.stringify({action: "level_up"}));
-                    lv2sent = true;
-                }
-            } else { 
-                l.innerText = "Լեվել 1: Աղքատ"; e.innerText = "🧑‍🌾"; f.style.width = (score/10000)*100+"%"; 
+            document.getElementById('balance').innerText = balance.toLocaleString();
+            if (cars.length > 0) {
+                document.getElementById('car-list').innerText = cars.join(", ");
             }
-        }
-
-        function openModal(id) { document.getElementById(id).style.display = "flex"; }
-        function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
-
-        function share() {
-            let id = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : 0;
-            let link = "https://t.me/ՔՈ_ԲՈՏԻ_Username?start=" + id; // <--- ՓՈԽԻՐ ՍԱ
-            tg.openTelegramLink("https://t.me/share/url?url=" + encodeURIComponent(link));
         }
     </script>
 </body>
