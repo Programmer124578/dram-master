@@ -6,37 +6,36 @@
     <title>Dram Master - Կայսրություն</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f0f0f; color: #e0e0e0; margin: 0; padding: 0; overflow-x: hidden; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f0f0f; color: #e0e0e0; margin: 0; padding: 0; overflow-x: hidden; user-select: none; }
         .container { padding: 20px; max-width: 500px; margin: auto; }
         
-        /* Էկրաններ */
-        .screen { display: none; text-align: center; animation: fadeIn 0.5s; }
+        .screen { display: none; text-align: center; animation: fadeIn 0.4s; }
         .active { display: block; }
-
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Դիզայնի տարրեր */
-        .logo { font-size: 32px; font-weight: bold; color: #ffcc00; text-shadow: 0 0 15px rgba(255, 204, 0, 0.5); margin-bottom: 20px; }
-        .stats-box { background: #1a1a1a; border: 2px solid #333; border-radius: 15px; padding: 15px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .balance-text { font-size: 28px; color: #00ff88; font-weight: bold; }
-        .level-text { font-size: 18px; color: #00d4ff; margin-top: 5px; }
+        .logo { font-size: 36px; font-weight: bold; color: #ffcc00; text-shadow: 0 0 20px rgba(255, 204, 0, 0.6); margin: 30px 0; letter-spacing: 2px; }
+        .stats-box { background: linear-gradient(145deg, #1a1a1a, #222); border: 1px solid #333; border-radius: 20px; padding: 20px; margin-bottom: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.7); }
+        .balance-text { font-size: 32px; color: #00ff88; font-weight: bold; margin: 5px 0; }
+        .level-badge { background: #00d4ff; color: #000; padding: 4px 12px; border-radius: 20px; font-size: 14px; font-weight: bold; display: inline-block; margin-top: 10px; }
 
-        /* Կոճակներ */
-        .main-btn { width: 100%; padding: 20px; font-size: 20px; border: none; border-radius: 12px; cursor: pointer; transition: 0.3s; margin-bottom: 15px; font-weight: bold; }
-        .work-btn { background: linear-gradient(45deg, #28a745, #218838); color: white; box-shadow: 0 5px 0 #155724; }
-        .work-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 #155724; }
+        .main-btn { width: 100%; padding: 22px; font-size: 22px; border: none; border-radius: 15px; cursor: pointer; transition: 0.2s; margin-bottom: 20px; font-weight: bold; text-transform: uppercase; }
+        .work-btn { background: linear-gradient(45deg, #28a745, #2ecc71); color: white; box-shadow: 0 6px 0 #1e7e34; }
+        .work-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #1e7e34; }
         
-        .tab-btn { background: #333; color: #ccc; width: 30%; padding: 10px; font-size: 14px; border-radius: 8px; margin: 5px; border: 1px solid #444; }
-        .tab-btn.active-tab { background: #ffcc00; color: #000; }
+        .tabs { display: flex; justify-content: space-around; margin-bottom: 20px; background: #1a1a1a; padding: 5px; border-radius: 12px; }
+        .tab-btn { background: transparent; color: #888; border: none; padding: 10px; font-size: 14px; cursor: pointer; flex: 1; transition: 0.3s; }
+        .tab-btn.active-tab { background: #333; color: #ffcc00; border-radius: 8px; font-weight: bold; }
 
-        /* Խանութի քարտեր */
-        .card { background: #222; border-radius: 12px; padding: 15px; margin-bottom: 10px; text-align: left; border-left: 5px solid #ffcc00; display: flex; justify-content: space-between; align-items: center; }
-        .card h4 { margin: 0; color: #fff; }
-        .card p { margin: 5px 0 0; font-size: 13px; color: #aaa; }
-        .buy-btn { background: #444; color: #fff; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; }
-        .buy-btn:hover { background: #555; }
+        .card { background: #1e1e1e; border-radius: 15px; padding: 18px; margin-bottom: 12px; text-align: left; border-left: 6px solid #ffcc00; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .card h4 { margin: 0; font-size: 18px; color: #fff; }
+        .card p { margin: 6px 0 0; font-size: 13px; color: #999; }
+        .buy-btn { background: #333; color: #ffcc00; border: 1px solid #ffcc00; padding: 10px 18px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+        .buy-btn:active { background: #ffcc00; color: #000; }
 
-        input { width: 90%; padding: 15px; border-radius: 10px; border: 1px solid #444; background: #222; color: #fff; font-size: 18px; margin-bottom: 20px; }
+        input { width: 90%; padding: 18px; border-radius: 12px; border: 2px solid #333; background: #1a1a1a; color: #fff; font-size: 18px; margin-bottom: 25px; outline: none; }
+        input:focus { border-color: #ffcc00; }
+        
+        #inventory-list { text-align: left; background: #1a1a1a; padding: 15px; border-radius: 12px; color: #ccc; min-height: 50px; line-height: 1.6; }
     </style>
 </head>
 <body>
@@ -44,24 +43,24 @@
 <div class="container">
     <div id="welcome-screen" class="screen active">
         <div class="logo">DRAM MASTER</div>
-        <p>Ստեղծիր քո կայսրությունը</p>
-        <input type="text" id="player-name" placeholder="Մուտքագրեք ձեր անունը...">
-        <button class="main-btn work-btn" onclick="startGame()">ՄՈՒՏՔ ԽԱՂ</button>
+        <p style="color: #888;">Կառուցիր քո սեփական կայսրությունը</p>
+        <input type="text" id="player-name" placeholder="Գրեք ձեր անունը...">
+        <button class="main-btn work-btn" onclick="startGame()">ՍԿՍԵԼ ԽԱՂԸ</button>
     </div>
 
     <div id="game-screen" class="screen">
         <div class="stats-box">
-            <div id="display-player-name" style="font-size: 14px; color: #888;"></div>
+            <div id="display-player-name" style="font-size: 14px; color: #ffcc00; font-weight: bold; margin-bottom: 5px;"></div>
             <div class="balance-text"><span id="balance">0</span> ֏</div>
-            <div class="level-text">Մակարդակ: <span id="level">1</span> (<span id="status">Նորեկ</span>)</div>
+            <div class="level-badge">Մակարդակ: <span id="level">1</span> — <span id="status">Նորեկ</span></div>
         </div>
 
         <button class="main-btn work-btn" onclick="clickWork()">ԱՇԽԱՏԵԼ (Կլիկ)</button>
 
-        <div style="margin-bottom: 20px;">
-            <button class="tab-btn active-tab" onclick="showTab('cars')">Մեքենաներ</button>
+        <div class="tabs">
+            <button class="tab-btn active-tab" onclick="showTab('cars')">Ավտոպարկ</button>
             <button class="tab-btn" onclick="showTab('business')">Բիզնես</button>
-            <button class="tab-btn" onclick="showTab('inventory')">Իմ գույքը</button>
+            <button class="tab-btn" onclick="showTab('inventory')">Գույք</button>
         </div>
 
         <div id="tab-cars" class="tab-content">
@@ -85,14 +84,15 @@
                 <button class="buy-btn" onclick="buyItem('biz', 'Կրպակ', 20000, 200)">Գնել</button>
             </div>
             <div class="card">
-                <div><h4>Ավտոլվացման կետ</h4><p>Գինը: 100,000 ֏ | +1,200 ֏/վրկ</p></div>
-                <button class="buy-btn" onclick="buyItem('biz', 'Ավտոլվացման կետ', 100000, 1200)">Գնել</button>
+                <div><h4>Ավտոլվացում</h4><p>Գինը: 100,000 ֏ | +1,200 ֏/վրկ</p></div>
+                <button class="buy-btn" onclick="buyItem('biz', 'Ավտոլվացում', 100000, 1200)">Գնել</button>
             </div>
         </div>
 
         <div id="tab-inventory" class="tab-content" style="display:none;">
-            <h3>Իմ Գույքը</h3>
-            <div id="inventory-list" style="color: #aaa;">Դեռ ոչինչ չկա...</div>
+            <h3 style="text-align: left; margin-top: 0;">Իմ Սեփականությունը</h3>
+            <div id="inventory-list">Դեռ ոչինչ չկա...</div>
+            <button class="buy-btn" style="width: 100%; margin-top: 20px; border-color: #ff4444; color: #ff4444;" onclick="resetGame()">Ջնջել խաղը (Reset)</button>
         </div>
     </div>
 </div>
@@ -110,80 +110,110 @@
         name: ""
     };
 
+    // 1. ԽԱՂԻ ԲԵՌՆՈՒՄ (LOAD)
+    function loadGame() {
+        const saved = localStorage.getItem('dramMasterSave');
+        if (saved) {
+            state = JSON.parse(saved);
+            if (state.name) {
+                document.getElementById('display-player-name').innerText = "ԽԱՂԱՑՈՂ: " + state.name;
+                document.getElementById('welcome-screen').classList.remove('active');
+                document.getElementById('game-screen').classList.add('active');
+                updateUI();
+                updateInventoryUI();
+                checkLevel();
+            }
+        }
+    }
+
+    // 2. ԽԱՂԻ ՊԱՀՊԱՆՈՒՄ (SAVE)
+    function saveGame() {
+        localStorage.setItem('dramMasterSave', JSON.stringify(state));
+    }
+
     function startGame() {
-        const name = document.getElementById('player-name').value;
-        if (name.trim() === "") return alert("Գրիր անունդ!");
+        const input = document.getElementById('player-name');
+        if (input.value.trim() === "") return alert("Մուտքագրեք ձեր անունը:");
         
-        state.name = name;
-        document.getElementById('display-player-name').innerText = "Խաղացող: " + name;
+        state.name = input.value;
+        document.getElementById('display-player-name').innerText = "ԽԱՂԱՑՈՂ: " + state.name;
         
-        // Telegram-ին լուր ուղարկել
-        tg.sendData(JSON.stringify({action: "new_player_joined", name: name}));
+        tg.sendData(JSON.stringify({action: "new_player_joined", name: state.name}));
 
         document.getElementById('welcome-screen').classList.remove('active');
         document.getElementById('game-screen').classList.add('active');
-        
-        // Սկսել պասիվ եկամուտը
-        setInterval(processPassiveIncome, 1000);
+        saveGame();
     }
 
     function clickWork() {
         state.balance += state.clickPower;
         checkLevel();
         updateUI();
-    }
-
-    function processPassiveIncome() {
-        if (state.passiveIncome > 0) {
-            state.balance += state.passiveIncome;
-            updateUI();
-        }
+        saveGame();
     }
 
     function buyItem(type, name, price, power) {
         if (state.balance >= price) {
             state.balance -= price;
             state.inventory.push(name);
-            
             if (type === 'car') state.clickPower += power;
             if (type === 'biz') state.passiveIncome += power;
-            
             updateUI();
             updateInventoryUI();
+            saveGame();
             alert("Շնորհավոր! Դու գնեցիր " + name);
         } else {
-            alert("Փողդ չի հերիքում!");
+            alert("Ձեր հաշվեկշիռը չի բավարարում:");
         }
     }
 
     function checkLevel() {
-        if (state.balance > 1000000) { state.level = 3; }
-        else if (state.balance > 50000) { state.level = 2; }
+        if (state.balance > 1000000) state.level = 3;
+        else if (state.balance > 100000) state.level = 2;
         
         let status = "Նորեկ";
         if (state.level === 2) status = "Գործարար";
         if (state.level === 3) status = "Օլիգարխ";
+        
         document.getElementById('status').innerText = status;
         document.getElementById('level').innerText = state.level;
     }
 
-    function showTab(tabName) {
+    function showTab(tab) {
         document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab'));
-        
-        document.getElementById('tab-' + tabName).style.display = 'block';
+        document.getElementById('tab-' + tab).style.display = 'block';
         event.currentTarget.classList.add('active-tab');
     }
 
     function updateUI() {
-        document.getElementById('balance').innerText = state.balance.toLocaleString();
+        document.getElementById('balance').innerText = Math.floor(state.balance).toLocaleString();
     }
 
     function updateInventoryUI() {
         const list = document.getElementById('inventory-list');
-        list.innerHTML = state.inventory.length > 0 ? state.inventory.join("<br>") : "Դեռ ոչինչ չկա...";
+        list.innerHTML = state.inventory.length > 0 ? "✅ " + state.inventory.join("<br>✅ ") : "Դեռ ոչինչ չկա...";
     }
-</script>
 
+    function resetGame() {
+        if(confirm("Իսկապե՞ս ուզում եք ջնջել ամբողջ պրոգրեսը:")) {
+            localStorage.removeItem('dramMasterSave');
+            location.reload();
+        }
+    }
+
+    // Պասիվ եկամուտի հաշվարկ (1 վայրկյանը մեկ)
+    setInterval(() => {
+        if (state.passiveIncome > 0) {
+            state.balance += (state.passiveIncome / 1);
+            updateUI();
+            saveGame();
+        }
+    }, 1000);
+
+    // Խաղը բեռնել հենց էջը բացվի
+    window.onload = loadGame;
+
+</script>
 </body>
 </html>
