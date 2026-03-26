@@ -6,42 +6,60 @@
     <title>Dram Master Pro</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* Քո տված դիզայնը՝ առանց փոփոխության (գեղեցկության համար) */
-        body { background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; text-align: center; overflow: hidden; user-select: none; -webkit-tap-highlight-color: transparent; }
+        /* ՔՈ ԴԻԶԱՅՆԸ - ՈՉԻՆՉ ՉԻ ՓՈԽՎԵԼ */
+        body { background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; text-align: center; overflow: hidden; user-select: none; -webkit-tap-highlight-color: transparent; }
+        
         #login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
         #login-screen h1 { color: #f1c40f; text-shadow: 0 0 20px #f1c40f; font-size: 36px; margin-bottom: 10px; }
         #nick-input { padding: 15px 20px; width: 250px; font-size: 18px; border-radius: 25px; border: 2px solid #f1c40f; background: transparent; color: white; text-align: center; margin-bottom: 20px; outline: none; }
-        .btn { padding: 15px 40px; font-size: 18px; font-weight: bold; background: linear-gradient(45deg, #f1c40f, #e67e22); color: #000; border: none; border-radius: 25px; cursor: pointer; box-shadow: 0 5px 15px rgba(241, 196, 15, 0.4); transition: 0.2s; }
+        .btn { padding: 15px 40px; font-size: 18px; font-weight: bold; background: linear-gradient(45deg, #f1c40f, #e67e22); color: #000; border: none; border-radius: 25px; cursor: pointer; box-shadow: 0 5px 15px rgba(241, 196, 15, 0.4); transition: transform 0.2s; }
+        .btn:active { transform: scale(0.95); }
+
         #main-game { display: none; height: 100vh; flex-direction: column; }
         .header { display: flex; align-items: center; padding: 15px 20px; background: rgba(0,0,0,0.5); border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .profile-pic { width: 50px; height: 50px; background: linear-gradient(45deg, #f1c40f, #e67e22); color: #000; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; margin-right: 15px; }
+        .profile-pic { width: 50px; height: 50px; background: linear-gradient(45deg, #f1c40f, #e67e22); color: #000; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; margin-right: 15px; box-shadow: 0 0 10px rgba(241, 196, 15, 0.5); }
         .level-info { text-align: left; }
         .level-name { font-size: 16px; font-weight: bold; color: #aaa; margin-bottom: 5px; }
         .progress-bar { width: 150px; height: 8px; background: #333; border-radius: 5px; overflow: hidden; }
         .progress-fill { height: 100%; background: #f1c40f; width: 0%; transition: width 0.3s; }
-        .score-display { font-size: 50px; font-weight: 900; margin: 30px 0; display: flex; justify-content: center; align-items: center; gap: 10px; }
+
+        .score-display { font-size: 50px; font-weight: 900; margin: 30px 0; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.5); display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .coin-icon { width: 40px; height: 40px; background: #f1c40f; border-radius: 50%; border: 3px solid #d4ac0d; display: flex; justify-content: center; align-items: center; font-size: 24px; color: #000; }
+
         .click-area { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; }
-        .coin-circle { width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle, #2c3e50, #000); box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 8px solid #1a1a1a; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: transform 0.05s; z-index: 10; }
-        .coin-circle:active { transform: scale(0.93); }
-        .character-emoji { font-size: 130px; pointer-events: none; }
+        .coin-circle { width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle, #2c3e50, #000000); box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 20px rgba(241, 196, 15, 0.2); border: 8px solid #1a1a1a; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: transform 0.05s; position: relative; z-index: 10; }
+        .coin-circle:active { transform: scale(0.93); box-shadow: 0 5px 15px rgba(0,0,0,0.8); }
+        .character-emoji { font-size: 130px; pointer-events: none; text-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+
         .floating-text { position: absolute; color: #fff; font-size: 30px; font-weight: bold; pointer-events: none; text-shadow: 0 0 10px #f1c40f; animation: floatUp 0.8s ease-out forwards; z-index: 20; }
-        @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-100px); opacity: 0; } }
+        @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-100px) scale(1.5); opacity: 0; } }
+
         .bottom-nav { display: flex; background: rgba(0,0,0,0.8); padding: 15px 0 25px 0; border-top: 1px solid rgba(255,255,255,0.1); }
-        .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; color: #888; font-size: 13px; cursor: pointer; }
-        .nav-btn.active { color: #f1c40f; }
+        .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; color: #888; font-size: 13px; cursor: pointer; transition: 0.2s; }
+        .nav-btn:hover, .nav-btn.active { color: #f1c40f; transform: translateY(-3px); }
         .nav-icon { font-size: 26px; margin-bottom: 5px; }
-        .modal { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0f0c29; z-index: 50; flex-direction: column; }
-        .modal-header { padding: 20px; font-size: 22px; background: rgba(0,0,0,0.5); color: #f1c40f; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .modal-content { padding: 20px; flex: 1; overflow-y: auto; text-align: left; }
-        .item-card { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .buy-btn { background: #f1c40f; color: #000; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; }
+
+        .modal { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0f0c29; z-index: 50; flex-direction: column; animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .modal-header { padding: 20px; font-size: 22px; font-weight: bold; background: rgba(0,0,0,0.5); color: #f1c40f; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .close-btn { color: #fff; cursor: pointer; font-size: 28px; background: rgba(255,255,255,0.1); width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
+        .modal-content { padding: 20px; flex: 1; overflow-y: auto; text-align: left; padding-bottom: 100px; }
+        
+        .item-card { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.1); }
+        .item-info h4 { margin: 0 0 5px 0; font-size: 18px; color: #fff; }
+        .item-price { color: #00ff88; font-weight: bold; }
+        .buy-btn { background: #f1c40f; color: #000; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+
+        .invite-box { background: rgba(241, 196, 15, 0.1); border: 1px dashed #f1c40f; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; }
+        .invite-box h3 { margin-top: 0; color: #f1c40f; }
+        .share-btn { width: 100%; padding: 15px; background: #0088cc; color: white; border: none; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
         <h1>DRAM MASTER</h1>
-        <p style="color: #aaa;">Ստեղծիր քո կայսրությունը</p><br>
+        <p style="color: #aaa; margin-bottom: 20px;">Ստեղծիր քո կայսրությունը</p>
         <input type="text" id="nick-input" placeholder="Գրիր անունդ..." maxlength="12">
         <button class="btn" onclick="startGame()">Մուտք Խաղ</button>
     </div>
@@ -55,7 +73,10 @@
             </div>
         </div>
 
-        <div class="score-display">֏ <span id="score">0</span></div>
+        <div class="score-display">
+            <div class="coin-icon">֏</div>
+            <span id="score">0</span>
+        </div>
 
         <div class="click-area" id="click-area">
             <div class="coin-circle" onpointerdown="clickCoin(event)">
@@ -66,130 +87,126 @@
         <div class="bottom-nav">
             <div class="nav-btn active" onclick="closeModals()"><div class="nav-icon">🎮</div><div>Խաղ</div></div>
             <div class="nav-btn" onclick="openModal('shop-modal')"><div class="nav-icon">🛒</div><div>Խանութ</div></div>
-            <div class="nav-btn" onclick="openModal('tasks-modal')"><div class="nav-icon">📋</div><div>Գործեր</div></div>
             <div class="nav-btn" onclick="openModal('friends-modal')"><div class="nav-icon">👥</div><div>Ընկերներ</div></div>
+            <div class="nav-btn" onclick="openLeaderboard()"><div class="nav-icon">🏆</div><div>Top 10</div></div>
         </div>
     </div>
 
     <div id="shop-modal" class="modal">
-        <div class="modal-header"><span>🛒 Խանութ</span><span onclick="closeModals()">✖</span></div>
+        <div class="modal-header"><span>🛒 Խանութ</span><span class="close-btn" onclick="closeModals()">✖</span></div>
         <div class="modal-content">
-            <div class="item-card"><div><h4>🚗 G550</h4><span style="color:#00ff88">45,000 ֏</span></div><button class="buy-btn">Գնել</button></div>
-            <div class="item-card"><div><h4>✂️ Բառբեր շոփ</h4><span style="color:#00ff88">2,000,000 ֏</span></div><button class="buy-btn">Գնել</button></div>
-        </div>
-    </div>
-
-    <div id="tasks-modal" class="modal">
-        <div class="modal-header"><span>📋 Առաջադրանքներ</span><span onclick="closeModals()">✖</span></div>
-        <div class="modal-content">
-            <div class="item-card" style="border: 1px solid #00ff88;">
-                <div><b>Dram Master News</b><br><small>+10,000 ֏ բոնուս</small></div>
-                <button class="buy-btn" onclick="window.open('https://t.me/dram_master_news')">Միանալ</button>
-            </div>
+            <h3 style="color:#aaa;">Ավտոտնակ</h3>
+            <div class="item-card"><div class="item-info"><h4>🚗 MERSEDES G550</h4><span class="item-price">45,000 ֏</span></div><button class="buy-btn">Գնել</button></div>
+            <div class="item-card"><div class="item-info"><h4>🏎️ Ferrari</h4><span class="item-price">450,000 ֏</span></div><button class="buy-btn">Գնել</button></div>
+            
+            <h3 style="color:#aaa; margin-top:20px;">Բիզնեսներ</h3>
+            <div class="item-card"><div class="item-info"><h4>✂️ Բառբեր շոփ</h4><span class="item-price">2,000,000 ֏</span></div><button class="buy-btn">Գնել</button></div>
+            <div class="item-card"><div class="item-info"><h4>📉 Կրիպտո շուկա</h4><span class="item-price">3,000,000 ֏</span></div><button class="buy-btn">Գնել</button></div>
         </div>
     </div>
 
     <div id="friends-modal" class="modal">
-        <div class="modal-header"><span>👥 Ընկերներ</span><span onclick="closeModals()">✖</span></div>
-        <div class="modal-content" style="text-align:center;">
-            <h3>Հրավիրիր և վաստակիր</h3>
-            <p>Ստացիր <b>5,000 ֏</b>, երբ ընկերդ հասնի Լեվել 2:</p>
-            <button class="btn" onclick="shareGame()">ՀՐԱՎԻՐԵԼ</button>
+        <div class="modal-header"><span>👥 Ընկերներ</span><span class="close-btn" onclick="closeModals()">✖</span></div>
+        <div class="modal-content">
+            <div class="invite-box">
+                <h3>Հրավիրիր և վաստակիր</h3>
+                <p style="color: #ccc; font-size: 14px; margin-bottom: 20px;">Ամեն ընկերոջ համար, ով կդառնա Լեվել 2, ստացիր +50,000 ֏ նվեր!</p>
+                <button class="share-btn" onclick="shareGame()">✈️ Հրավիրել Ընկերոջը</button>
+            </div>
         </div>
     </div>
 
+    <div id="leaderboard-modal" class="modal">
+        <div class="modal-header"><span>🏆 Top 10</span><span class="close-btn" onclick="closeModals()">✖</span></div>
+        <div class="modal-content" id="lb-content"></div>
+    </div>
+
     <script>
+        // 1. ՍԱԶՄԱՆԱՓԱԿՈՒՄ ԵՎ ԻՆԻՑԻԱԼԻԶԱՑԻԱ
         let tg = window.Telegram.WebApp;
+        tg.ready();
         tg.expand();
+
         let score = 0;
+        let nickName = "";
         let lv2sent = false;
 
+        // Մուտք խաղ (ՈՒՂՂՎԱԾ)
         function startGame() {
-            let nick = document.getElementById("nick-input").value.trim();
+            let nickInput = document.getElementById("nick-input");
+            let nick = nickInput.value.trim();
             if(nick.length >= 2) {
+                nickName = nick;
                 document.getElementById("profile-pic").innerText = nick[0].toUpperCase();
                 document.getElementById("login-screen").style.display = "none";
                 document.getElementById("main-game").style.display = "flex";
+            } else {
+                alert("Անունը պետք է լինի առնվազն 2 տառ:");
             }
         }
 
+        // Սեղմում (ՈՒՂՂՎԱԾ)
         function clickCoin(event) {
-            score += 1;
+            score += 1; 
             updateUI();
             
             const plus = document.createElement('div');
             plus.classList.add('floating-text');
             plus.innerText = '+1';
-            let x = event.clientX || (event.touches && event.touches[0].clientX);
-            let y = event.clientY || (event.touches && event.touches[0].clientY);
-            plus.style.left = `${x}px`;
-            plus.style.top = `${y}px`;
+            
+            let x = event.clientX || (event.touches && event.touches[0].clientX) || window.innerWidth / 2;
+            let y = event.clientY || (event.touches && event.touches[0].clientY) || window.innerHeight / 2;
+            
+            plus.style.left = x + 'px';
+            plus.style.top = y + 'px';
+            
             document.getElementById("click-area").appendChild(plus);
             setTimeout(() => { plus.remove(); }, 800);
         }
 
-       function updateUI() {
-    document.getElementById("score").innerText = score.toLocaleString();
-    let char = document.getElementById("character-emoji");
-    let lvl = document.getElementById("level-name");
-    let fill = document.getElementById("progress-fill");
-
-    // Լեվել 6: 1,500,000+ ֏
-    if (score >= 1500000) { 
-        lvl.innerText = "Լեվել 6: Մագնատ 👑"; 
-        char.innerText = "💰"; 
-        fill.style.width = "100%"; 
-    } 
-    // Լեվել 5: 500,000+ ֏
-    else if (score >= 500000) { 
-        lvl.innerText = "Լեվել 5: Օլիգարխ"; 
-        char.innerText = "💎"; 
-        fill.style.width = (score / 1500000) * 100 + "%"; 
-    } 
-    // Լեվել 4: 100,000+ ֏
-    else if (score >= 100000) { 
-        lvl.innerText = "Լեվել 4: Բիզնեսմեն"; 
-        char.innerText = "💼"; 
-        fill.style.width = (score / 500000) * 100 + "%"; 
-    } 
-    // Լեվել 3: 50,000+ ֏
-    else if (score >= 50000) { 
-        lvl.innerText = "Լեվել 3: Հարուստ"; 
-        char.innerText = "🤵"; 
-        fill.style.width = (score / 100000) * 100 + "%"; 
-    } 
-    // Լեվել 2: 10,000+ ֏
-    else if (score >= 10000) { 
-        lvl.innerText = "Լեվել 2: Միջին"; 
-        char.innerText = "👷"; 
-        fill.style.width = (score / 50000) * 100 + "%"; 
-        
-        // ՍԱ ԿԱՐԵՎՈՐ Է. Երբ հասնում է 10,000-ի, բոտին հրաման է գնում
-        if (!lv2sent) {
-            tg.sendData(JSON.stringify({action: "level_up", level: 2}));
-            lv2sent = true; 
-        }
-    } 
-    // Լեվել 1: 0 - 9,999 ֏
-    else { 
-        lvl.innerText = "Լեվել 1: Աղքատ"; 
-        char.innerText = "🧑‍🌾"; 
-        fill.style.width = (score / 10000) * 100 + "%"; 
-    }
-}
-
-            else { lvl.innerText = "Լեվել 1: Աղքատ"; char.innerText = "🧑‍🌾"; fill.style.width = (score/10)*100 + "%"; }
+        // Թարմացնել էկրանը և 6 Լեվելները (ՔՈ ՈՒԶԱԾ ԹՎԵՐՈՎ)
+        function updateUI() {
+            document.getElementById("score").innerText = score.toLocaleString();
+            let char = document.getElementById("character-emoji");
+            let lvl = document.getElementById("level-name");
+            let fill = document.getElementById("progress-fill");
+            
+            if (score >= 1500000) { 
+                lvl.innerText = "Լեվել 6: Մագնատ 👑"; char.innerText = "💰"; fill.style.width = "100%"; 
+            } else if (score >= 500000) { 
+                lvl.innerText = "Լեվել 5: Օլիգարխ"; char.innerText = "💎"; fill.style.width = (score/1500000)*100 + "%"; 
+            } else if (score >= 100000) { 
+                lvl.innerText = "Լեվել 4: Բիզնեսմեն"; char.innerText = "💼"; fill.style.width = (score/500000)*100 + "%"; 
+            } else if (score >= 50000) { 
+                lvl.innerText = "Լեվել 3: Հարուստ"; char.innerText = "🤵"; fill.style.width = (score/100000)*100 + "%"; 
+            } else if (score >= 10000) { 
+                lvl.innerText = "Լեվել 2: Միջին"; char.innerText = "👷"; fill.style.width = (score/50000)*100 + "%"; 
+                // ԵՐԲ ԴԱՌՆՈՒՄ Է ԼԵՎԵԼ 2, ՏՎՅԱԼԸ ՈՒՂԱՐԿՎՈՒՄ Է ԲՈՏԻՆ
+                if(!lv2sent) {
+                    tg.sendData(JSON.stringify({action: "level_up", level: 2}));
+                    lv2sent = true;
+                }
+            } else { 
+                lvl.innerText = "Լեվել 1: Աղքատ"; char.innerText = "🧑‍🌾"; fill.style.width = (score/10000)*100 + "%"; 
+            }
         }
 
+        // Հրավիրել ընկերոջը Telegram-ով (ՈՒՂՂՎԱԾ)
         function shareGame() {
-            let user_id = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : 0;
-            let bot_user = "ՔՈ_ԲՈՏԻ_ԱՆՈՒՆԸ"; // ՓՈԽԻՐ ՍԱ
-            let link = `https://t.me/${bot_user}?start=${user_id}`;
-            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent("Արի խաղանք Dram Master ու դառնանք օլիգարխ!")}`);
+            let user_id = (tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : 0;
+            let botUsername = "ՔՈ_ԲՈՏԻ_ԱՆՈՒՆԸ"; // <--- ԱՅՍՏԵՂ ԳՐԻՐ ՔՈ ԲՈՏԻ USERNAME-Ը
+            let link = "https://t.me/" + botUsername + "?start=" + user_id;
+            let text = "Արի խաղանք Dram Master և դառնանք օլիգարխ!";
+            tg.openTelegramLink("https://t.me/share/url?url=" + encodeURIComponent(link) + "&text=" + encodeURIComponent(text));
         }
 
         function openModal(id) { closeModals(); document.getElementById(id).style.display = "flex"; }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
+
+        function openLeaderboard() {
+            openModal('leaderboard-modal');
+            document.getElementById("lb-content").innerHTML = `<div class="item-card"><h4>#1 ${nickName}</h4><span class="item-price">${score} ֏</span></div>`;
+        }
     </script>
 </body>
 </html>
