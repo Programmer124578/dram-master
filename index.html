@@ -3,44 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dram Master - Final Version</title>
+    <title>Dram Master - Perfection</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root { --gold: #ffcc00; --green: #00ff88; --bg: #0b0b0b; }
-        body { font-family: sans-serif; background-color: var(--bg); color: white; margin: 0; padding: 0; overflow: hidden; user-select: none; }
+        :root { --gold: #ffcc00; --green: #00ff88; --bg: #0b0b0b; --card: #1a1a1a; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: white; margin: 0; padding: 0; overflow: hidden; user-select: none; }
         .container { display: flex; flex-direction: column; height: 100vh; max-width: 500px; margin: auto; }
-        .screen { display: none; flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
+        
+        .screen { display: none; flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 110px; }
         .active { display: flex; flex-direction: column; }
-        .header { background: #1a1a1a; padding: 15px; border-bottom: 2px solid var(--gold); border-radius: 0 0 20px 20px; text-align: center; }
-        .balance { font-size: 38px; font-weight: bold; color: var(--green); margin: 5px 0; }
-        .tap-area { flex: 1; display: flex; justify-content: center; align-items: center; }
-        .coin { width: 220px; height: 220px; background: linear-gradient(135deg, var(--gold), #b8860b); border-radius: 50%; border: 8px solid #8b6508; box-shadow: 0 0 30px rgba(255,204,0,0.2); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 70px; transition: transform 0.05s; }
-        .coin:active { transform: scale(0.92); }
-        .card { background: #1a1a1a; border-radius: 15px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
-        .buy-btn { background: var(--gold); color: black; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .buy-btn:disabled { background: #444; color: #777; }
-        .nav { position: fixed; bottom: 0; left: 0; right: 0; background: #1a1a1a; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #333; }
-        .nav-item { color: #666; font-size: 12px; text-align: center; cursor: pointer; }
-        .nav-item.active { color: var(--gold); }
-        input { width: 80%; padding: 15px; border-radius: 10px; border: 1px solid #333; background: #1a1a1a; color: white; margin-bottom: 20px; text-align: center; }
+
+        /* Header */
+        .header { background: var(--card); padding: 15px; border-bottom: 2px solid var(--gold); border-radius: 0 0 25px 25px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .balance { font-size: 40px; font-weight: 900; color: var(--green); margin: 5px 0; text-shadow: 0 0 10px rgba(0,255,136,0.2); }
+        .stats-row { display: flex; justify-content: space-around; font-size: 13px; color: #aaa; }
+        .stats-row b { color: var(--gold); }
+
+        /* Coin Area */
+        .tap-area { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; }
+        .coin { width: 240px; height: 240px; background: linear-gradient(135deg, var(--gold), #8b6508); border-radius: 50%; border: 10px solid #5c4306; box-shadow: 0 0 50px rgba(255,204,0,0.2); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 85px; transition: transform 0.05s; z-index: 5; }
+        .coin:active { transform: scale(0.94); }
+
+        /* List Items */
+        .section-title { color: var(--gold); margin: 20px 0 10px; font-size: 18px; border-left: 4px solid var(--gold); padding-left: 10px; }
+        .card { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; transition: 0.3s; }
+        .card:active { border-color: var(--gold); }
+        .card-info h4 { margin: 0; font-size: 16px; }
+        .card-info p { margin: 5px 0 0; font-size: 12px; color: #888; }
+        .buy-btn { background: var(--gold); color: black; border: none; padding: 12px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; min-width: 100px; }
+        .buy-btn:disabled { background: #333; color: #666; cursor: not-allowed; }
+
+        /* Nav */
+        .nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(26,26,26,0.95); display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #333; backdrop-filter: blur(10px); z-index: 100; }
+        .nav-item { color: #666; font-size: 11px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .nav-item.active { color: var(--gold); transform: translateY(-5px); }
+        .nav-icon { font-size: 24px; margin-bottom: 4px; }
+
+        /* Welcome Screen */
+        #welcome-screen { align-items: center; justify-content: center; text-align: center; }
+        input { width: 85%; padding: 18px; border-radius: 15px; border: 2px solid #333; background: #1a1a1a; color: white; font-size: 18px; text-align: center; margin-bottom: 25px; outline: none; }
+        input:focus { border-color: var(--gold); }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div id="welcome-screen" class="screen">
-        <h1 style="color: var(--gold); text-align: center;">DRAM MASTER</h1>
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;">
-            <input type="text" id="username" placeholder="Մուտքագրեք ձեր անունը">
-            <button onclick="saveName()" style="background: var(--gold); padding: 15px 40px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer;">Մուտք</button>
-        </div>
+        <div style="font-size: 50px; margin-bottom: 10px;">🪙</div>
+        <h1 style="color: var(--gold); margin-bottom: 5px;">DRAM MASTER</h1>
+        <p style="color: #888; margin-bottom: 30px;">Կառուցիր քո կայսրությունը</p>
+        <input type="text" id="username" placeholder="Գրիր քո անունը">
+        <button onclick="saveName()" style="background: var(--gold); color: black; padding: 18px 60px; border-radius: 15px; border: none; font-weight: bold; font-size: 18px; cursor: pointer; box-shadow: 0 5px 15px rgba(255,204,0,0.3);">ՄՈՒՏՔ</button>
     </div>
 
     <div id="game-screen" class="screen">
         <div class="header">
-            <div id="user-display" style="color: var(--gold); font-size: 14px; font-weight: bold;"></div>
+            <div id="user-display" style="color: var(--gold); font-weight: bold; font-size: 16px;"></div>
             <div class="balance"><span id="balance">0</span> ֏</div>
-            <div style="font-size: 13px; color: #888;">+<span id="pps">0</span> ֏/վրկ | Կլիկը՝ <span id="cpc">1</span> ֏</div>
+            <div class="stats-row">
+                <span>Վրկ: <b>+<span id="pps">0</span></b></span>
+                <span>Կլիկ: <b>+<span id="cpc">1</span></b></span>
+            </div>
         </div>
         <div class="tap-area">
             <div class="coin" onclick="handleTap()">֏</div>
@@ -48,26 +71,43 @@
     </div>
 
     <div id="shop-screen" class="screen">
-        <h2 style="color: var(--gold);">Շուկա</h2>
-        <div id="shop-content"></div>
+        <h2 style="color: var(--gold); margin-bottom: 20px;">🛒 Շուկա</h2>
+        
+        <div class="section-title">Կլիկի Boost</div>
+        <div id="boost-list"></div>
+
+        <div class="section-title">Ավտոպարկ (10 մեքենա)</div>
+        <div id="cars-list"></div>
+
+        <div class="section-title">Բիզնեսներ (10 հատ)</div>
+        <div id="biz-list"></div>
+
+        <div class="section-title">Գույք (7 հատ)</div>
+        <div id="property-list"></div>
     </div>
 
     <div id="task-screen" class="screen">
-        <h2 style="color: var(--gold);">Առաջադրանքներ</h2>
+        <h2 style="color: var(--gold);">📋 Առաջադրանքներ</h2>
         <div class="card">
-            <div>
-                <h4 style="margin:0;">Միացիր ալիքին</h4>
-                <p style="font-size:11px; color:#888; margin:5px 0 0;">Պարգև՝ 10,000 ֏</p>
+            <div class="card-info">
+                <h4>Միացիր ալիքին</h4>
+                <p>Պարգև՝ +10,000 ֏</p>
             </div>
             <button id="task-btn" class="buy-btn" onclick="startTask()">Միանալ</button>
         </div>
-        <p id="task-status" style="font-size: 12px; color: #888; text-align: center; margin-top: 10px;"></p>
+
+        <h2 style="color: var(--gold); margin-top: 30px;">👥 Ընկերներ</h2>
+        <div class="card" style="flex-direction: column; text-align: center; gap: 15px;">
+            <p style="margin: 0; color: #ccc;">Հրավիրիր ընկերոջդ և ստացիր <br><b style="color: var(--gold);">5,000 ֏</b> ամեն մեկի համար</p>
+            <button class="buy-btn" style="width: 100%;" onclick="inviteFriend()">ՀՐԱՎԻՐԵԼ</button>
+        </div>
+        <div id="task-status" style="font-size: 12px; color: #888; text-align: center; margin-top: 15px;"></div>
     </div>
 
     <nav class="nav" id="main-nav" style="display: none;">
-        <div class="nav-item active" onclick="navTo('game')">🪙<br>Խաղ</div>
-        <div class="nav-item" onclick="navTo('shop')">🛒<br>Շուկա</div>
-        <div class="nav-item" onclick="navTo('task')">📋<br>Առաջադրանք</div>
+        <div class="nav-item active" onclick="navTo('game')"><div class="nav-icon">🪙</div>Խաղ</div>
+        <div class="nav-item" onclick="navTo('shop')"><div class="nav-icon">🛒</div>Շուկա</div>
+        <div class="nav-item" onclick="navTo('task')"><div class="nav-icon">📋</div>Գործեր</div>
     </nav>
 </div>
 
@@ -77,19 +117,50 @@
 
     let state = { bal: 0, cpc: 1, pps: 0, name: "", tasks: [] };
 
-    const items = [
-        { id: 'b1', n: "Կլիկ x2", p: 1500, type: 'boost', val: 2 },
-        { id: 'b2', n: "Կլիկ x5", p: 15000, type: 'boost', val: 5 },
-        { id: 'c1', n: "Opel Vectra", p: 3000, type: 'passive', val: 2 },
-        { id: 'c2', n: "Mercedes C180", p: 15000, type: 'passive', val: 8 },
-        { id: 'c3', n: "BMW M5 F10", p: 85000, type: 'passive', val: 40 },
-        { id: 'bz1', n: "Կրպակ", p: 12000, type: 'passive', val: 6 },
-        { id: 'bz2', n: "Ավտոլվացում", p: 50000, type: 'passive', val: 25 }
-    ];
+    const data = {
+        boost: [
+            { id: 'u1', n: "Կլիկ x2", p: 1500, v: 2 },
+            { id: 'u2', n: "Կլիկ x5", p: 12000, v: 5 },
+            { id: 'u3', n: "Կլիկ x10", p: 80000, v: 10 }
+        ],
+        cars: [
+            { n: "Opel Vectra", p: 2000, v: 2 },
+            { n: "Mercedes C180", p: 8000, v: 6 },
+            { n: "BMW M5 F10", p: 40000, v: 25 },
+            { n: "Range Rover", p: 150000, v: 80 },
+            { n: "Tesla Model S", p: 600000, v: 300 },
+            { n: "Audi RS7", p: 2000000, v: 900 },
+            { n: "Ferrari 488", p: 10000000, v: 4000 },
+            { n: "Lamborghini Urus", p: 40000000, v: 15000 },
+            { n: "Bentley Mulsanne", p: 150000000, v: 50000 },
+            { n: "Rolls Royce", p: 600000000, v: 180000 }
+        ],
+        biz: [
+            { n: "Կրպակ", p: 5000, v: 5 },
+            { n: "Ավտոլվացում", p: 25000, v: 20 },
+            { n: "Սրճարան", p: 120000, v: 90 },
+            { n: "Բենզալցակայան", p: 800000, v: 500 },
+            { n: "Սուպերմարկետ", p: 4000000, v: 2200 },
+            { n: "Հյուրանոց", p: 15000000, v: 8000 },
+            { n: "Գործարան", p: 80000000, v: 35000 },
+            { n: "Առևտրի Կենտրոն", p: 400000000, v: 150000 },
+            { n: "Բանկ", p: 2000000000, v: 700000 },
+            { n: "ՏՏ Կորպորացիա", p: 10000000000, v: 3000000 }
+        ],
+        prop: [
+            { n: "Բնակարան (1 սենյակ)", p: 50000, v: 15 },
+            { n: "Առանձնատուն", p: 300000, v: 80 },
+            { n: "Ամառանոց Սևանում", p: 1500000, v: 400 },
+            { n: "Պենտհաուս", p: 7000000, v: 1800 },
+            { n: "Վիլլա Իտալիայում", p: 50000000, v: 12000 },
+            { n: "Սեփական Կղզի", p: 500000000, v: 100000 },
+            { n: "Դղյակ Ֆրանսիայում", p: 3000000000, v: 500000 }
+        ]
+    };
 
     function saveName() {
         const n = document.getElementById('username').value;
-        if(!n) return;
+        if(!n) return alert("Գրիր անունդ!");
         state.name = n;
         save();
         initUI();
@@ -101,6 +172,7 @@
         document.getElementById('game-screen').classList.add('active');
         document.getElementById('main-nav').style.display = 'flex';
         renderShop();
+        setInterval(tick, 1000);
     }
 
     function handleTap() {
@@ -116,69 +188,83 @@
 
     function updateUI() {
         document.getElementById('balance').innerText = Math.floor(state.bal).toLocaleString();
-        document.getElementById('pps').innerText = state.pps;
+        document.getElementById('pps').innerText = state.pps.toLocaleString();
         document.getElementById('cpc').innerText = state.cpc;
-        renderShop();
+        
+        // Update all buy buttons in real-time
+        document.querySelectorAll('.buy-btn').forEach(btn => {
+            const price = parseInt(btn.getAttribute('data-price'));
+            if(price) btn.disabled = (state.bal < price);
+        });
     }
 
     function renderShop() {
-        const cont = document.getElementById('shop-content');
-        if(!cont) return;
+        renderList('boost-list', data.boost, 'boost');
+        renderList('cars-list', data.cars, 'passive');
+        renderList('biz-list', data.biz, 'passive');
+        renderList('property-list', data.prop, 'passive');
+    }
+
+    function renderList(id, list, type) {
+        const cont = document.getElementById(id);
         cont.innerHTML = '';
-        items.forEach(item => {
+        list.forEach(item => {
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
-                <div>
-                    <h4 style="margin:0;">${item.n}</h4>
-                    <p style="font-size:11px; color:#888; margin:5px 0 0;">${item.p.toLocaleString()} ֏ | +${item.val}${item.type === 'passive' ? '/վրկ' : ' կլիկ'}</p>
+                <div class="card-info">
+                    <h4>${item.n}</h4>
+                    <p>${item.p.toLocaleString()} ֏ | +${item.v}${type==='boost' ? ' կլիկ' : '/վրկ'}</p>
                 </div>
-                <button class="buy-btn" onclick="buy('${item.id}')" ${state.bal < item.p ? 'disabled' : ''}>Գնել</button>
+                <button class="buy-btn" data-price="${item.p}" onclick="buy('${type}', ${item.p}, ${item.v}, '${item.n}')">Գնել</button>
             `;
             cont.appendChild(card);
         });
     }
 
-    function buy(id) {
-        const item = items.find(i => i.id === id);
-        if(state.bal >= item.p) {
-            state.bal -= item.p;
-            if(item.type === 'boost') state.cpc = item.val;
-            else state.pps += item.val;
+    function buy(type, price, val, name) {
+        if(state.bal >= price) {
+            state.bal -= price;
+            if(type === 'boost') state.cpc = val;
+            else state.pps += val;
             updateUI();
             save();
+            tg.HapticFeedback.notificationOccurred('success');
         }
     }
 
     function startTask() {
         tg.openTelegramLink('https://t.me/drammasternews');
         if(state.tasks.includes('sub')) return;
-        
         const btn = document.getElementById('task-btn');
         btn.disabled = true;
         btn.innerText = "Սպասեք...";
-        
         let sec = 10;
         const timer = setInterval(() => {
             sec--;
-            document.getElementById('task-status').innerText = `Ստուգում ${sec} վայրկյանից...`;
+            document.getElementById('task-status').innerText = `Ստուգում ${sec}վ...`;
             if(sec <= 0) {
                 clearInterval(timer);
                 btn.disabled = false;
-                btn.innerText = "Ստանալ 10,000 ֏";
-                btn.onclick = claimTask;
-                document.getElementById('task-status').innerText = "Կարող եք ստանալ";
+                btn.innerText = "Ստանալ";
+                btn.onclick = () => {
+                    state.bal += 10000;
+                    state.tasks.push('sub');
+                    save(); updateUI();
+                    btn.innerText = "✅"; btn.disabled = true;
+                };
             }
         }, 1000);
     }
 
-    function claimTask() {
-        state.bal += 10000;
-        state.tasks.push('sub');
-        save();
+    function inviteFriend() {
+        const text = "Միացիր Dram Master խաղին և դարձիր միլիոնատեր:";
+        const url = "https://t.me/dram_master_bot"; // Քո բոտի հղումը
+        tg.openTelegramLink(`https://t.me/share/url?url=${url}&text=${text}`);
+        // Քանի որ մենք չունենք backend, բոնուսը տալիս ենք հենց սեղմելիս
+        state.bal += 5000;
         updateUI();
-        document.getElementById('task-btn').innerText = "✅ Կատարված";
-        document.getElementById('task-btn').disabled = true;
+        save();
     }
 
     function navTo(s) {
@@ -188,25 +274,20 @@
         event.currentTarget.classList.add('active');
     }
 
-    function save() { localStorage.setItem('dm_final_save', JSON.stringify(state)); }
-    
+    function save() { localStorage.setItem('dm_perfection_save', JSON.stringify(state)); }
+
     window.onload = function() {
-        const s = localStorage.getItem('dm_final_save');
+        const s = localStorage.getItem('dm_perfection_save');
         if(s) {
             state = JSON.parse(s);
             if(state.name) {
                 initUI();
                 if(state.tasks.includes('sub')) {
-                    const btn = document.getElementById('task-btn');
-                    if(btn) { btn.innerText = "✅ Կատարված"; btn.disabled = true; }
+                    const b = document.getElementById('task-btn');
+                    if(b) { b.innerText = "✅"; b.disabled = true; }
                 }
-            } else {
-                document.getElementById('welcome-screen').classList.add('active');
-            }
-        } else {
-            document.getElementById('welcome-screen').classList.add('active');
-        }
-        setInterval(tick, 1000);
+            } else document.getElementById('welcome-screen').classList.add('active');
+        } else document.getElementById('welcome-screen').classList.add('active');
     };
 </script>
 </body>
