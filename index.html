@@ -3,100 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dram Master - Ultimate Edition</title>
+    <title>Dram Master - Pro Edition</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #ffcc00; --green: #00ff88; --bg: #0b0b0b; }
-        body { font-family: 'Roboto', sans-serif; background-color: var(--bg); color: white; margin: 0; padding: 0; overflow: hidden; user-select: none; }
+        body { font-family: sans-serif; background-color: var(--bg); color: white; margin: 0; padding: 0; overflow: hidden; user-select: none; }
         .container { display: flex; flex-direction: column; height: 100vh; max-width: 500px; margin: auto; }
-        
-        /* Screens */
         .screen { display: none; flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
         .active { display: flex; flex-direction: column; }
-
-        /* Welcome */
-        #welcome-screen { align-items: center; justify-content: center; text-align: center; }
-        .big-logo { font-size: 40px; font-weight: 900; color: var(--gold); text-shadow: 0 0 20px rgba(255,204,0,0.5); margin-bottom: 10px; }
-        input { width: 80%; padding: 15px; border-radius: 12px; border: 2px solid #333; background: #1a1a1a; color: white; font-size: 18px; text-align: center; margin-bottom: 20px; }
-
-        /* Header & Stats */
-        .header { background: #1a1a1a; padding: 15px; border-radius: 0 0 20px 20px; border-bottom: 2px solid var(--gold); }
-        .balance-container { text-align: center; margin: 10px 0; }
-        .balance { font-size: 42px; font-weight: 900; color: var(--green); display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .passive-rate { font-size: 14px; color: #aaa; }
-
-        /* Level System */
-        .level-box { margin-top: 15px; }
-        .level-info { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; color: var(--gold); }
-        .progress-bg { background: #333; height: 10px; border-radius: 5px; overflow: hidden; }
-        .progress-fill { background: linear-gradient(90deg, var(--gold), #ffaa00); height: 100%; width: 0%; transition: width 0.5s; }
-
-        /* Main Clicker */
+        .header { background: #1a1a1a; padding: 15px; border-bottom: 2px solid var(--gold); border-radius: 0 0 20px 20px; text-align: center; }
+        .balance { font-size: 38px; font-weight: bold; color: var(--green); margin: 10px 0; }
         .tap-area { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; }
-        .coin { width: 240px; height: 240px; background: linear-gradient(135deg, var(--gold), #b8860b); border-radius: 50%; border: 8px solid #8b6508; box-shadow: 0 0 40px rgba(255,204,0,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 80px; transition: transform 0.1s; position: relative; z-index: 5; }
-        .coin:active { transform: scale(0.95); }
-
-        /* Floating Text */
-        .plus-one { position: absolute; color: var(--green); font-weight: 900; font-size: 24px; animation: floatUp 0.7s forwards; pointer-events: none; z-index: 10; }
-        @keyframes floatUp { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-100px); } }
-
-        /* Cards */
+        .coin { width: 220px; height: 220px; background: linear-gradient(135deg, var(--gold), #b8860b); border-radius: 50%; border: 8px solid #8b6508; box-shadow: 0 0 30px rgba(255,204,0,0.2); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 70px; transition: transform 0.05s; }
+        .coin:active { transform: scale(0.92); }
         .card { background: #1a1a1a; border-radius: 15px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
-        .card-info h4 { margin: 0; color: white; }
-        .card-info p { margin: 5px 0 0; font-size: 12px; color: #888; }
-        .buy-btn { background: var(--gold); color: black; border: none; padding: 10px 15px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-        .buy-btn:disabled { background: #444; color: #888; }
-
-        /* Navigation */
-        .nav { position: fixed; bottom: 0; left: 0; right: 0; background: #1a1a1a; display: flex; justify-content: space-around; padding: 15px; border-top: 2px solid #333; }
-        .nav-item { color: #888; font-size: 12px; text-align: center; cursor: pointer; flex: 1; }
+        .buy-btn { background: var(--gold); color: black; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .buy-btn:disabled { background: #444; color: #777; cursor: not-allowed; }
+        .nav { position: fixed; bottom: 0; left: 0; right: 0; background: #1a1a1a; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #333; }
+        .nav-item { color: #666; font-size: 12px; text-align: center; cursor: pointer; text-decoration: none; }
         .nav-item.active { color: var(--gold); }
-        .nav-icon { font-size: 22px; display: block; margin-bottom: 5px; }
-
-        .btn-start { background: var(--gold); color: black; padding: 18px 50px; border-radius: 15px; font-size: 20px; font-weight: bold; border: none; cursor: pointer; box-shadow: 0 5px 15px rgba(255,204,0,0.3); }
+        input { width: 80%; padding: 15px; border-radius: 10px; border: 1px solid #333; background: #1a1a1a; color: white; margin-bottom: 20px; text-align: center; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="welcome-screen" class="screen active">
-        <div class="big-logo">DRAM MASTER</div>
-        <p style="color: #888; margin-bottom: 30px;">Ստեղծիր քո հայկական իմպերիան</p>
-        <input type="text" id="username" placeholder="Գրիր քո անունը">
-        <button class="btn-start" onclick="initGame()">ՍԿՍԵԼ</button>
+    <div id="welcome-screen" class="screen active" style="align-items: center; justify-content: center;">
+        <h1 style="color: var(--gold);">DRAM MASTER</h1>
+        <input type="text" id="username" placeholder="Քո անունը">
+        <button onclick="initGame()" style="background: var(--gold); padding: 15px 40px; border-radius: 10px; border: none; font-weight: bold;">ՍԿՍԵԼ</button>
     </div>
 
     <div id="game-screen" class="screen">
         <div class="header">
-            <div id="user-display" style="font-weight: bold; color: var(--gold);">Անուն</div>
-            <div class="balance-container">
-                <div class="balance"><span id="balance">0</span> ֏</div>
-                <div class="passive-rate">+<span id="pps">0</span> ֏/վրկ</div>
-            </div>
-            <div class="level-box">
-                <div class="level-info">
-                    <span id="level-name">Նորեկ</span>
-                    <span id="level-count">Level 1/7</span>
-                </div>
-                <div class="progress-bg"><div id="progress-bar" class="progress-fill"></div></div>
-            </div>
+            <div id="user-display" style="color: var(--gold); font-size: 14px;"></div>
+            <div class="balance"><span id="balance">0</span> ֏</div>
+            <div style="font-size: 13px; color: #888;">+<span id="pps">0</span> ֏/վրկ | Կլիկը՝ <span id="cpc">1</span> ֏</div>
         </div>
         <div class="tap-area">
             <div class="coin" onclick="handleTap(event)">֏</div>
-        </div>
-        <div style="text-align: center; color: #555; font-size: 12px; margin-bottom: 10px;">
-            Մեկ կլիկը՝ <span id="cpc">1</span> ֏
         </div>
     </div>
 
     <div id="shop-screen" class="screen">
         <h2 style="color: var(--gold);">Շուկա</h2>
-        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-            <button onclick="switchShop('cars')" id="btn-cars" style="flex:1; padding:10px; border-radius:10px; background:var(--gold); border:none; font-weight:bold;">Մեքենաներ</button>
-            <button onclick="switchShop('biz')" id="btn-biz" style="flex:1; padding:10px; border-radius:10px; background:#333; color:white; border:none; font-weight:bold;">Բիզնես</button>
-            <button onclick="switchShop('boost')" id="btn-boost" style="flex:1; padding:10px; border-radius:10px; background:#333; color:white; border:none; font-weight:bold;">Boost</button>
-        </div>
         <div id="shop-content"></div>
     </div>
 
@@ -104,210 +54,145 @@
         <h2 style="color: var(--gold);">Առաջադրանքներ</h2>
         <div class="card">
             <div class="card-info">
-                <h4>Միացիր ալիքին</h4>
-                <p>Բոնուս +10,000 ֏</p>
+                <h4>Միացիր Dram Master News-ին</h4>
+                <p>Պարգև՝ 10,000 ֏</p>
             </div>
-            <button class="buy-btn" onclick="doTask('https://t.me/Raz_Studio', 10000)">Միանալ</button>
+            <button id="task-btn" class="buy-btn" onclick="startTask()">Միանալ</button>
         </div>
+        <p id="task-status" style="font-size: 12px; color: #888; text-align: center;"></p>
     </div>
 
     <nav class="nav" id="main-nav" style="display: none;">
-        <div class="nav-item active" onclick="navTo('game')"><span class="nav-icon">🪙</span>Խաղ</div>
-        <div class="nav-item" onclick="navTo('shop')"><span class="nav-icon">🛒</span>Շուկա</div>
-        <div class="nav-item" onclick="navTo('task')"><span class="nav-icon">📋</span>Առաջադրանք</div>
+        <div class="nav-item active" onclick="navTo('game')">🪙<br>Խաղ</div>
+        <div class="nav-item" onclick="navTo('shop')">🛒<br>Շուկա</div>
+        <div class="nav-item" onclick="navTo('task')">📋<br>Առաջադրանք</div>
     </nav>
 </div>
 
 <script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
+    let state = { bal: 0, cpc: 1, pps: 0, name: "", tasks: [] };
 
-    let state = {
-        bal: 0,
-        cpc: 1,
-        pps: 0,
-        level: 1,
-        name: "",
-        inventory: [],
-        tasks: []
-    };
-
-    const levels = [
-        { n: "Նորեկ", m: 0 },
-        { n: "Գործարար", m: 50000 },
-        { n: "Օլիգարխ", m: 500000 },
-        { n: "Պատգամավոր", m: 5000000 },
-        { n: "Նախարար", m: 50000000 },
-        { n: "Վարչապետ", m: 500000000 },
-        { n: "Կայսր", m: 5000000000 }
+    const items = [
+        { id: 'b1', n: "Կլիկ x2", p: 1000, type: 'boost', val: 2 },
+        { id: 'b2', n: "Կլիկ x5", p: 10000, type: 'boost', val: 5 },
+        { id: 'c1', n: "Opel Vectra", p: 2500, type: 'passive', val: 5 },
+        { id: 'c2', n: "Mercedes C180", p: 12000, type: 'passive', val: 20 },
+        { id: 'c3', n: "BMW M5 F10", p: 70000, type: 'passive', val: 100 },
+        { id: 'bz1', n: "Կրպակ", p: 10000, type: 'passive', val: 25 },
+        { id: 'bz2', n: "Ավտոլվացում", p: 45000, type: 'passive', val: 130 }
     ];
 
-    const data = {
-        cars: [
-            { id: 'c1', n: "Opel Vectra", p: 5000, i: 10 },
-            { id: 'c2', n: "Mercedes C180", p: 25000, i: 60 },
-            { id: 'c3', n: "BMW M5 F10", p: 100000, i: 250 },
-            { id: 'c4', n: "Range Rover Sport", p: 500000, i: 1500 },
-            { id: 'c5', n: "Porsche 911", p: 2000000, i: 6000 },
-            { id: 'c6', n: "Tesla Model X", p: 10000000, i: 35000 },
-            { id: 'c7', n: "Lamborghini Urus", p: 50000000, i: 180000 },
-            { id: 'c8', n: "Ferrari SF90", p: 200000000, i: 800000 },
-            { id: 'c9', n: "Bentley Mulsanne", p: 1000000000, i: 5000000 },
-            { id: 'c10', n: "Rolls Royce Cullinan", p: 5000000000, i: 30000000 }
-        ],
-        biz: [
-            { id: 'b1', n: "Կրպակ", p: 15000, i: 40 },
-            { id: 'b2', n: "Ավտոլվացման կետ", p: 80000, i: 220 },
-            { id: 'b3', n: "Սրճարան", p: 400000, i: 1100 },
-            { id: 'b4', n: "Բենզալցակայան", p: 2000000, i: 6500 },
-            { id: 'b5', n: "Ռեստորան", p: 15000000, i: 55000 },
-            { id: 'b6', n: "Գործարան", p: 100000000, i: 450000 },
-            { id: 'b7', n: "Առևտրի կենտրոն", p: 800000000, i: 4000000 },
-            { id: 'b8', n: "Բանկ", p: 5000000000, i: 30000000 },
-            { id: 'b9', n: "Օդանավակայան", p: 20000000000, i: 150000000 },
-            { id: 'b10', n: "ՏՏ Կորպորացիա", p: 100000000000, i: 900000000 }
-        ],
-        boost: [
-            { id: 'u1', n: "Կլիկ x2", p: 1000, c: 2 },
-            { id: 'u2', n: "Կլիկ x5", p: 10000, c: 5 },
-            { id: 'u3', n: "Կլիկ x10", p: 100000, c: 10 },
-            { id: 'u4', n: "Կլիկ x50", p: 2000000, c: 50 },
-            { id: 'u5', n: "Կլիկ x100", p: 10000000, c: 100 }
-        ]
-    };
-
     function initGame() {
-        const nameInput = document.getElementById('username').value;
-        if (!nameInput) return alert("Գրիր անունդ!");
-        state.name = nameInput;
-        document.getElementById('user-display').innerText = state.name;
+        const n = document.getElementById('username').value;
+        if(!n) return;
+        state.name = n;
+        document.getElementById('user-display').innerText = n;
         document.getElementById('welcome-screen').classList.remove('active');
         document.getElementById('game-screen').classList.add('active');
         document.getElementById('main-nav').style.display = 'flex';
-        loadLocal();
-        renderShop('cars');
+        load();
+        renderShop();
         setInterval(tick, 1000);
     }
 
-    function handleTap(e) {
+    function handleTap() {
         state.bal += state.cpc;
         updateUI();
-        saveLocal();
-
-        const plus = document.createElement('div');
-        plus.className = 'plus-one';
-        plus.innerText = `+${state.cpc}`;
-        plus.style.left = `${e.clientX}px`;
-        plus.style.top = `${e.clientY}px`;
-        document.body.appendChild(plus);
-        setTimeout(() => plus.remove(), 700);
     }
 
     function tick() {
         state.bal += state.pps;
         updateUI();
-        saveLocal();
+        save();
     }
 
     function updateUI() {
         document.getElementById('balance').innerText = Math.floor(state.bal).toLocaleString();
-        document.getElementById('pps').innerText = state.pps.toLocaleString();
+        document.getElementById('pps').innerText = state.pps;
         document.getElementById('cpc').innerText = state.cpc;
-        
-        let cur = levels[0];
-        let next = levels[1];
-        for (let i = 0; i < levels.length; i++) {
-            if (state.bal >= levels[i].m) {
-                cur = levels[i];
-                state.level = i + 1;
-                next = levels[i + 1] || null;
-            }
-        }
-        
-        document.getElementById('level-name').innerText = cur.n;
-        document.getElementById('level-count').innerText = `Level ${state.level}/7`;
-        
-        if (next) {
-            let prog = ((state.bal - cur.m) / (next.m - cur.m)) * 100;
-            document.getElementById('progress-bar').style.width = `${Math.min(prog, 100)}%`;
-        } else {
-            document.getElementById('progress-bar').style.width = '100%';
-        }
+        renderShop();
     }
 
-    function navTo(screen) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(`${screen}-screen`).classList.add('active');
-        event.currentTarget.classList.add('active');
-    }
-
-    function switchShop(type) {
-        ['cars', 'biz', 'boost'].forEach(t => {
-            document.getElementById(`btn-${t}`).style.background = (t === type) ? 'var(--gold)' : '#333';
-            document.getElementById(`btn-${t}`).style.color = (t === type) ? 'black' : 'white';
-        });
-        renderShop(type);
-    }
-
-    function renderShop(type) {
-        const container = document.getElementById('shop-content');
-        container.innerHTML = '';
-        data[type].forEach(item => {
+    function renderShop() {
+        const cont = document.getElementById('shop-content');
+        if(!cont) return;
+        cont.innerHTML = '';
+        items.forEach(item => {
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
-                <div class="card-info">
+                <div>
                     <h4>${item.n}</h4>
-                    <p>${type === 'boost' ? `Կլիկը դառնում է ${item.c}` : `+${item.i.toLocaleString()} ֏/վրկ`}</p>
-                    <p>Գինը՝ ${item.p.toLocaleString()} ֏</p>
+                    <p style="font-size:11px; color:#888;">Գինը՝ ${item.p.toLocaleString()} ֏</p>
                 </div>
-                <button class="buy-btn" onclick="buyItem('${type}', '${item.id}')" ${state.bal < item.p ? 'disabled' : ''}>Գնել</button>
+                <button class="buy-btn" onclick="buy('${item.id}')" ${state.bal < item.p ? 'disabled' : ''}>Գնել</button>
             `;
-            container.appendChild(card);
+            cont.appendChild(card);
         });
     }
 
-    function buyItem(type, id) {
-        const item = data[type].find(i => i.id === id);
-        if (state.bal >= item.p) {
+    function buy(id) {
+        const item = items.find(i => i.id === id);
+        if(state.bal >= item.p) {
             state.bal -= item.p;
-            if (type === 'boost') state.cpc = item.c;
-            else {
-                state.pps += item.i;
-                state.inventory.push(item.n);
+            if(item.type === 'boost') state.cpc = item.val;
+            else state.pps += item.val;
+            updateUI();
+            save();
+        }
+    }
+
+    function startTask() {
+        window.open('https://t.me/drammasternews', '_blank');
+        if(state.tasks.includes('sub')) return;
+        
+        const btn = document.getElementById('task-btn');
+        btn.disabled = true;
+        btn.innerText = "Սպասեք...";
+        
+        let sec = 10;
+        const timer = setInterval(() => {
+            sec--;
+            document.getElementById('task-status').innerText = `Ստուգում ${sec} վայրկյանից...`;
+            if(sec <= 0) {
+                clearInterval(timer);
+                btn.disabled = false;
+                btn.innerText = "Ստանալ 10,000 ֏";
+                btn.onclick = claimTask;
+                document.getElementById('task-status').innerText = "Պատրաստ է";
             }
-            updateUI();
-            renderShop(type);
-            saveLocal();
-            alert(`Շնորհավոր! Դու գնեցիր ${item.n}`);
-        }
+        }, 1000);
     }
 
-    function doTask(url, prize) {
-        window.open(url, '_blank');
-        if (!state.tasks.includes(url)) {
-            state.bal += prize;
-            state.tasks.push(url);
-            alert(`Բոնուսը ստացված է: +${prize.toLocaleString()} ֏`);
-            updateUI();
-            saveLocal();
-        }
+    function claimTask() {
+        state.bal += 10000;
+        state.tasks.push('sub');
+        save();
+        updateUI();
+        document.getElementById('task-btn').innerText = "✅ Ստացված է";
+        document.getElementById('task-btn').disabled = true;
     }
 
-    function saveLocal() {
-        localStorage.setItem('dram_master_save', JSON.stringify(state));
+    function navTo(s) {
+        document.querySelectorAll('.screen').forEach(scr => scr.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById(s + '-screen').classList.add('active');
+        event.currentTarget.classList.add('active');
     }
 
-    function loadLocal() {
-        const saved = localStorage.getItem('dram_master_save');
-        if (saved) {
-            const parsed = JSON.parse(saved);
-            state = { ...state, ...parsed };
-            updateUI();
+    function save() { localStorage.setItem('dm_save_pro', JSON.stringify(state)); }
+    function load() {
+        const s = localStorage.getItem('dm_save_pro');
+        if(s) {
+            state = JSON.parse(s);
+            if(state.tasks.includes('sub')) {
+                const btn = document.getElementById('task-btn');
+                btn.innerText = "✅ Ստացված է";
+                btn.disabled = true;
+            }
         }
+        updateUI();
     }
 </script>
-
 </body>
 </html>
