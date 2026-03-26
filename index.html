@@ -132,7 +132,7 @@
             <div class="balance"><span id="balance">0</span> ֏</div>
             <div class="progress-container"><div id="progress-bar"></div></div>
             <div class="stats-row" style="margin-top: 15px;">
-                <span>Մնացել է՝ <b id="clicks-left">2,000</b> կլիկ</span>
+                <span>Հաջորդ Level՝ <b id="money-left">2,000</b> ֏</span>
                 <span>Level <b id="current-lvl-num">1</b>/12</span>
             </div>
             <div class="stats-row">
@@ -186,9 +186,10 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    let state = { bal: 0, total_clicks: 0, lvl: 1, pps: 0, name: "", tasks: [], inventory: [] };
+    // Ավելացրել ենք total_earned՝ ընդհանուր վաստակած գումարը հաշվելու համար
+    let state = { bal: 0, total_earned: 0, lvl: 1, pps: 0, name: "", tasks: [], inventory: [] };
 
-    // Ճշգրիտ 12 Level-ները քո պահանջով (0, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2000000, 5000000)
+    // Ճշգրիտ 12 Level-ները՝ հիմնված գումարի վրա
     const levels = [
         { lvl: 1, req: 0, cpc: 1, name: "ԱՂՔԱՏ", icon: "🥺", color: "#8B4513" },
         { lvl: 2, req: 2000, cpc: 5, name: "ԲԱՆՎՈՐ", icon: "👷‍♂️", color: "#A0522D" },
@@ -258,7 +259,7 @@
     function handleTap(e) {
         let currentLevelObj = levels.find(l => l.lvl === state.lvl);
         state.bal += currentLevelObj.cpc;
-        state.total_clicks += 1; 
+        state.total_earned += currentLevelObj.cpc; // Ավելանում է ընդհանուր վաստակածին
         
         createFloatingText(e, currentLevelObj.cpc, currentLevelObj.color);
         checkLevel();
@@ -285,7 +286,7 @@
 
     function checkLevel() {
         let nextLevelObj = levels.find(l => l.lvl === state.lvl + 1);
-        if(nextLevelObj && state.total_clicks >= nextLevelObj.req) {
+        if(nextLevelObj && state.total_earned >= nextLevelObj.req) {
             state.lvl++;
             tg.HapticFeedback.notificationOccurred('success');
             tg.showAlert(`🎉 ՇՆՈՐՀԱՎՈՐՈՒՄ ԵՆՔ!\n\nԴուք հասաք Level ${state.lvl} և ստացաք «${nextLevelObj.name}» կարգավիճակը: \nԱյժմ ձեր հարվածի ուժը դարձավ +${nextLevelObj.cpc} ֏`);
@@ -318,20 +319,24 @@
         if(!nextLvl) {
             document.getElementById('progress-bar').style.width = "100%";
             document.getElementById('progress-bar').style.background = currentLvl.color;
-            document.getElementById('clicks-left').innerText = "ՄԱՔՍԻՄՈՒՄ";
+            document.getElementById('money-left').innerText = "ՄԱՔՍԻՄՈՒՄ";
         } else {
             let totalNeeded = nextLvl.req - currentLvl.req;
-            let currentInLvl = state.total_clicks - currentLvl.req;
+            let currentInLvl = state.total_earned - currentLvl.req;
             let percent = (currentInLvl / totalNeeded) * 100;
             
             document.getElementById('progress-bar').style.width = percent + "%";
             document.getElementById('progress-bar').style.background = `linear-gradient(90deg, ${currentLvl.color}, ${nextLvl.color})`;
-            document.getElementById('clicks-left').innerText = (nextLvl.req - state.total_clicks).toLocaleString();
+            document.getElementById('money-left').innerText = (nextLvl.req - state.total_earned).toLocaleString();
         }
     }
 
     function tick() {
-        state.bal += state.pps;
+        if(state.pps > 0) {
+            state.bal += state.pps;
+            state.total_earned += state.pps; // Պասիվ եկամուտը ևս օգնում է Level բարձրանալ
+            checkLevel();
+        }
         updateUI();
         save();
     }
@@ -379,7 +384,7 @@
 
     function buy(id, price, val) {
         if(state.bal >= price && !state.inventory.includes(id)) {
-            state.bal -= price;
+            state.bal -= price; // Բալանսը պակասում է, բայց Level-ը մնում է նույնը, քանի որ total_earned-ը չի պակասում
             state.pps += val;
             state.inventory.push(id);
             updateUI(); 
@@ -394,7 +399,9 @@
         if(state.tasks.includes('sub')) return;
         setTimeout(() => {
             state.bal += 10000;
+            state.total_earned += 10000;
             state.tasks.push('sub');
+            checkLevel();
             updateUI();
             document.getElementById('task-btn').innerText = "✅ ԿԱՏԱՐՎԱԾ";
             document.getElementById('task-btn').disabled = true;
@@ -407,6 +414,8 @@
         tg.openTelegramLink('https://t.me/share/url?url=https://t.me/dram_master_bot&text=Դարձիր Օլիգարխ Dram Master-ում!');
         setTimeout(() => { 
             state.bal += 5000; 
+            state.total_earned += 5000;
+            checkLevel();
             updateUI(); 
             tg.HapticFeedback.notificationOccurred('success');
             tg.showAlert('Շնորհավորում ենք! Դուք ստացաք +5,000 ֏ բոնուս:');
@@ -421,10 +430,11 @@
         tg.HapticFeedback.impactOccurred('light');
     }
 
-    function save() { localStorage.setItem('dm_masterpiece_v1', JSON.stringify(state)); }
+    // Նոր բանալի (v2), որպեսզի հին պահպանումները չխանգարեն նոր տրամաբանությանը
+    function save() { localStorage.setItem('dm_masterpiece_v2', JSON.stringify(state)); }
     
     window.onload = function() {
-        const s = localStorage.getItem('dm_masterpiece_v1');
+        const s = localStorage.getItem('dm_masterpiece_v2');
         if(s) {
             state = JSON.parse(s);
             if(state.name) {
