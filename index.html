@@ -3,97 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dram Master Game</title>
+    <title>Dram Master - Կայսրություն</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; background-color: #1a1a1a; color: white; margin: 0; padding: 20px; }
-        .screen { display: none; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f0f0f; color: #e0e0e0; margin: 0; padding: 0; overflow-x: hidden; }
+        .container { padding: 20px; max-width: 500px; margin: auto; }
+        
+        /* Էկրաններ */
+        .screen { display: none; text-align: center; animation: fadeIn 0.5s; }
         .active { display: block; }
-        input { padding: 10px; font-size: 16px; border-radius: 5px; border: none; margin-bottom: 10px; width: 80%; }
-        button { padding: 12px 25px; font-size: 18px; color: white; background-color: #28a745; border: none; border-radius: 5px; cursor: pointer; }
-        button:active { background-color: #218838; }
-        .car-card { border: 1px solid #444; padding: 15px; margin: 10px; border-radius: 10px; background: #2a2a2a; }
-        .balance { font-size: 24px; color: #ffd700; margin: 20px 0; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Դիզայնի տարրեր */
+        .logo { font-size: 32px; font-weight: bold; color: #ffcc00; text-shadow: 0 0 15px rgba(255, 204, 0, 0.5); margin-bottom: 20px; }
+        .stats-box { background: #1a1a1a; border: 2px solid #333; border-radius: 15px; padding: 15px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .balance-text { font-size: 28px; color: #00ff88; font-weight: bold; }
+        .level-text { font-size: 18px; color: #00d4ff; margin-top: 5px; }
+
+        /* Կոճակներ */
+        .main-btn { width: 100%; padding: 20px; font-size: 20px; border: none; border-radius: 12px; cursor: pointer; transition: 0.3s; margin-bottom: 15px; font-weight: bold; }
+        .work-btn { background: linear-gradient(45deg, #28a745, #218838); color: white; box-shadow: 0 5px 0 #155724; }
+        .work-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 #155724; }
+        
+        .tab-btn { background: #333; color: #ccc; width: 30%; padding: 10px; font-size: 14px; border-radius: 8px; margin: 5px; border: 1px solid #444; }
+        .tab-btn.active-tab { background: #ffcc00; color: #000; }
+
+        /* Խանութի քարտեր */
+        .card { background: #222; border-radius: 12px; padding: 15px; margin-bottom: 10px; text-align: left; border-left: 5px solid #ffcc00; display: flex; justify-content: space-between; align-items: center; }
+        .card h4 { margin: 0; color: #fff; }
+        .card p { margin: 5px 0 0; font-size: 13px; color: #aaa; }
+        .buy-btn { background: #444; color: #fff; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; }
+        .buy-btn:hover { background: #555; }
+
+        input { width: 90%; padding: 15px; border-radius: 10px; border: 1px solid #444; background: #222; color: #fff; font-size: 18px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
+<div class="container">
     <div id="welcome-screen" class="screen active">
-        <h1>💰 Dram Master 💰</h1>
-        <p>Գրիր անունդ և սկսիր հարստանալ</p>
-        <input type="text" id="player-name" placeholder="Քո անունը...">
-        <br>
-        <button onclick="startGame()">Մուտք Խաղ</button>
+        <div class="logo">DRAM MASTER</div>
+        <p>Ստեղծիր քո կայսրությունը</p>
+        <input type="text" id="player-name" placeholder="Մուտքագրեք ձեր անունը...">
+        <button class="main-btn work-btn" onclick="startGame()">ՄՈՒՏՔ ԽԱՂ</button>
     </div>
 
     <div id="game-screen" class="screen">
-        <h2 id="display-name">Բարի գալուստ!</h2>
-        <div class="balance">Հաշվեկշիռ: <span id="balance">0</span> ֏</div>
-        
-        <div class="car-card">
-            <h3>🚗 Քո մեքենաները</h3>
-            <p id="car-list">Դեռ մեքենա չունես</p>
-            <button onclick="clickMoney()">Աշխատել 100 ֏</button>
+        <div class="stats-box">
+            <div id="display-player-name" style="font-size: 14px; color: #888;"></div>
+            <div class="balance-text"><span id="balance">0</span> ֏</div>
+            <div class="level-text">Մակարդակ: <span id="level">1</span> (<span id="status">Նորեկ</span>)</div>
         </div>
 
-        <div class="shop">
-            <h3>🛒 Խանութ</h3>
-            <button onclick="buyCar('Opel Vectra', 5000)">Գնել Opel (5,000 ֏)</button>
+        <button class="main-btn work-btn" onclick="clickWork()">ԱՇԽԱՏԵԼ (Կլիկ)</button>
+
+        <div style="margin-bottom: 20px;">
+            <button class="tab-btn active-tab" onclick="showTab('cars')">Մեքենաներ</button>
+            <button class="tab-btn" onclick="showTab('business')">Բիզնես</button>
+            <button class="tab-btn" onclick="showTab('inventory')">Իմ գույքը</button>
+        </div>
+
+        <div id="tab-cars" class="tab-content">
+            <div class="card">
+                <div><h4>Opel Vectra</h4><p>Գինը: 5,000 ֏ | +50 ֏/կլիկ</p></div>
+                <button class="buy-btn" onclick="buyItem('car', 'Opel Vectra', 5000, 50)">Գնել</button>
+            </div>
+            <div class="card">
+                <div><h4>Mercedes G550</h4><p>Գինը: 150,000 ֏ | +500 ֏/կլիկ</p></div>
+                <button class="buy-btn" onclick="buyItem('car', 'Mercedes G550', 150000, 500)">Գնել</button>
+            </div>
+            <div class="card">
+                <div><h4>BMW M5 F90</h4><p>Գինը: 500,000 ֏ | +2,000 ֏/կլիկ</p></div>
+                <button class="buy-btn" onclick="buyItem('car', 'BMW M5 F90', 500000, 2000)">Գնել</button>
+            </div>
+        </div>
+
+        <div id="tab-business" class="tab-content" style="display:none;">
+            <div class="card">
+                <div><h4>Կրպակ</h4><p>Գինը: 20,000 ֏ | +200 ֏/վրկ</p></div>
+                <button class="buy-btn" onclick="buyItem('biz', 'Կրպակ', 20000, 200)">Գնել</button>
+            </div>
+            <div class="card">
+                <div><h4>Ավտոլվացման կետ</h4><p>Գինը: 100,000 ֏ | +1,200 ֏/վրկ</p></div>
+                <button class="buy-btn" onclick="buyItem('biz', 'Ավտոլվացման կետ', 100000, 1200)">Գնել</button>
+            </div>
+        </div>
+
+        <div id="tab-inventory" class="tab-content" style="display:none;">
+            <h3>Իմ Գույքը</h3>
+            <div id="inventory-list" style="color: #aaa;">Դեռ ոչինչ չկա...</div>
         </div>
     </div>
+</div>
 
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand(); // Բացում ենք խաղը ամբողջ էկրանով
+<script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
 
-        let balance = 0;
-        let cars = [];
+    let state = {
+        balance: 0,
+        level: 1,
+        clickPower: 100,
+        passiveIncome: 0,
+        inventory: [],
+        name: ""
+    };
 
-        function startGame() {
-            const nameInput = document.getElementById('player-name').value;
-            if (nameInput.trim() === "") {
-                alert("Խնդրում եմ, գրիր անունդ:");
-                return;
-            }
+    function startGame() {
+        const name = document.getElementById('player-name').value;
+        if (name.trim() === "") return alert("Գրիր անունդ!");
+        
+        state.name = name;
+        document.getElementById('display-player-name').innerText = "Խաղացող: " + name;
+        
+        // Telegram-ին լուր ուղարկել
+        tg.sendData(JSON.stringify({action: "new_player_joined", name: name}));
 
-            // ԿԱՐԵՎՈՐ. Լուր ենք ուղարկում Բոտին (Python-ին), որ խաղացողը միացավ
-            // Սա կաշխատեցնի 5,000 ֏ բոնուսի համակարգը
-            tg.sendData(JSON.stringify({
-                action: "new_player_joined",
-                name: nameInput
-            }));
+        document.getElementById('welcome-screen').classList.remove('active');
+        document.getElementById('game-screen').classList.add('active');
+        
+        // Սկսել պասիվ եկամուտը
+        setInterval(processPassiveIncome, 1000);
+    }
 
-            // Անցնում ենք խաղի էկրանին
-            document.getElementById('welcome-screen').classList.remove('active');
-            document.getElementById('game-screen').classList.add('active');
-            document.getElementById('display-name').innerText = "Խաղացող: " + nameInput;
-            
-            // Փակում ենք WebApp-ը (ընտրովի, եթե ուզում ես կոճակը սեղմելուց հետո բոտը պատասխանի)
-            // tg.close(); 
-        }
+    function clickWork() {
+        state.balance += state.clickPower;
+        checkLevel();
+        updateUI();
+    }
 
-        function clickMoney() {
-            balance += 100;
+    function processPassiveIncome() {
+        if (state.passiveIncome > 0) {
+            state.balance += state.passiveIncome;
             updateUI();
         }
+    }
 
-        function buyCar(model, price) {
-            if (balance >= price) {
-                balance -= price;
-                cars.push(model);
-                updateUI();
-                alert("Շնորհավոր! Դու գնեցիր " + model);
-            } else {
-                alert("Փողդ չի հերիքում!");
-            }
+    function buyItem(type, name, price, power) {
+        if (state.balance >= price) {
+            state.balance -= price;
+            state.inventory.push(name);
+            
+            if (type === 'car') state.clickPower += power;
+            if (type === 'biz') state.passiveIncome += power;
+            
+            updateUI();
+            updateInventoryUI();
+            alert("Շնորհավոր! Դու գնեցիր " + name);
+        } else {
+            alert("Փողդ չի հերիքում!");
         }
+    }
 
-        function updateUI() {
-            document.getElementById('balance').innerText = balance.toLocaleString();
-            if (cars.length > 0) {
-                document.getElementById('car-list').innerText = cars.join(", ");
-            }
-        }
-    </script>
+    function checkLevel() {
+        if (state.balance > 1000000) { state.level = 3; }
+        else if (state.balance > 50000) { state.level = 2; }
+        
+        let status = "Նորեկ";
+        if (state.level === 2) status = "Գործարար";
+        if (state.level === 3) status = "Օլիգարխ";
+        document.getElementById('status').innerText = status;
+        document.getElementById('level').innerText = state.level;
+    }
+
+    function showTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab'));
+        
+        document.getElementById('tab-' + tabName).style.display = 'block';
+        event.currentTarget.classList.add('active-tab');
+    }
+
+    function updateUI() {
+        document.getElementById('balance').innerText = state.balance.toLocaleString();
+    }
+
+    function updateInventoryUI() {
+        const list = document.getElementById('inventory-list');
+        list.innerHTML = state.inventory.length > 0 ? state.inventory.join("<br>") : "Դեռ ոչինչ չկա...";
+    }
+</script>
+
 </body>
 </html>
