@@ -100,6 +100,17 @@
         // --- ՖՈՒՆԿՑԻԱՆԵՐ ---
 
         function startGame() {
+    let nick = document.getElementById("nick-input").value.trim();
+    if(nick.length >= 2) {
+        document.getElementById("prof-initial").innerText = nick[0].toUpperCase();
+        document.getElementById("login-screen").style.display = "none";
+        document.getElementById("main-game").style.display = "flex";
+
+        // Ավելացրու ԱՅՍ ՏՈՂԸ. հենց մտնում է խաղ, բոտին լուր է գնում
+        tg.sendData(JSON.stringify({action: "new_player_joined"}));
+        
+    } else { alert("Անունը պետք է լինի առնվազն 2 տառ:"); }
+}
             let nick = document.getElementById("nick-input").value.trim();
             if(nick.length >= 2) {
                 document.getElementById("prof-initial").innerText = nick[0].toUpperCase();
