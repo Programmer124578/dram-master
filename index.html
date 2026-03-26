@@ -3,69 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dram Master - Ultimate</title>
+    <title>Dram Master - Empire Edition</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root { --gold: #ffcc00; --green: #00ff88; --bg: #0b0b0b; --card: #1a1a1a; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: white; margin: 0; padding: 0; overflow: hidden; user-select: none; -webkit-tap-highlight-color: transparent; }
+        body { font-family: sans-serif; background-color: var(--bg); color: white; margin: 0; padding: 0; overflow: hidden; user-select: none; -webkit-tap-highlight-color: transparent; }
         .container { display: flex; flex-direction: column; height: 100vh; max-width: 500px; margin: auto; }
-        
         .screen { display: none; flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 110px; }
         .active { display: flex; flex-direction: column; }
 
-        /* Header */
-        .header { background: var(--card); padding: 15px; border-bottom: 2px solid var(--gold); border-radius: 0 0 25px 25px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .balance { font-size: 40px; font-weight: 900; color: var(--green); margin: 5px 0; text-shadow: 0 0 10px rgba(0,255,136,0.2); }
-        .stats-row { display: flex; justify-content: space-around; font-size: 13px; color: #aaa; }
-        .stats-row b { color: var(--gold); }
+        /* Header & Progress */
+        .header { background: var(--card); padding: 15px; border-bottom: 2px solid var(--gold); border-radius: 0 0 25px 25px; text-align: center; position: sticky; top: 0; z-index: 10; }
+        .balance { font-size: 36px; font-weight: 900; color: var(--green); margin: 5px 0; }
+        .level-info { display: flex; justify-content: space-between; font-size: 13px; color: var(--gold); font-weight: bold; margin-bottom: 5px; }
+        .progress-container { width: 100%; background: #333; height: 12px; border-radius: 6px; overflow: hidden; border: 1px solid #444; }
+        #progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #ffd700, #ffcc00); transition: width 0.3s; }
 
-        /* Coin Area */
+        /* Coin */
         .tap-area { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; }
-        .coin { width: 240px; height: 240px; background: linear-gradient(135deg, var(--gold), #8b6508); border-radius: 50%; border: 10px solid #5c4306; box-shadow: 0 0 50px rgba(255,204,0,0.2); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 85px; transition: transform 0.05s; z-index: 5; }
-        .coin:active { transform: scale(0.94); }
+        .coin { width: 230px; height: 230px; background: linear-gradient(135deg, var(--gold), #8b6508); border-radius: 50%; border: 8px solid #5c4306; box-shadow: 0 0 50px rgba(255,204,0,0.2); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 90px; transition: transform 0.05s; }
+        .coin:active { transform: scale(0.95); }
 
-        /* Floating Text */
-        .plus-one { position: absolute; color: var(--green); font-weight: 900; font-size: 24px; animation: floatUp 0.7s forwards; pointer-events: none; z-index: 10; }
-        @keyframes floatUp { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-100px); } }
-
-        /* List Items */
-        .section-title { color: var(--gold); margin: 20px 0 10px; font-size: 18px; border-left: 4px solid var(--gold); padding-left: 10px; }
-        .card { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; transition: 0.3s; }
-        .card-info h4 { margin: 0; font-size: 16px; }
-        .card-info p { margin: 5px 0 0; font-size: 12px; color: #888; }
-        .buy-btn { background: var(--gold); color: black; border: none; padding: 12px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; min-width: 100px; }
+        /* Market */
+        .section-title { color: var(--gold); margin: 25px 0 10px; font-size: 18px; border-left: 4px solid var(--gold); padding-left: 10px; }
+        .card { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
+        .card-info h4 { margin: 0; font-size: 15px; }
+        .card-info p { margin: 4px 0 0; font-size: 11px; color: #888; }
+        .buy-btn { background: var(--gold); color: black; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; min-width: 80px; }
         .buy-btn:disabled { background: #333; color: #666; cursor: not-allowed; }
+        .bought { background: #00ff88 !important; color: black !important; }
 
         /* Nav */
-        .nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(26,26,26,0.95); display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #333; backdrop-filter: blur(10px); z-index: 100; }
-        .nav-item { color: #666; font-size: 11px; text-align: center; cursor: pointer; transition: 0.3s; }
-        .nav-item.active { color: var(--gold); transform: translateY(-5px); }
-        .nav-icon { font-size: 24px; margin-bottom: 4px; }
-
-        /* Welcome Screen */
-        #welcome-screen { align-items: center; justify-content: center; text-align: center; }
-        input { width: 85%; padding: 18px; border-radius: 15px; border: 2px solid #333; background: #1a1a1a; color: white; font-size: 18px; text-align: center; margin-bottom: 25px; outline: none; }
-        input:focus { border-color: var(--gold); }
+        .nav { position: fixed; bottom: 0; left: 0; right: 0; background: #1a1a1a; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #333; z-index: 100; }
+        .nav-item { color: #666; font-size: 11px; text-align: center; cursor: pointer; }
+        .nav-item.active { color: var(--gold); }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div id="welcome-screen" class="screen">
-        <div style="font-size: 50px; margin-bottom: 10px;">🪙</div>
-        <h1 style="color: var(--gold); margin-bottom: 5px;">DRAM MASTER</h1>
-        <p style="color: #888; margin-bottom: 30px;">Կառուցիր քո կայսրությունը</p>
-        <input type="text" id="username" placeholder="Գրիր քո անունը">
-        <button onclick="saveName()" style="background: var(--gold); color: black; padding: 18px 60px; border-radius: 15px; border: none; font-weight: bold; font-size: 18px; cursor: pointer; box-shadow: 0 5px 15px rgba(255,204,0,0.3);">ՄՈՒՏՔ</button>
+        <h1 style="color: var(--gold); text-align: center; margin-top: 60px;">DRAM MASTER</h1>
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;">
+            <input type="text" id="username" placeholder="Մուտքագրեք ձեր անունը" style="width: 80%; padding: 18px; border-radius: 15px; border: none; text-align: center; font-size: 18px;">
+            <button onclick="saveName()" style="background: var(--gold); padding: 18px 60px; border-radius: 15px; border: none; font-weight: bold; margin-top: 25px; cursor: pointer;">ՄՈՒՏՔ</button>
+        </div>
     </div>
 
     <div id="game-screen" class="screen">
         <div class="header">
-            <div id="user-display" style="color: var(--gold); font-weight: bold; font-size: 16px;"></div>
+            <div class="level-info">
+                <span id="user-display"></span>
+                <span>Level <span id="lvl-num">1</span></span>
+            </div>
             <div class="balance"><span id="balance">0</span> ֏</div>
-            <div class="stats-row">
-                <span>Վրկ: <b>+<span id="pps">0</span></b></span>
-                <span>Կլիկ: <b>+<span id="cpc">1</span></b></span>
+            <div class="progress-container"><div id="progress-bar"></div></div>
+            <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: #aaa;">
+                <span>Կլիկ: <b id="cpc-val">1</b></span>
+                <span>Վրկ: <b id="pps-val">0</b></span>
             </div>
         </div>
         <div class="tap-area">
@@ -74,99 +69,87 @@
     </div>
 
     <div id="shop-screen" class="screen">
-        <h2 style="color: var(--gold); margin-bottom: 20px;">🛒 Շուկա</h2>
-        
-        <div class="section-title">Կլիկի Boost</div>
-        <div id="boost-list"></div>
-
-        <div class="section-title">Ավտոպարկ (10 մեքենա)</div>
+        <h2 style="color: var(--gold);">🛒 Շուկա</h2>
+        <div class="section-title">Ավտոպարկ (15)</div>
         <div id="cars-list"></div>
-
-        <div class="section-title">Բիզնեսներ (10 հատ)</div>
+        <div class="section-title">Բիզնեսներ (15)</div>
         <div id="biz-list"></div>
-
-        <div class="section-title">Գույք (7 հատ)</div>
-        <div id="property-list"></div>
+        <div class="section-title">Գույք (15)</div>
+        <div id="prop-list"></div>
     </div>
 
     <div id="task-screen" class="screen">
         <h2 style="color: var(--gold);">📋 Առաջադրանքներ</h2>
         <div class="card">
             <div class="card-info">
-                <h4>Միացիր Raz Studio ալիքին</h4>
-                <p>Պարգև՝ +10,000 ֏</p>
+                <h4>Միացիր Dram Master News-ին</h4>
+                <p>Պարգև՝ 10,000 ֏</p>
             </div>
             <button id="task-btn" class="buy-btn" onclick="startTask()">Միանալ</button>
         </div>
-
-        <h2 style="color: var(--gold); margin-top: 30px;">👥 Ընկերներ</h2>
-        <div class="card" style="flex-direction: column; text-align: center; gap: 15px;">
-            <p style="margin: 0; color: #ccc;">Հրավիրիր ընկերոջդ և ստացիր <br><b style="color: var(--gold);">5,000 ֏</b> բոնուս</p>
-            <button id="invite-btn" class="buy-btn" style="width: 100%;" onclick="inviteFriend()">ՀՐԱՎԻՐԵԼ</button>
-        </div>
-        <div id="task-status" style="font-size: 12px; color: #888; text-align: center; margin-top: 15px;"></div>
+        <button class="buy-btn" onclick="inviteFriend()" style="width: 100%; margin-top: 15px; padding: 20px;">👥 ՀՐԱՎԻՐԵԼ ԸՆԿԵՐՈՋ (+5,000 ֏)</button>
     </div>
 
     <nav class="nav" id="main-nav" style="display: none;">
-        <div class="nav-item active" onclick="navTo('game')"><div class="nav-icon">🪙</div>Խաղ</div>
-        <div class="nav-item" onclick="navTo('shop')"><div class="nav-icon">🛒</div>Շուկա</div>
-        <div class="nav-item" onclick="navTo('task')"><div class="nav-icon">📋</div>Գործեր</div>
+        <div class="nav-item active" onclick="navTo('game')">🪙<br>Խաղ</div>
+        <div class="nav-item" onclick="navTo('shop')">🛒<br>Շուկա</div>
+        <div class="nav-item" onclick="navTo('task')">📋<br>Գործեր</div>
     </nav>
 </div>
 
 <script>
     const tg = window.Telegram.WebApp;
-    tg.expand();
+    let state = { bal: 0, total_clicks: 0, lvl: 1, pps: 0, name: "", tasks: [], inventory: [] };
 
-    let state = { bal: 0, cpc: 1, pps: 0, name: "", tasks: [], lastInvite: 0 };
+    const levels = [
+        { lvl: 1, req: 0, cpc: 1 },
+        { lvl: 2, req: 1000, cpc: 5 },
+        { lvl: 3, req: 10000, cpc: 20 },
+        { lvl: 4, req: 50000, cpc: 100 },
+        { lvl: 5, req: 150000, cpc: 500 },
+        { lvl: 6, req: 500000, cpc: 2000 },
+        { lvl: 7, req: 1500000, cpc: 10000 },
+        { lvl: 8, req: 10000000, cpc: 50000 }
+    ];
 
-    const data = {
-        boost: [
-            { id: 'u1', n: "Կլիկ x2", p: 1500, v: 2 },
-            { id: 'u2', n: "Կլիկ x5", p: 12000, v: 5 },
-            { id: 'u3', n: "Կլիկ x10", p: 80000, v: 10 }
-        ],
+    const items = {
         cars: [
-            { n: "Opel Vectra", p: 2000, v: 2 },
-            { n: "Mercedes C180", p: 8000, v: 6 },
-            { n: "BMW M5 F10", p: 40000, v: 25 },
-            { n: "Range Rover", p: 150000, v: 80 },
-            { n: "Tesla Model S", p: 600000, v: 300 },
-            { n: "Audi RS7", p: 2000000, v: 900 },
-            { n: "Ferrari 488", p: 10000000, v: 4000 },
-            { n: "Lamborghini Urus", p: 40000000, v: 15000 },
-            { n: "Bentley Mulsanne", p: 150000000, v: 50000 },
-            { n: "Rolls Royce", p: 600000000, v: 180000 }
+            { id: 'c1', n: "Opel Vectra", p: 2500, v: 2 }, { id: 'c2', n: "Mercedes C180", p: 9000, v: 8 },
+            { id: 'c3', n: "BMW M5 F10", p: 45000, v: 30 }, { id: 'c4', n: "Range Rover", p: 120000, v: 100 },
+            { id: 'c5', n: "Tesla Model 3", p: 350000, v: 250 }, { id: 'c6', n: "Audi RS7", p: 900000, v: 700 },
+            { id: 'c7', n: "Porsche 911", p: 2500000, v: 1800 }, { id: 'c8', n: "Nissan GTR", p: 6000000, v: 4500 },
+            { id: 'c9', n: "Lamborghini Urus", p: 15000000, v: 12000 }, { id: 'c10', n: "Ferrari SF90", p: 40000000, v: 30000 },
+            { id: 'c11', n: "Rolls Royce Cullinan", p: 100000000, v: 80000 }, { id: 'c12', n: "Bugatti Chiron", p: 300000000, v: 250000 },
+            { id: 'c13', n: "Pagani Huayra", p: 800000000, v: 600000 }, { id: 'c14', n: "Koenigsegg Jesko", p: 2000000000, v: 1500000 },
+            { id: 'c15', n: "Mercedes Vision AVTR", p: 5000000000, v: 4000000 }
         ],
         biz: [
-            { n: "Կրպակ", p: 5000, v: 5 },
-            { n: "Ավտոլվացում", p: 25000, v: 20 },
-            { n: "Սրճարան", p: 120000, v: 90 },
-            { n: "Բենզալցակայան", p: 800000, v: 500 },
-            { n: "Սուպերմարկետ", p: 4000000, v: 2200 },
-            { n: "Հյուրանոց", p: 15000000, v: 8000 },
-            { n: "Գործարան", p: 80000000, v: 35000 },
-            { n: "Առևտրի Կենտրոն", p: 400000000, v: 150000 },
-            { n: "Բանկ", p: 2000000000, v: 700000 },
-            { n: "ՏՏ Կորպորացիա", p: 10000000000, v: 3000000 }
+            { id: 'b1', n: "Կրպակ", p: 6000, v: 5 }, { id: 'b2', n: "Ավտոլվացում", p: 25000, v: 20 },
+            { id: 'b3', n: "Սրճարան", p: 100000, v: 80 }, { id: 'b4', n: "Բենզալցակայան", p: 500000, v: 400 },
+            { id: 'b5', n: "Սուպերմարկետ", p: 2000000, v: 1500 }, { id: 'b6', n: "Գործարան", p: 8000000, v: 6000 },
+            { id: 'b7', n: "Գիշերային ակումբ", p: 25000000, v: 20000 }, { id: 'b8', n: "Հյուրանոց", p: 100000000, v: 85000 },
+            { id: 'b9', n: "Առևտրի կենտրոն", p: 400000000, v: 350000 }, { id: 'b10', n: "Կազինո", p: 1200000000, v: 1000000 },
+            { id: 'b11', n: "Բանկ", p: 4000000000, v: 3000000 }, { id: 'b12', n: "ՏՏ Հոլդինգ", p: 15000000000, v: 12000000 },
+            { id: 'b13', n: "Նավթային հոր", p: 50000000000, v: 40000000 }, { id: 'b14', n: "Ավիաընկերություն", p: 200000000000, v: 150000000 },
+            { id: 'b15', n: "Տիեզերական գործակալություն", p: 1000000000000, v: 800000000 }
         ],
         prop: [
-            { n: "Բնակարան (1 սենյակ)", p: 50000, v: 15 },
-            { n: "Առանձնատուն", p: 300000, v: 80 },
-            { n: "Ամառանոց Սևանում", p: 1500000, v: 400 },
-            { n: "Պենտհաուս", p: 7000000, v: 1800 },
-            { n: "Վիլլա Իտալիայում", p: 50000000, v: 12000 },
-            { n: "Սեփական Կղզի", p: 500000000, v: 100000 },
-            { n: "Դղյակ Ֆրանսիայում", p: 3000000000, v: 500000 }
+            { id: 'p1', n: "Բնակարան (1 սենյակ)", p: 40000, v: 15 }, { id: 'p2', n: "Բնակարան (3 սենյակ)", p: 150000, v: 60 },
+            { id: 'p3', n: "Առանձնատուն", p: 600000, v: 250 }, { id: 'p4', n: "Ամառանոց Սևանում", p: 2000000, v: 900 },
+            { id: 'p5', n: "Պենտհաուս", p: 8000000, v: 4000 }, { id: 'p6', n: "Վիլլա Իտալիայում", p: 35000000, v: 18000 },
+            { id: 'p7', n: "Սեփական կղզի", p: 150000000, v: 80000 }, { id: 'p8', n: "Պատմական դղյակ", p: 600000000, v: 350000 },
+            { id: 'p9', n: "Երկնաքեր", p: 2500000000, v: 1500000 }, { id: 'p10', n: "Սեփական քաղաք", p: 10000000000, v: 6000000 },
+            { id: 'p11', n: "Ստորջրյա բազա", p: 40000000000, v: 25000000 }, { id: 'p12', n: "Լուսնային կայան", p: 150000000000, v: 100000000 },
+            { id: 'p13', n: "Մարսի գաղութ", p: 500000000000, v: 350000000 }, { id: 'p14', n: "Օվկիանոսային քաղաք", p: 2000000000000, v: 1200000000 },
+            { id: 'p15', n: "Գալակտիկական կայան", p: 10000000000000, v: 6000000000 }
         ]
     };
 
     function saveName() {
         const n = document.getElementById('username').value;
-        if(!n) return alert("Գրիր անունդ!");
+        if(!n) return;
         state.name = n;
-        save();
-        initUI();
+        save(); initUI();
     }
 
     function initUI() {
@@ -179,20 +162,37 @@
     }
 
     function handleTap(e) {
-        state.bal += state.cpc;
+        let currentLevelObj = levels.find(l => l.lvl === state.lvl);
+        state.bal += currentLevelObj.cpc;
+        state.total_clicks += currentLevelObj.cpc;
+        checkLevel();
         updateUI();
-        
-        // Haptic Feedback (թրթռոց)
         tg.HapticFeedback.impactOccurred('light');
+    }
 
-        // Plus text animation
-        const plus = document.createElement('div');
-        plus.className = 'plus-one';
-        plus.innerText = `+${state.cpc}`;
-        plus.style.left = `${e.clientX}px`;
-        plus.style.top = `${e.clientY}px`;
-        document.body.appendChild(plus);
-        setTimeout(() => plus.remove(), 700);
+    function checkLevel() {
+        let nextLevelObj = levels.find(l => l.lvl === state.lvl + 1);
+        if(nextLevelObj && state.total_clicks >= nextLevelObj.req) {
+            state.lvl++;
+            tg.HapticFeedback.notificationOccurred('success');
+            alert("Շնորհավոր! Նոր մակարդակ՝ " + state.lvl);
+        }
+        updateLevelBar();
+    }
+
+    function updateLevelBar() {
+        let currentLvl = levels.find(l => l.lvl === state.lvl);
+        let nextLvl = levels.find(l => l.lvl === state.lvl + 1);
+        if(!nextLvl) {
+            document.getElementById('progress-bar').style.width = "100%";
+        } else {
+            let totalNeeded = nextLvl.req - currentLvl.req;
+            let currentInLvl = state.total_clicks - currentLvl.req;
+            let percent = (currentInLvl / totalNeeded) * 100;
+            document.getElementById('progress-bar').style.width = percent + "%";
+        }
+        document.getElementById('lvl-num').innerText = state.lvl;
+        document.getElementById('cpc-val').innerText = currentLvl.cpc;
     }
 
     function tick() {
@@ -203,97 +203,63 @@
 
     function updateUI() {
         document.getElementById('balance').innerText = Math.floor(state.bal).toLocaleString();
-        document.getElementById('pps').innerText = state.pps.toLocaleString();
-        document.getElementById('cpc').innerText = state.cpc;
-        
-        // Update all buy buttons in real-time
-        document.querySelectorAll('.buy-btn').forEach(btn => {
-            const price = parseInt(btn.getAttribute('data-price'));
-            if(price) btn.disabled = (state.bal < price);
-        });
+        document.getElementById('pps-val').innerText = state.pps.toLocaleString();
+        updateLevelBar();
+        renderShop();
     }
 
     function renderShop() {
-        renderList('boost-list', data.boost, 'boost');
-        renderList('cars-list', data.cars, 'passive');
-        renderList('biz-list', data.biz, 'passive');
-        renderList('property-list', data.prop, 'passive');
+        renderList('cars-list', items.cars);
+        renderList('biz-list', items.biz);
+        renderList('prop-list', items.prop);
     }
 
-    function renderList(id, list, type) {
-        const cont = document.getElementById(id);
+    function renderList(containerId, list) {
+        const cont = document.getElementById(containerId);
         cont.innerHTML = '';
         list.forEach(item => {
+            const isBought = state.inventory.includes(item.id);
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
                 <div class="card-info">
                     <h4>${item.n}</h4>
-                    <p>${item.p.toLocaleString()} ֏ | +${item.v}${type==='boost' ? ' կլիկ' : '/վրկ'}</p>
+                    <p>${item.p.toLocaleString()} ֏ | +${item.v.toLocaleString()}/վրկ</p>
                 </div>
-                <button class="buy-btn" data-price="${item.p}" onclick="buy('${type}', ${item.p}, ${item.v}, '${item.n}')">Գնել</button>
+                <button class="buy-btn ${isBought ? 'bought' : ''}" 
+                    onclick="buy('${item.id}', ${item.p}, ${item.v})" 
+                    ${(state.bal < item.p || isBought) ? 'disabled' : ''}>
+                    ${isBought ? 'Գնված' : 'Գնել'}
+                </button>
             `;
             cont.appendChild(card);
         });
     }
 
-    function buy(type, price, val, name) {
-        if(state.bal >= price) {
+    function buy(id, price, val) {
+        if(state.bal >= price && !state.inventory.includes(id)) {
             state.bal -= price;
-            if(type === 'boost') state.cpc = val;
-            else state.pps += val;
-            updateUI();
-            save();
+            state.pps += val;
+            state.inventory.push(id);
+            updateUI(); save();
             tg.HapticFeedback.notificationOccurred('success');
         }
     }
 
     function startTask() {
-        tg.openTelegramLink('https://t.me/Raz_Studio');
+        tg.openTelegramLink('https://t.me/drammasternews');
         if(state.tasks.includes('sub')) return;
-        const btn = document.getElementById('task-btn');
-        btn.disabled = true;
-        btn.innerText = "Սպասեք...";
-        let sec = 10;
-        const timer = setInterval(() => {
-            sec--;
-            document.getElementById('task-status').innerText = `Ստուգում ${sec}վ...`;
-            if(sec <= 0) {
-                clearInterval(timer);
-                btn.disabled = false;
-                btn.innerText = "Ստանալ";
-                btn.onclick = () => {
-                    state.bal += 10000;
-                    state.tasks.push('sub');
-                    save(); updateUI();
-                    btn.innerText = "✅"; btn.disabled = true;
-                };
-            }
-        }, 1000);
+        setTimeout(() => {
+            state.bal += 10000;
+            state.tasks.push('sub');
+            updateUI();
+            alert("10,000 ֏ ավելացվեց!");
+        }, 5000);
     }
 
     function inviteFriend() {
-        const text = "Միացիր Dram Master խաղին և դարձիր միլիոնատեր:";
-        const url = "https://t.me/dram_master_bot"; // Քո բոտի հղումը
-        
-        // Օգտագործում ենք Telegram-ի ներկառուցված share ֆունկցիան
-        tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`);
-        
-        // Նոր տրամաբանություն. բոնուսը տալիս ենք միայն 5 վայրկյան անց,
-        // երբ ենթադրվում է, որ մարդը բացել է share պատուհանը
-        const now = Date.now();
-        if (now - state.lastInvite > 10000) { // Սահմանափակում՝ 10 վայրկյանը մեկ
-            setTimeout(() => {
-                state.bal += 5000;
-                state.lastInvite = Date.now();
-                updateUI();
-                save();
-                tg.HapticFeedback.notificationOccurred('success');
-                alert("Շնորհավոր! Դու ստացար +5,000 ֏ բոնուս:");
-            }, 5000); 
-        } else {
-            alert("Շատ հաճախ մի՛ սեղմեք:");
-        }
+        tg.openTelegramLink('https://t.me/share/url?url=https://t.me/your_bot&text=Միացիր!');
+        setTimeout(() => { state.bal += 5000; updateUI(); }, 3000);
     }
 
     function navTo(s) {
@@ -304,20 +270,17 @@
         tg.HapticFeedback.impactOccurred('light');
     }
 
-    function save() { localStorage.setItem('dm_ultimate_save', JSON.stringify(state)); }
-
+    function save() { localStorage.setItem('dm_empire_v1', JSON.stringify(state)); }
+    
     window.onload = function() {
-        const s = localStorage.getItem('dm_ultimate_save');
+        const s = localStorage.getItem('dm_empire_v1');
         if(s) {
             state = JSON.parse(s);
-            if(state.name) {
-                initUI();
-                if(state.tasks.includes('sub')) {
-                    const b = document.getElementById('task-btn');
-                    if(b) { b.innerText = "✅"; b.disabled = true; }
-                }
-            } else document.getElementById('welcome-screen').classList.add('active');
-        } else document.getElementById('welcome-screen').classList.add('active');
+            if(state.name) initUI();
+            else document.getElementById('welcome-screen').classList.add('active');
+        } else {
+            document.getElementById('welcome-screen').classList.add('active');
+        }
     };
 </script>
 </body>
