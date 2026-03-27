@@ -3,378 +3,317 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dram Master</title>
+    <title>Dram Master Pro</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://sad.adsgram.ai/js/adsgram-adbox.js"></script>
     <style>
-        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121212; color: white; text-align: center; overflow: hidden; }
-        .header { padding: 15px; background: #1e1e1e; border-bottom: 2px solid #FFD700; border-radius: 0 0 20px 20px; position: relative; }
-        .balance { font-size: 36px; font-weight: bold; color: #FFD700; margin: 10px 0; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
-        .level-text { font-size: 16px; color: #aaa; }
-        .energy-bar { width: 90%; height: 22px; background: #333; margin: 15px auto 5px; border-radius: 11px; position: relative; overflow: hidden; border: 2px solid #555; }
-        .energy-fill { height: 100%; background: linear-gradient(90deg, #00FA9A, #00BFFF); width: 100%; transition: width 0.3s; }
-        .energy-text { position: absolute; top: 0; left: 0; right: 0; font-size: 14px; font-weight: bold; line-height: 22px; text-shadow: 1px 1px 2px #000; }
-        .boost-status { font-size: 14px; font-weight: bold; margin-top: 5px; color: #FF4500; display: none; }
-        .coin-btn { width: 220px; height: 220px; background: radial-gradient(circle, #FFDF00, #DAA520); border-radius: 50%; border: 8px solid #B8860B; box-shadow: 0 0 40px rgba(255, 215, 0, 0.4); margin: 30px auto; font-size: 90px; display: flex; align-items: center; justify-content: center; user-select: none; transition: transform 0.1s; }
-        .coin-btn:active { transform: scale(0.95); }
-        .menu { display: flex; justify-content: space-around; background: #1e1e1e; padding: 15px; position: fixed; bottom: 0; width: 100%; border-top: 1px solid #333; z-index: 10; }
-        .menu-btn { background: none; border: none; color: white; font-size: 16px; opacity: 0.5; }
-        .menu-btn.active { color: #FFD700; opacity: 1; font-weight: bold; }
-        .screen { display: none; padding: 20px; padding-bottom: 100px; height: 100vh; overflow-y: auto; box-sizing: border-box; }
+        :root { --gold: #FFD700; --dark-bg: #121212; --card-bg: #1e1e1e; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--dark-bg); color: white; text-align: center; overflow: hidden; user-select: none; }
+        
+        /* Header */
+        .header { padding: 15px; background: var(--card-bg); border-bottom: 2px solid var(--gold); border-radius: 0 0 25px 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .balance { font-size: 34px; font-weight: bold; color: var(--gold); margin: 5px 0; }
+        .level-badge { font-size: 14px; background: var(--gold); color: black; padding: 3px 10px; border-radius: 10px; font-weight: bold; }
+        
+        /* Energy Bar */
+        .energy-container { width: 85%; height: 20px; background: #333; margin: 15px auto; border-radius: 10px; position: relative; border: 1px solid #444; }
+        .energy-fill { height: 100%; background: linear-gradient(90deg, #00FF7F, #00D2FF); border-radius: 10px; transition: width 0.3s ease; }
+        .energy-text { position: absolute; width: 100%; top: 0; font-size: 13px; line-height: 20px; font-weight: bold; }
+
+        /* Main Game Area */
+        .game-area { height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .coin-btn { width: 230px; height: 230px; background: radial-gradient(circle, #ffe066, #b8860b); border-radius: 50%; border: 10px solid #8b6914; box-shadow: 0 0 50px rgba(184, 134, 11, 0.5); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 100px; transition: transform 0.05s; }
+        .coin-btn:active { transform: scale(0.92); }
+
+        /* Shop & Tabs */
+        .screen { display: none; padding: 20px; height: 80vh; overflow-y: auto; box-sizing: border-box; padding-bottom: 100px; }
         .screen.active { display: block; }
-        .card { background: #2a2a2a; margin: 10px 0; padding: 15px; border-radius: 15px; border: 1px solid #444; text-align: left; display: flex; justify-content: space-between; align-items: center; }
-        .card-col { flex-direction: column; align-items: stretch; text-align: center; }
-        .action-btn { background: #FFD700; color: black; border: none; padding: 10px 15px; border-radius: 10px; font-weight: bold; font-size: 14px; cursor: pointer; }
-        .action-btn:disabled { background: #555 !important; color: #888 !important; cursor: not-allowed; }
-        .title { color: #FFD700; font-size: 20px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
-        .section-title { font-size: 16px; color: #888; margin-top: 25px; margin-bottom: 5px; text-align: left; text-transform: uppercase; }
+        .tab-content { display: flex; flex-direction: column; gap: 10px; }
+        .shop-card { background: var(--card-bg); padding: 12px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
+        .shop-info b { color: var(--gold); font-size: 16px; }
+        .shop-info small { color: #888; display: block; }
+        .buy-btn { background: var(--gold); border: none; padding: 8px 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .buy-btn:disabled { background: #444; color: #777; }
+
+        /* Navigation */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #1a1a1a; display: flex; justify-content: space-around; padding: 15px 0; border-top: 2px solid #333; }
+        .nav-item { color: #888; font-size: 12px; border: none; background: none; cursor: pointer; }
+        .nav-item.active { color: var(--gold); font-weight: bold; }
+
+        @keyframes floatText { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-100px); } }
+        .floating-text { position: absolute; pointer-events: none; animation: floatText 0.8s ease-out forwards; font-weight: bold; font-size: 24px; }
     </style>
 </head>
 <body>
 
-    <div id="main-screen" class="screen active">
-        <div class="header">
-            <div class="level-text" id="level-display">Լևլ 1: Սկսնակ</div>
-            <div class="balance" id="balance-display">0 ֏</div>
-            <div class="energy-bar">
-                <div class="energy-fill" id="energy-fill"></div>
-                <div class="energy-text" id="energy-text">⚡ 500 / 500</div>
-            </div>
-            <div class="boost-status" id="boost-status"></div>
+    <div class="header">
+        <span class="level-badge" id="lvl-name">Լևլ 1: Սկսնակ</span>
+        <div class="balance" id="balance">0 ֏</div>
+        <div class="energy-container">
+            <div class="energy-fill" id="energy-fill" style="width: 100%;"></div>
+            <div class="energy-text" id="energy-text">⚡ 500 / 500</div>
         </div>
-        <div class="coin-btn" id="coin" onclick="tapCoin(event)">🪙</div>
+    </div>
+
+    <div id="game-screen" class="screen active">
+        <div class="game-area">
+            <div class="coin-btn" id="coin" onclick="handleTap(event)">🪙</div>
+            <p id="income-text" style="color: #00FF7F; margin-top: 15px;">Պասիվ շահույթ: 0 ֏/վրկ</p>
+        </div>
+    </div>
+
+    <div id="shop-screen" class="screen">
+        <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 20px;">
+            <button class="buy-btn" onclick="showSubShop('house')">🏠 Գույք</button>
+            <button class="buy-btn" onclick="showSubShop('car')">🚗 Մեքենա</button>
+            <button class="buy-btn" onclick="showSubShop('biz')">🏢 Բիզնես</button>
+        </div>
+        <div id="shop-items" class="tab-content"></div>
     </div>
 
     <div id="tasks-screen" class="screen">
-        <div class="title">📋 Առաջադրանքներ և Բոնուսներ</div>
-        
-        <div class="section-title">⚡ Էներգիա</div>
-        <div class="card">
-            <div>
-                <b>Լցնել 100% Էներգիա</b><br>
-                <small id="energy-progress">Դիտված է: 0/2</small>
-            </div>
-            <button class="action-btn" id="btn-energy" onclick="doEnergyTask()">Դիտել</button>
+        <h2 style="color: var(--gold);">📋 Առաջադրանքներ</h2>
+        <div class="shop-card">
+            <div class="shop-info"><b>Էներգիայի լիցքավորում</b><small>Դիտիր 2 գովազդ</small></div>
+            <button class="buy-btn" onclick="watchAd('energy')">Դիտել</button>
         </div>
-
-        <div class="section-title">🚀 Ժամանակավոր Խթանիչներ (Boosts)</div>
-        <div class="card">
-            <div>
-                <b>🔥 2X Գումար (5 րոպե)</b><br>
-                <small id="x2-progress">Դիտված է: 0/3</small>
-            </div>
-            <button class="action-btn" id="btn-x2" onclick="do2xTask()">Ակտիվացնել</button>
+        <div class="shop-card">
+            <div class="shop-info"><b>🔥 2X Շահույթ (5 րոպե)</b><small>Դիտիր 3 գովազդ</small></div>
+            <button class="buy-btn" onclick="watchAd('2x')">Ակտիվացնել</button>
         </div>
-        <div class="card" style="border-color: #FF4500;">
-            <div>
-                <b style="color: #FF4500;">🚀 3X ՍՈՒՊԵՐ (5 րոպե)</b><br>
-                <small id="x3-progress">Դիտված է: 0/4</small><br>
-                <small id="x3-cooldown" style="color: #FF4500; font-weight: bold;"></small>
-            </div>
-            <button class="action-btn" id="btn-x3" onclick="do3xTask()" style="background: #FF4500; color: white;">Ակտիվացնել</button>
-        </div>
-
-        <div class="section-title">💰 Գումարային Առաջադրանքներ</div>
-        <div class="card">
-            <div><b>1 Գովազդ (1000 ֏)</b><br><small id="task1-progress">0/1</small></div>
-            <button class="action-btn" id="btn-task1" onclick="doTask('task1', 1, 1000)">Դիտել</button>
-        </div>
-        <div class="card">
-            <div><b>3 Գովազդ (5000 ֏)</b><br><small id="task3-progress">0/3</small></div>
-            <button class="action-btn" id="btn-task3" onclick="doTask('task3', 3, 5000)">Դիտել</button>
-        </div>
-        <div class="card">
-            <div><b>5 Գովազդ (10000 ֏)</b><br><small id="task5-progress">0/5</small></div>
-            <button class="action-btn" id="btn-task5" onclick="doTask('task5', 5, 10000)">Դիտել</button>
+        <div class="shop-card" id="x3-task">
+            <div class="shop-info"><b>🚀 3X ՍՈՒՊԵՐ (5 րոպե)</b><small>Դիտիր 4 գովազդ (3 օրը մեկ)</small></div>
+            <button class="buy-btn" onclick="watchAd('3x')">Ակտիվացնել</button>
         </div>
     </div>
 
-    <div id="daily-screen" class="screen">
-        <div class="title">🎁 Ամենօրյա Պարգև</div>
-        <p style="font-size: 14px; color: #aaa;">Դիտիր գովազդ՝ օրվա պարգևը ստանալու համար: Բաց թողնելու դեպքում օրերը կզրոյանան:</p>
-        <div class="card card-col" style="border-color: #FFD700;">
-            <h3 id="daily-day-text" style="margin: 0; color: white;">Օր 1</h3>
-            <h1 id="daily-reward-text" style="color: #FFD700; margin: 15px 0; font-size: 32px;">+ 1000 ֏</h1>
-            <button class="action-btn" id="btn-daily" style="width: 100%; padding: 15px; font-size: 16px;" onclick="claimDaily()">ԴԻՏԵԼ ԳՈՎԱԶԴ ՈՒ ՍՏԱՆԱԼ</button>
-        </div>
-    </div>
-
-    <div class="menu">
-        <button class="menu-btn active" onclick="nav('main-screen', this)">🏠 Գլխավոր</button>
-        <button class="menu-btn" onclick="nav('tasks-screen', this)">📋 Առաջադրանք</button>
-        <button class="menu-btn" onclick="nav('daily-screen', this)">🎁 Պարգև</button>
+    <div class="nav-bar">
+        <button class="nav-item active" onclick="nav('game-screen', this)">🏠 Խաղալ</button>
+        <button class="nav-item" onclick="nav('shop-screen', this)">🛒 Խանութ</button>
+        <button class="nav-item" onclick="nav('tasks-screen', this)">⚡ Բոնուս</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
+        // ADSGRAM CONFIG - Ուղղված է
         const AdController = window.Adsgram ? window.Adsgram.init({ blockId: "26025" }) : null;
 
         let state = {
-            bal: 0, clickValue: 10, lastDate: null, streak: 0, dailyClaimed: false,
-            tasks: { task1: 0, task3: 0, task5: 0 },
-            x2Ads: 0, x2EndTime: 0,
-            x3Ads: 0, x3EndTime: 0, x3NextAvailable: 0,
-            energy: 500, energyAds: 0, lastSaveTime: Date.now()
+            bal: 0, 
+            inc: 0, 
+            energy: 500, 
+            click: 1, 
+            lvl: 1,
+            inventory: [],
+            x2Until: 0,
+            x3Until: 0,
+            x3Next: 0,
+            adCount: { energy: 0, x2: 0, x3: 0 }
         };
 
-        const dailyRewards = [1000, 5000, 10000, 15000, 20000, 20000, 50000];
+        const levels = [
+            { l: 1, name: "Սկսնակ", min: 0, maxE: 500 },
+            { l: 2, name: "Փորձնակ", min: 2000, maxE: 1000 },
+            { l: 3, name: "Աշակերտ", min: 5000, maxE: 1500 },
+            { l: 4, name: "Աշխատավոր", min: 10000, maxE: 2000 },
+            { l: 5, name: "Խանութպան", min: 25000, maxE: 2500 },
+            { l: 6, name: "Վաճառական", min: 50000, maxE: 3000 },
+            { l: 7, name: "Առաջնորդ", min: 100000, maxE: 3500 },
+            { l: 8, name: "Մենեջեր", min: 250000, maxE: 4000 },
+            { l: 9, name: "Ներդրող", min: 500000, maxE: 4500 },
+            { l: 10, name: "Միլիոնատեր", min: 1000000, maxE: 5000 },
+            { l: 11, name: "Բիզնեսմեն", min: 2000000, maxE: 5500 },
+            { l: 12, name: "Օլիգարխ", min: 5000000, maxE: 6000 }
+        ];
 
-        function loadData() {
-            let saved = localStorage.getItem('dramMasterState');
-            if (saved) {
-                let parsed = JSON.parse(saved);
-                state = { ...state, ...parsed }; // Ապահովում ենք նոր դաշտերի գոյությունը հին խաղացողների համար
-            }
-
-            let today = new Date().toDateString();
-            if (state.lastDate !== today) {
-                if (state.lastDate) {
-                    let yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
-                    if (state.lastDate !== yesterday.toDateString()) state.streak = 0;
-                    else if (state.dailyClaimed) {
-                        state.streak++;
-                        if (state.streak >= 7) state.streak = 0;
-                    }
-                }
-                state.dailyClaimed = false;
-                state.tasks = { task1: 0, task3: 0, task5: 0 };
-                state.lastDate = today;
-            }
-            updateEnergyOffline();
-            updateUI();
-        }
-
-        function saveData() {
-            localStorage.setItem('dramMasterState', JSON.stringify(state));
-        }
-
-        // Լևլների համակարգ և Էներգիայի հաշվարկ
-        function getLevel() {
-            const b = state.bal;
-            if (b >= 5000000) return { l: 12, name: "Օլիգարխ", maxE: 6000 };
-            if (b >= 2000000) return { l: 11, name: "Բիզնեսմեն", maxE: 5500 };
-            if (b >= 1000000) return { l: 10, name: "Միլիոնատեր", maxE: 5000 };
-            if (b >= 500000) return { l: 9, name: "Ներդրող", maxE: 4500 };
-            if (b >= 250000) return { l: 8, name: "Մենեջեր", maxE: 4000 };
-            if (b >= 100000) return { l: 7, name: "Առաջնորդ", maxE: 3500 };
-            if (b >= 50000) return { l: 6, name: "Վաճառական", maxE: 3000 };
-            if (b >= 25000) return { l: 5, name: "Խանութպան", maxE: 2500 };
-            if (b >= 10000) return { l: 4, name: "Աշխատավոր", maxE: 2000 };
-            if (b >= 5000) return { l: 3, name: "Աշակերտ", maxE: 1500 };
-            if (b >= 2000) return { l: 2, name: "Փորձնակ", maxE: 1000 };
-            return { l: 1, name: "Սկսնակ", maxE: 500 };
-        }
-
-        function updateEnergyOffline() {
-            let now = Date.now();
-            let secondsPassed = (now - state.lastSaveTime) / 1000;
-            if (secondsPassed > 0) {
-                let maxE = getLevel().maxE;
-                let regenPerSec = maxE / 7200; // Ամբողջությամբ լցվում է 2 ժամում
-                state.energy = Math.min(maxE, state.energy + (regenPerSec * secondsPassed));
-            }
-            state.lastSaveTime = now;
-        }
-
-        // Վայրկյանաչափ ժամանակը գեղեցիկ ցույց տալու համար
-        function formatTime(ms) {
-            let totalSec = Math.floor(ms / 1000);
-            let m = Math.floor(totalSec / 60).toString().padStart(2, '0');
-            let s = (totalSec % 60).toString().padStart(2, '0');
-            return `${m}:${s}`;
-        }
-        function formatCooldown(ms) {
-            let d = Math.floor(ms / (1000 * 60 * 60 * 24));
-            let h = Math.floor((ms / (1000 * 60 * 60)) % 24);
-            if (d > 0) return `${d} օր ${h} ժամից`;
-            return `${h} ժամից`;
-        }
+        // 45 ԻՐԵՐԻ ՑՈՒՑԱԿ (15-ական)
+        const items = {
+            house: [
+                { id: 'h1', n: 'Հին սենյակ', p: 500, inc: 1 },
+                { id: 'h2', n: 'Վարձով բնակարան', p: 2000, inc: 5 },
+                { id: 'h3', n: 'Գյուղական տուն', p: 10000, inc: 25 },
+                { id: 'h4', n: 'Նորակառույց բնակարան', p: 25000, inc: 60 },
+                { id: 'h5', n: 'Դուպլեքս Կենտրոնում', p: 75000, inc: 150 },
+                { id: 'h6', n: 'Առանձնատուն Դիլիջանում', p: 150000, inc: 350 },
+                { id: 'h7', n: 'Modern Villa', p: 300000, inc: 700 },
+                { id: 'h8', n: 'Smart Home', p: 600000, inc: 1500 },
+                { id: 'h9', n: 'Oceanfront Villa', p: 1200000, inc: 3000 },
+                { id: 'h10', n: 'Պենտհաուս Դուբայում', p: 2500000, inc: 6500 },
+                { id: 'h11', n: 'Սեփական Ամրոց', p: 5000000, inc: 14000 },
+                { id: 'h12', n: 'Փոքր Կղզի', p: 10000000, inc: 30000 },
+                { id: 'h13', n: 'Անձնական Բլուր', p: 25000000, inc: 75000 },
+                { id: 'h14', n: 'Թագավորական Պալատ', p: 50000000, inc: 160000 },
+                { id: 'h15', n: 'Մարսի Բազա', p: 100000000, inc: 400000 }
+            ],
+            car: [
+                { id: 'c1', n: 'Հեծանիվ', p: 200, inc: 0.5 },
+                { id: 'c2', n: 'VAZ 2107', p: 1500, inc: 4 },
+                { id: 'c3', n: 'Opel Astra', p: 5000, inc: 12 },
+                { id: 'c4', n: 'Toyota Camry', p: 20000, inc: 50 },
+                { id: 'c5', n: 'Mercedes C-Class', p: 50000, inc: 120 },
+                { id: 'c6', n: 'Tesla Model 3', p: 120000, inc: 300 },
+                { id: 'c7', n: 'BMW M5', p: 250000, inc: 650 },
+                { id: 'c8', n: 'Porsche 911', p: 500000, inc: 1400 },
+                { id: 'c9', n: 'Lamborghini Aventador', p: 1000000, inc: 2800 },
+                { id: 'c10', n: 'Rolls Royce Cullinan', p: 2000000, inc: 6000 },
+                { id: 'c11', n: 'Ferrari SF90', p: 4000000, inc: 13000 },
+                { id: 'c12', n: 'Bugatti Chiron', p: 8000000, inc: 28000 },
+                { id: 'c13', n: 'Անձնական Ուղղաթիռ', p: 15000000, inc: 55000 },
+                { id: 'c14', n: 'Private Jet', p: 40000000, inc: 150000 },
+                { id: 'c15', n: 'Տիեզերանավ', p: 100000000, inc: 450000 }
+            ],
+            biz: [
+                { id: 'b1', n: 'Կրպակ', p: 1000, inc: 3 },
+                { id: 'b2', n: 'Ավտոլվացման կետ', p: 4000, inc: 10 },
+                { id: 'b3', n: 'Սրճարան', p: 12000, inc: 35 },
+                { id: 'b4', n: 'Գեղեցկության սրահ', p: 35000, inc: 90 },
+                { id: 'b5', n: 'Ֆիթնես ակումբ', p: 80000, inc: 220 },
+                { id: 'b6', n: 'Ավտոսերվիս', p: 180000, inc: 500 },
+                { id: 'b7', n: 'Ռեստորանային ցանց', p: 400000, inc: 1200 },
+                { id: 'b8', n: 'Շինարարական ընկերություն', p: 900000, inc: 2800 },
+                { id: 'b9', n: 'IT Ստարտափ', p: 2000000, inc: 6500 },
+                { id: 'b10', n: 'Բանկ', p: 5000000, inc: 17000 },
+                { id: 'b11', n: 'Նավթային հորատանցք', p: 12000000, inc: 45000 },
+                { id: 'b12', n: 'Ավիաընկերություն', p: 30000000, inc: 120000 },
+                { id: 'b13', n: 'AI Կորպորացիա', p: 70000000, inc: 300000 },
+                { id: 'b14', n: 'Էներգոցանց', p: 150000000, inc: 700000 },
+                { id: 'b15', n: 'Գլոբալ Իմպերիա', p: 500000000, inc: 2500000 }
+            ]
+        };
 
         function updateUI() {
-            let now = Date.now();
-            let maxE = getLevel().maxE;
+            const now = Date.now();
+            let currentLvl = levels.findLast(l => state.bal >= l.min) || levels[0];
+            state.lvl = currentLvl.l;
             
-            // UI Գլխավոր
-            document.getElementById('balance-display').innerText = state.bal.toLocaleString('hy-AM') + ' ֏';
-            document.getElementById('level-display').innerText = `Լևլ ${getLevel().l}: ${getLevel().name}`;
+            document.getElementById('balance').innerText = Math.floor(state.bal).toLocaleString() + ' ֏';
+            document.getElementById('lvl-name').innerText = `Լևլ ${currentLvl.l}: ${currentLvl.name}`;
+            document.getElementById('income-text').innerText = `Պասիվ շահույթ: ${state.inc.toLocaleString()} ֏/վրկ`;
             
-            // Էներգիայի բար
-            let ePercent = (state.energy / maxE) * 100;
-            document.getElementById('energy-fill').style.width = `${ePercent}%`;
-            document.getElementById('energy-text').innerText = `⚡ ${Math.floor(state.energy)} / ${maxE}`;
-
-            // Բոնուսների ստատուս
-            let boostEl = document.getElementById('boost-status');
-            if (now < state.x3EndTime) {
-                boostEl.style.display = 'block';
-                boostEl.style.color = '#FF4500';
-                boostEl.innerText = `🚀 3X ՍՈՒՊԵՐ (Մնաց՝ ${formatTime(state.x3EndTime - now)})`;
-            } else if (now < state.x2EndTime) {
-                boostEl.style.display = 'block';
-                boostEl.style.color = '#00FA9A';
-                boostEl.innerText = `🔥 2X ԲՈՆՈՒՍ (Մնաց՝ ${formatTime(state.x2EndTime - now)})`;
-            } else {
-                boostEl.style.display = 'none';
-            }
-
-            // UI Պարգև
-            document.getElementById('daily-day-text').innerText = `Օր ${state.streak + 1}`;
-            document.getElementById('daily-reward-text').innerText = `+ ${dailyRewards[state.streak].toLocaleString()} ֏`;
-            let btnDaily = document.getElementById('btn-daily');
-            if (state.dailyClaimed) { btnDaily.innerText = "Վերցված է ✅"; btnDaily.disabled = true; }
-            else { btnDaily.innerText = "ԴԻՏԵԼ ԳՈՎԱԶԴ ՈՒ ՍՏԱՆԱԼ"; btnDaily.disabled = false; }
-
-            // UI Առաջադրանքներ
-            updateTaskUI('task1', 1, state.tasks.task1);
-            updateTaskUI('task3', 3, state.tasks.task3);
-            updateTaskUI('task5', 5, state.tasks.task5);
-
-            // UI Էներգիա Task
-            document.getElementById('energy-progress').innerText = `Դիտված է: ${state.energyAds}/2`;
-            let btnEnergy = document.getElementById('btn-energy');
-            if (state.energy >= maxE * 0.99) { btnEnergy.innerText = "Լիքն է ✅"; btnEnergy.disabled = true; }
-            else { btnEnergy.innerText = "Դիտել"; btnEnergy.disabled = false; }
-
-            // UI 2X
-            document.getElementById('x2-progress').innerText = `Դիտված է: ${state.x2Ads}/3`;
-            let btnX2 = document.getElementById('btn-x2');
-            if (now < state.x2EndTime) { btnX2.innerText = "Ակտիվ է ✅"; btnX2.disabled = true; }
-            else { btnX2.innerText = "Դիտել"; btnX2.disabled = false; }
-
-            // UI 3X
-            document.getElementById('x3-progress').innerText = `Դիտված է: ${state.x3Ads}/4`;
-            let btnX3 = document.getElementById('btn-x3');
-            let cdText = document.getElementById('x3-cooldown');
-            if (now < state.x3EndTime) { 
-                btnX3.innerText = "Ակտիվ է ✅"; btnX3.disabled = true; cdText.innerText = "";
-            } else if (now < state.x3NextAvailable) {
-                btnX3.innerText = "Սպասեք ⏳"; btnX3.disabled = true; 
-                cdText.innerText = `Հասանելի կլինի: ${formatCooldown(state.x3NextAvailable - now)}`;
-            } else {
-                btnX3.innerText = "Դիտել"; btnX3.disabled = false; cdText.innerText = "Հասանելի է ✅";
-                cdText.style.color = "#00FA9A";
-            }
+            // Energy
+            let ePercent = (state.energy / currentLvl.maxE) * 100;
+            document.getElementById('energy-fill').style.width = ePercent + '%';
+            document.getElementById('energy-text').innerText = `⚡ ${Math.floor(state.energy)} / ${currentLvl.maxE}`;
         }
 
-        function updateTaskUI(id, max, current) {
-            document.getElementById(`${id}-progress`).innerText = `Դիտված է: ${current}/${max}`;
-            let btn = document.getElementById(`btn-${id}`);
-            if (current >= max) { btn.innerText = "Կատարված է ✅"; btn.disabled = true; btn.style.background = "#00FA9A"; }
-            else { btn.innerText = "Դիտել"; btn.disabled = false; btn.style.background = "#FFD700"; }
-        }
-
-        // Ստուգող ցիկլ (Ամեն վայրկյան)
-        setInterval(() => {
-            let maxE = getLevel().maxE;
-            let regenPerSec = maxE / 7200;
-            if (state.energy < maxE) {
-                state.energy = Math.min(maxE, state.energy + regenPerSec);
-            }
-            
-            // Ստուգում ենք, արդյոք 2X/3X ժամանակն ավարտվեց
-            let now = Date.now();
-            if (state.x2EndTime > 0 && now > state.x2EndTime) { state.x2EndTime = 0; state.x2Ads = 0; }
-            if (state.x3EndTime > 0 && now > state.x3EndTime) { state.x3EndTime = 0; state.x3Ads = 0; }
-            
-            state.lastSaveTime = now;
-            updateUI();
-        }, 1000);
-
-        setInterval(saveData, 5000); // Պահպանում ենք յուրաքանչյուր 5 վրկ
-
-        // --- ԳՈՎԱԶԴ ---
-        async function watchAd(onSuccess) {
-            if (!AdController) return tg.showAlert("Գովազդի համակարգը դեռ չի բեռնվել կամ բլոկավորված է:");
-            try {
-                await AdController.show();
-                onSuccess();
-                saveData(); updateUI();
-                tg.HapticFeedback.notificationOccurred('success');
-            } catch (error) { tg.showAlert("Գովազդը փակվել է կամ այս պահին հասանելի չէ:"); }
-        }
-
-        // ՍԵՂՄՈՒՄ
-        function tapCoin(e) {
-            if (Math.floor(state.energy) <= 0) {
+        function handleTap(e) {
+            if (state.energy < 1) {
                 tg.HapticFeedback.notificationOccurred('error');
-                tg.showAlert("⚡ Էներգիան սպառվել է: Սպասեք կամ լիցքավորեք Առաջադրանքներ բաժնում:");
                 return;
             }
-            
-            tg.HapticFeedback.impactOccurred('medium');
             state.energy -= 1;
-            
-            let now = Date.now();
             let mult = 1;
-            if (now < state.x3EndTime) mult = 3;
-            else if (now < state.x2EndTime) mult = 2;
+            if (Date.now() < state.x3Until) mult = 3;
+            else if (Date.now() < state.x2Until) mult = 2;
             
-            let earn = state.clickValue * mult;
-            state.bal += earn;
+            let amount = state.click * mult;
+            state.bal += amount;
             
-            // Գեղեցիկ թռչող տեքստ
-            let floatText = document.createElement('div');
-            floatText.innerHTML = `+${earn}`;
-            floatText.style.position = 'absolute'; floatText.style.left = (e.clientX - 10) + 'px'; floatText.style.top = (e.clientY - 20) + 'px';
-            floatText.style.color = mult === 3 ? '#FF4500' : (mult === 2 ? '#00FA9A' : '#FFD700');
-            floatText.style.fontSize = mult > 1 ? '30px' : '24px'; floatText.style.fontWeight = 'bold'; floatText.style.pointerEvents = 'none';
-            floatText.style.animation = 'floatUp 1s ease-out forwards';
-            document.body.appendChild(floatText);
-            setTimeout(() => floatText.remove(), 1000);
-            
+            showFloatingText(e.clientX, e.clientY, `+${amount}`, mult);
+            tg.HapticFeedback.impactOccurred('medium');
             updateUI();
         }
 
-        // Ֆունկցիաներ
-        function claimDaily() {
-            watchAd(() => {
-                let r = dailyRewards[state.streak]; state.bal += r; state.dailyClaimed = true;
-                tg.showAlert(`Շնորհավոր! Ստացաք ${r.toLocaleString()} ֏`);
+        function showFloatingText(x, y, text, mult) {
+            const el = document.createElement('div');
+            el.className = 'floating-text';
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+            el.style.color = mult === 3 ? '#FF4500' : (mult === 2 ? '#00FF7F' : '#FFD700');
+            el.innerText = text;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 800);
+        }
+
+        function showSubShop(type) {
+            const container = document.getElementById('shop-items');
+            container.innerHTML = '';
+            items[type].forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'shop-card';
+                card.innerHTML = `
+                    <div class="shop-info">
+                        <b>${item.n}</b>
+                        <small>Գին: ${item.p.toLocaleString()} ֏ | +${item.inc}/վրկ</small>
+                    </div>
+                    <button class="buy-btn" onclick="buyItem('${type}', '${item.id}')" ${state.bal < item.p ? 'disabled' : ''}>Գնել</button>
+                `;
+                container.appendChild(card);
             });
         }
-        function doTask(taskId, targetAds, reward) {
-            watchAd(() => {
-                state.tasks[taskId]++;
-                if (state.tasks[taskId] >= targetAds) { state.bal += reward; tg.showAlert(`Կատարված է! +${reward.toLocaleString()} ֏`); }
-            });
+
+        function buyItem(type, id) {
+            const item = items[type].find(i => i.id === id);
+            if (state.bal >= item.p) {
+                state.bal -= item.p;
+                state.inc += item.inc;
+                state.click += Math.ceil(item.inc * 0.1);
+                tg.HapticFeedback.notificationOccurred('success');
+                showSubShop(type);
+                updateUI();
+                save();
+            }
         }
-        function doEnergyTask() {
-            watchAd(() => {
-                state.energyAds++;
-                if (state.energyAds >= 2) { state.energy = getLevel().maxE; state.energyAds = 0; tg.showAlert("⚡ Էներգիան 100% վերականգնված է!"); }
-                else tg.showAlert("⚡ Մնաց ևս 1 գովազդ՝ էներգիան լցնելու համար:");
-            });
-        }
-        function do2xTask() {
-            watchAd(() => {
-                state.x2Ads++;
-                if (state.x2Ads >= 3) { state.x2EndTime = Date.now() + 5 * 60 * 1000; state.x2Ads = 0; tg.showAlert("🔥 2X Բոնուսն ակտիվացված է 5 րոպեով!"); }
-            });
-        }
-        function do3xTask() {
-            watchAd(() => {
-                state.x3Ads++;
-                if (state.x3Ads >= 4) {
-                    state.x3EndTime = Date.now() + 5 * 60 * 1000;
-                    state.x3NextAvailable = Date.now() + 3 * 24 * 60 * 60 * 1000; // 3 օր
-                    state.x3Ads = 0; tg.showAlert("🚀 3X ՍՈՒՊԵՐ Բոնուսն ակտիվացված է 5 րոպեով!");
+
+        async function watchAd(type) {
+            if (!AdController) {
+                alert("Գովազդը բեռնված չէ: Ստուգեք ինտերնետը կամ անջատեք AdBlock-ը:");
+                return;
+            }
+
+            try {
+                await AdController.show();
+                state.adCount[type]++;
+                
+                if (type === 'energy' && state.adCount.energy >= 2) {
+                    let maxE = levels.find(l => l.l === state.lvl).maxE;
+                    state.energy = maxE;
+                    state.adCount.energy = 0;
+                    alert("⚡ Էներգիան լցված է!");
+                } else if (type === '2x' && state.adCount.x2 >= 3) {
+                    state.x2Until = Date.now() + (5 * 60 * 1000);
+                    state.adCount.x2 = 0;
+                    alert("🔥 2X Բոնուսը միացված է 5 րոպեով!");
+                } else if (type === '3x' && state.adCount.x3 >= 4) {
+                    state.x3Until = Date.now() + (5 * 60 * 1000);
+                    state.x3Next = Date.now() + (3 * 24 * 60 * 60 * 1000);
+                    state.adCount.x3 = 0;
+                    alert("🚀 3X ՍՈՒՊԵՐ Բոնուսը միացված է!");
                 }
-            });
+                save();
+                updateUI();
+            } catch (e) {
+                alert("Գովազդը փակվել է կամ սխալ է տեղի ունեցել:");
+            }
         }
-        function nav(screenId, btn) {
+
+        function nav(id, btn) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active'); btn.classList.add('active');
-            tg.HapticFeedback.selectionChanged();
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            btn.classList.add('active');
         }
 
-        const style = document.createElement('style');
-        style.innerHTML = `@keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-50px); opacity: 0; } }`;
-        document.head.appendChild(style);
+        // Պասիվ շահույթ և Էներգիա
+        setInterval(() => {
+            state.bal += (state.inc / 10);
+            let maxE = levels.find(l => l.l === state.lvl).maxE;
+            if (state.energy < maxE) {
+                state.energy = Math.min(maxE, state.energy + (maxE / 1000));
+            }
+            updateUI();
+        }, 100);
 
-        loadData();
+        function save() { localStorage.setItem('dramMasterState', JSON.stringify(state)); }
+        function load() {
+            const saved = localStorage.getItem('dramMasterState');
+            if (saved) state = JSON.parse(saved);
+            updateUI();
+        }
+
+        load();
     </script>
 </body>
 </html>
