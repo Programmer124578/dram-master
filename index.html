@@ -3,63 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dram Master Pro | Deluxe</title>
+    <title>Dram Master Pro | Deluxe Edition</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://sad.adsgram.ai/js/adsgram-adbox.js"></script>
     <style>
-        /* ԴԻԶԱՅՆԸ ՄՆՈՒՄ Է ՆՈՒՅՆԸ, ԻՆՉ ՆԱԽՈՐԴ ՏԱՐԲԵՐԱԿՈՒՄ */
-        :root { --gold: #F59E0B; --gold-light: #FCD34D; --bg: #0F172A; --card-bg: #1E293B; --mint: #10B981; --text: #F8FAFC; --accent: #3B82F6; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; overflow: hidden; user-select: none; }
-        .header { padding: 20px 15px 15px; background: rgba(30,41,59,0.9); border-bottom: 1px solid #334155; text-align: center; }
-        .balance-val { font-size: 38px; font-weight: 900; color: var(--gold-light); }
-        .stats { display: flex; justify-content: space-between; font-size: 14px; color: #94A3B8; margin-top: 10px; font-weight: bold; }
-        .lvl-cont { width: 100%; height: 22px; background: #0F172A; border-radius: 12px; margin-top: 15px; overflow: hidden; position: relative; border: 1px solid #334155; }
-        .lvl-fill { height: 100%; background: linear-gradient(90deg, #D97706, #FBBF24); width: 0%; transition: width 0.4s ease; }
-        .lvl-txt { position: absolute; top: 0; width: 100%; text-align: center; font-size: 12px; line-height: 22px; font-weight: 800; color: #fff; }
-        .screen { display: none; padding: 15px; height: calc(100vh - 180px); overflow-y: auto; padding-bottom: 80px; }
+        :root { --gold: #FFD700; --gold-dark: #B8860B; --bg: #050505; --card-bg: #111111; --mint: #00FA9A; --text: #ffffff; }
+        body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: sans-serif; overflow: hidden; user-select: none; }
+        
+        /* Header */
+        .header { padding: 15px; background: #181818; border-bottom: 2px solid var(--gold); text-align: center; }
+        .balance-val { font-size: 34px; font-weight: 900; color: var(--gold); }
+        .stats { display: flex; justify-content: space-around; font-size: 12px; color: #aaa; margin-top: 5px; }
+        
+        /* Progress Bar */
+        .lvl-cont { width: 90%; height: 18px; background: #222; border-radius: 9px; margin: 10px auto; overflow: hidden; position: relative; border: 1px solid #333; }
+        .lvl-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dark), var(--gold)); width: 0%; transition: 0.3s; }
+        .lvl-txt { position: absolute; width: 100%; text-align: center; font-size: 10px; line-height: 18px; font-weight: bold; color: #fff; }
+
+        /* Screens */
+        .screen { display: none; padding: 20px; height: calc(100vh - 170px); overflow-y: auto; box-sizing: border-box; }
         .screen.active { display: block; }
+
+        /* Coin Area */
         .coin-area { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .main-coin { width: 240px; height: 240px; background: radial-gradient(circle at 30% 30%, #FCD34D, #B45309); border-radius: 50%; border: 10px solid #78350F; display: flex; align-items: center; justify-content: center; font-size: 90px; color: #451A03; font-weight: 900; cursor: pointer; transition: transform 0.05s; }
-        .main-coin:active { transform: scale(0.92); }
-        .tabs { display: flex; gap: 8px; margin-bottom: 20px; position: sticky; top: 0; background: var(--bg); padding: 10px 0; z-index: 10; }
-        .tab-btn { flex: 1; padding: 12px 5px; background: #334155; border: none; color: #CBD5E1; border-radius: 10px; font-size: 13px; font-weight: bold; }
-        .tab-btn.active { background: var(--accent); color: #fff; }
-        .card { background: var(--card-bg); border-radius: 14px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; }
-        .card-info b { color: var(--text); display: block; font-size: 15px; margin-bottom: 4px; }
-        .card-info small { color: #94A3B8; font-size: 12px; display: block; }
-        .buy-btn { background: var(--gold); color: #000; border: none; padding: 10px 15px; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer; }
-        .buy-btn:disabled { background: #334155; color: #64748B; }
-        .nav { position: fixed; bottom: 0; width: 100%; background: rgba(30,41,59,0.95); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #334155; z-index: 100; }
-        .nav-btn { background: none; border: none; color: #64748B; font-size: 12px; font-weight: bold; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .nav-btn.active { color: var(--gold-light); transform: translateY(-3px); }
-        .float { position: absolute; color: #fff; font-weight: 900; font-size: 28px; pointer-events: none; animation: floatUp 0.8s forwards; z-index: 50; }
-        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-120px); } }
+        .main-coin { width: 220px; height: 220px; background: radial-gradient(circle, #ffe066, #b8860b); border-radius: 50%; border: 8px solid #5e4a06; display: flex; align-items: center; justify-content: center; font-size: 80px; color: #5e4a06; font-weight: bold; cursor: pointer; }
+        .main-coin:active { transform: scale(0.95); }
+
+        /* Shop Tabs */
+        .tabs { display: flex; gap: 5px; margin-bottom: 15px; position: sticky; top: 0; background: var(--bg); padding: 5px 0; z-index: 10; }
+        .tab-btn { flex: 1; padding: 10px; background: #222; border: none; color: #fff; border-radius: 8px; font-size: 12px; }
+        .tab-btn.active { background: var(--gold); color: #000; font-weight: bold; }
+
+        /* Cards */
+        .card { background: var(--card-bg); border-radius: 12px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
+        .card b { color: var(--gold); display: block; font-size: 14px; }
+        .card small { color: #888; font-size: 11px; }
+        .buy-btn { background: var(--gold); color: #000; border: none; padding: 8px 12px; border-radius: 8px; font-weight: bold; }
+        .buy-btn:disabled { background: #444; color: #888; }
+
+        /* Nav */
+        .nav { position: fixed; bottom: 0; width: 100%; background: #111; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; }
+        .nav-btn { background: none; border: none; color: #666; font-size: 10px; display: flex; flex-direction: column; align-items: center; }
+        .nav-btn.active { color: var(--gold); }
+        
+        .float { position: absolute; color: white; font-weight: bold; font-size: 24px; animation: up 0.7s forwards; pointer-events: none; }
+        @keyframes up { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-100px); } }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="balance-val" id="bal">Բեռնվում է...</div>
-        <div class="stats"><span id="inc">0 ֏/վ</span><span id="energy">⚡ 500/500</span></div>
-        <div class="lvl-cont"><div class="lvl-fill" id="lvl-fill"></div><div class="lvl-txt" id="lvl-txt">Լևլ 1</div></div>
+        <div class="balance-val" id="bal">0 ֏</div>
+        <div class="stats">
+            <span id="inc">0/վ</span>
+            <span id="energy">⚡ 500/500</span>
+        </div>
+        <div class="lvl-cont">
+            <div class="lvl-fill" id="lvl-fill"></div>
+            <div class="lvl-txt" id="lvl-txt">Լևլ 1 | 0%</div>
+        </div>
     </div>
 
     <div id="game" class="screen active">
-        <div class="coin-area"><div class="main-coin" id="coin">֏</div></div>
+        <div class="coin-area">
+            <div class="main-coin" id="coin">֏</div>
+            <p id="b-time" style="color:var(--mint); font-weight:bold; margin-top:10px; display:none;"></p>
+        </div>
     </div>
 
     <div id="shop" class="screen">
         <div class="tabs">
             <button class="tab-btn active" onclick="setTab('house')">🏠 Գույք</button>
             <button class="tab-btn" onclick="setTab('car')">🚗 Մեքենա</button>
+            <button class="tab-btn" onclick="setTab('biz')">🏢 Բիզնես</button>
         </div>
         <div id="shop-list"></div>
     </div>
 
     <div id="tasks" class="screen">
-        <div class="card"><div class="card-info"><b>🔗 Հրավիրել Ընկեր</b><small>+5,000 ֏</small></div><button class="buy-btn" onclick="inviteFriend()">Հրավիրել</button></div>
-        <div class="card"><div class="card-info"><b>💰 Դիտել Գովազդ</b><small>+10,000 ֏</small></div><button class="buy-btn" onclick="watchAd()">Դիտել</button></div>
+        <h3 style="color:var(--gold); font-size:16px;">🚀 Գովազդային Բոնուսներ</h3>
+        <div class="card"><div><b>💰 10,000 ֏ Ստանալ</b><small>Դիտիր 3 գովազդ</small></div><button class="buy-btn" onclick="watchAd('money')">Դիտել</button></div>
+        <div class="card"><div><b>🎁 5,000 ֏ Ստանալ</b><small>Դիտիր 2 գովազդ</small></div><button class="buy-btn" onclick="watchAd('bonus')">Դիտել</button></div>
+        <div class="card"><div><b>🔥 2X Շահույթ (5ր)</b><small>Դիտիր 3 գովազդ</small></div><button class="buy-btn" onclick="watchAd('x2')">Դիտել</button></div>
+        <div class="card"><div><b>⚡ Էներգիա 100%</b><small>Դիտիր 2 գովազդ</small></div><button class="buy-btn" onclick="watchAd('energy')">Դիտել</button></div>
+
+        <h3 style="color:var(--gold); font-size:16px; margin-top:20px;">📋 Առաջադրանքներ</h3>
+        <div class="card"><div><b>📢 Միանալ Ալիքին</b><small>+10,000 ֏</small></div><button class="buy-btn" id="sub-b" onclick="doTask('sub')">Միանալ</button></div>
+        <div class="card"><div><b>🔗 Հրավիրել Ընկեր</b><small>+10,000 ֏</small></div><button class="buy-btn" onclick="doTask('inv')">Հրավիրել</button></div>
     </div>
 
     <div class="nav">
@@ -71,87 +101,107 @@
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        tg.ready();
 
-        // ՔՈ ՍԵՐՎԵՐԻ ՀԱՍՑԵՆ (Կլրացնենք երբ սերվերը գործարկենք Render-ում)
-        const SERVER_URL = 'https://dram-master-api.onrender.com'; 
-        
-        // Ստանում ենք օգտատիրոջ ID-ն տելեգրամից
-        const userId = tg.initDataUnsafe?.user?.id || 12345; // 12345-ը թեստի համար է
+        // Տող 160: Այստեղ փոխիր dd66-ը 26025-ով, երբ ակտիվանա
+        const adsgram = window.Adsgram.init({ blockId: "dd66" });
+        let lastInt = 0;
 
-        let state = { bal: 0, inc: 0, energy: 500, lvl: 1 };
-        let clickQueue = 0; // Քանի անգամ է սեղմել, որ ուղարկենք սերվեր
+        let state = { bal:0, inc:0, energy:500, maxE:500, lvl:1, x2T:0, adsCount:{money:0, bonus:0, x2:0, energy:0}, sub:false, lastS:Date.now() };
 
-        // 1. Սերվերից բեռնում ենք խաղացողի իրական տվյալները
-        async function loadData() {
-            try {
-                const res = await fetch(`${SERVER_URL}/api/user/${userId}`);
-                const data = await res.json();
-                state.bal = data.bal;
-                state.inc = data.inc;
-                updateUI();
-            } catch (err) {
-                console.log("Սերվերի հետ կապ չկա, աշխատում ենք լոկալ");
-                // Լոկալ պահուստավորում (եթե սերվերը անջատված է)
-                state.bal = parseInt(localStorage.getItem('bal')) || 0;
-                updateUI();
+        const config = {
+            lvls: [
+                {l:1, n:"Սկսնակ", m:0, e:500, k:1}, {l:2, n:"Փորձնակ", m:20000, e:1000, k:2}, {l:3, n:"Աշխատավոր", m:100000, e:1500, k:4},
+                {l:4, n:"Վաճառական", m:500000, e:2000, k:8}, {l:5, n:"Գործարար", m:2000000, e:3000, k:15}, {l:6, n:"Միլիոնատեր", m:10000000, e:5000, k:30},
+                {l:7, n:"Օլիգարխ", m:50000000, e:8000, k:70}, {l:8, n:"Տիրակալ", m:250000000, e:12000, k:150}
+            ],
+            items: {
+                house: [
+                    {n:'Սենյակ', p:1000, i:2}, {n:'Բնակարան', p:5000, i:12}, {n:'Գյուղական տուն', p:20000, i:55}, {n:'Առանձնատուն', p:80000, i:220}, {n:'Դուպլեքս', p:250000, i:700}, {n:'Վիլլա', p:600000, i:1800}, {n:'Modern House', p:1500000, i:4500}, {n:'Smart Home', p:4000000, i:13000}, {n:'Ocean Villa', p:10000000, i:35000}, {n:'Պենտհաուս', p:25000000, i:90000}, {n:'Ամրոց', p:70000000, i:250000}, {n:'Կղզի', p:180000000, i:700000}, {n:'Թաղամաս', p:450000000, i:1800000}, {n:'Պալատ', p:1000000000, i:4500000}, {n:'Քաղաք', p:3000000000, i:15000000}
+                ],
+                car: [
+                    {n:'Հեծանիվ', p:500, i:1}, {n:'VAZ 2107', p:3000, i:8}, {n:'Opel Astra', p:10000, i:30}, {n:'Toyota Camry', p:40000, i:120}, {n:'Mercedes C', p:120000, i:400}, {n:'Tesla 3', p:300000, i:1100}, {n:'BMW M5', p:800000, i:3200}, {n:'Porsche 911', p:2000000, i:9000}, {n:'Lambo', p:6000000, i:28000}, {n:'Rolls Royce', p:15000000, i:75000}, {n:'Ferrari', p:40000000, i:220000}, {n:'Bugatti', p:100000000, i:600000}, {n:'Ուղղաթիռ', p:300000000, i:2000000}, {n:'Jet', p:800000000, i:6000000}, {n:'Rocket', p:2500000000, i:20000000}
+                ],
+                biz: [
+                    {n:'Կրպակ', p:2500, i:6}, {n:'Ավտոլվացում', p:12000, i:35}, {n:'Սրճարան', p:45000, i:140}, {n:'Սրահ', p:150000, i:500}, {n:'Մարզասրահ', p:400000, i:1500}, {n:'Ավտոսերվիս', p:1000000, i:4000}, {n:'Ռեստորան', p:3000000, i:13000}, {n:'Շինարարություն', p:8000000, i:38000}, {n:'IT Բիզնես', p:20000000, i:100000}, {n:'Բանկ', p:50000000, i:280000}, {n:'Գործարան', p:120000000, i:750000}, {n:'Կորպորացիա', p:350000000, i:2200000}, {n:'Հանքեր', p:900000000, i:6500000}, {n:'Էներգոցանց', p:2000000000, i:16000000}, {n:'Կայսրություն', p:5000000000, i:45000000}
+                ]
             }
-        }
+        };
 
-        function updateUI() {
+        function update() {
+            let cl = config.lvls.findLast(x => state.bal >= x.m) || config.lvls[0];
+            state.lvl = cl.l; state.maxE = cl.e;
             document.getElementById('bal').innerText = Math.floor(state.bal).toLocaleString() + ' ֏';
-            document.getElementById('inc').innerText = state.inc.toLocaleString() + ' ֏/վ';
+            document.getElementById('inc').innerText = state.inc.toLocaleString() + '/վ';
+            document.getElementById('energy').innerText = `⚡ ${Math.floor(state.energy)}/${state.maxE}`;
+            let nxt = config.lvls[cl.l], prg = nxt ? ((state.bal - cl.m)/(nxt.m - cl.m))*100 : 100;
+            document.getElementById('lvl-fill').style.width = Math.min(prg, 100)+'%';
+            document.getElementById('lvl-txt').innerText = `Լևլ ${cl.l} | ${cl.n} (${Math.floor(prg)}%)`;
+            document.getElementById('b-time').style.display = (Date.now() < state.x2T) ? 'block' : 'none';
+            document.getElementById('b-time').innerText = "🔥 2X ԱԿՏԻՎ Է";
+            if(state.sub) { document.getElementById('sub-b').innerText = "✅"; document.getElementById('sub-b').disabled = true; }
         }
 
-        // 2. Քլիքի համակարգը (հավաքում ենք սեղմումները և ամեն 2 վրկ-ն մեկ ուղարկում սերվեր)
-        document.getElementById('coin').addEventListener('pointerdown', (e) => {
+        document.getElementById('coin').onclick = (e) => {
             if(state.energy < 1) return;
             state.energy--;
-            
-            let earn = 1; // Սա պետք է գա քո config-ից (լևլից կախված)
+            let earn = config.lvls[state.lvl-1].k * (Date.now() < state.x2T ? 2 : 1);
             state.bal += earn;
-            clickQueue += earn; 
-            
-            let f = document.createElement('div'); f.className = 'float'; 
-            let clientX = e.clientX || (e.touches && e.touches[0].clientX);
-            let clientY = e.clientY || (e.touches && e.touches[0].clientY);
-            f.style.left = clientX + 'px'; f.style.top = clientY + 'px'; 
-            f.innerText = '+' + earn; document.body.appendChild(f); 
-            setTimeout(() => f.remove(), 800);
-            updateUI();
-        });
-
-        // 3. Սինխրոնիզացիա սերվերի հետ
-        setInterval(async () => {
-            if (clickQueue > 0) {
-                let toSend = clickQueue;
-                clickQueue = 0; // զրոյացնում ենք
-                try {
-                    await fetch(`${SERVER_URL}/api/sync`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ userId: userId, earned: toSend })
-                    });
-                } catch(e) {
-                    clickQueue += toSend; // եթե սխալ եղավ, հետ ենք վերադարձնում պարտքը
-                }
-            }
-            localStorage.setItem('bal', state.bal); // լոկալ պահուստ
-        }, 2000);
-
-        function inviteFriend() {
-            const botUsername = "ՔՈ_ԲՈՏԻ_ԱՆՈՒՆԸ_bot";
-            const inviteLink = `https://t.me/${botUsername}?start=${userId}`;
-            tg.openTelegramLink(`https://t.me/share/url?url=${inviteLink}&text=Արի խաղանք և գումար վաստակենք!`);
-        }
+            let f = document.createElement('div'); f.className='float'; f.style.left=e.clientX+'px'; f.style.top=e.clientY+'px'; f.innerText='+'+earn;
+            document.body.appendChild(f); setTimeout(()=>f.remove(), 700);
+            update();
+        };
 
         function nav(s, b) {
-            document.querySelectorAll('.screen').forEach(x => x.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
+            document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
             document.getElementById(s).classList.add('active'); b.classList.add('active');
+            if(Date.now() - lastInt > 60000) { adsgram.show().then(()=>lastInt=Date.now()).catch(()=>{}); }
+            if(s === 'shop') setTab('house');
         }
 
-        loadData();
+        let curT = 'house';
+        function setTab(t) {
+            curT = t;
+            document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+            event.target.classList.add('active');
+            const l = document.getElementById('shop-list'); l.innerHTML = '';
+            config.items[t].forEach((item, i) => {
+                l.innerHTML += `<div class="card"><div><b>${item.n}</b><small>${item.p.toLocaleString()} ֏ | +${item.i}/վ</small></div><button class="buy-btn" onclick="buy('${t}', ${i})" ${state.bal < item.p ? 'disabled':''}>Գնել</button></div>`;
+            });
+        }
+
+        function buy(t, i) {
+            let it = config.items[t][i];
+            if(state.bal >= it.p) { state.bal -= it.p; state.inc += it.i; update(); setTab(t); save(); }
+        }
+
+        function watchAd(type) {
+            adsgram.show().then(() => {
+                state.adsCount[type]++;
+                if(type === 'money' && state.adsCount.money >= 3) { state.bal += 10000; state.adsCount.money = 0; tg.showAlert("💰 Ստացաք 10,000 ֏!"); }
+                else if(type === 'bonus' && state.adsCount.bonus >= 2) { state.bal += 5000; state.adsCount.bonus = 0; tg.showAlert("🎁 Ստացաք 5,000 ֏!"); }
+                else if(type === 'x2' && state.adsCount.x2 >= 3) { state.x2T = Date.now() + 300000; state.adsCount.x2 = 0; tg.showAlert("🔥 2X-ը ակտիվացավ!"); }
+                else if(type === 'energy' && state.adsCount.energy >= 2) { state.energy = state.maxE; state.adsCount.energy = 0; tg.showAlert("⚡ Էներգիան լիքն է!"); }
+                else tg.showAlert("Դիտեք ևս մեկ գովազդ");
+                update(); save();
+            }).catch(() => tg.showAlert("Գովազդ չկա, փորձիր ուշ"));
+        }
+
+        function doTask(t) {
+            if(t === 'sub') { tg.openTelegramLink("https://t.me/ՔՈ_ԱԼԻՔԸ"); state.sub = true; state.bal += 10000; }
+            if(t === 'inv') { tg.openTelegramLink("https://t.me/share/url?url=https://t.me/ՔՈ_ԲՈՏԸ"); state.bal += 10000; }
+            update(); save();
+        }
+
+        function save() { state.lastS = Date.now(); localStorage.setItem('dm_save_final', JSON.stringify(state)); }
+        function load() {
+            let d = localStorage.getItem('dm_save_final');
+            if(d) { state = JSON.parse(d); state.bal += state.inc * ((Date.now() - state.lastS)/1000); }
+            update();
+        }
+
+        setInterval(() => { state.bal += state.inc/10; if(state.energy < state.maxE) state.energy += 0.2; update(); }, 100);
+        load(); setInterval(save, 5000);
     </script>
 </body>
 </html>
