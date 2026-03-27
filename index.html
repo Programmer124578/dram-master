@@ -11,7 +11,6 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         body { background: radial-gradient(circle at top, #1a1c29, var(--bg-dark)); color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; user-select: none; }
         
-        /* Կեղծանվան Էկրան */
         #nick-screen { position: fixed; inset: 0; background: var(--bg-dark); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
         .nick-box { background: var(--glass); padding: 30px; border-radius: 20px; border: 2px solid var(--gold); width: 100%; max-width: 300px; }
         .nick-input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--gold); background: rgba(255,255,255,0.05); color: #fff; margin: 15px 0; text-align: center; font-size: 18px; }
@@ -177,9 +176,9 @@
         };
 
         const levels = [
-            {l:1, n:"Անօթևան", m:0, e:500, k:1}, {l:2, n:"Մուրացկան", m:5000, e:1000, k:3}, {l:3, n:"Բանվոր", m:20000, e:1500, k:7}, {l:4, n:"Արհեստավոր", m:100000, e:2500, k:15},
-            {l:5, n:"Խանութպան", m:500000, e:4000, k:40}, {l:6, n:"Տնօրեն", m:2000000, e:6000, k:100}, {l:7, n:"Գործարար", m:10000000, e:8000, k:250}, {l:8, n:"Միլիոնատեր", m:50000000, e:10000, k:600},
-            {l:9, n:"Միլիարդատեր", m:200000000, e:15000, k:1500}, {l:10, n:"Մագնատ", m:1000000000, e:20000, k:4000}, {l:11, n:"Օլիգարխ", m:3000000000, e:30000, k:10000}, {l:12, n:"Տիեզ. Օլիգարխ", m:7000000000, e:50000, k:25000}
+            {l:1, n:"Անօթևան", m:0, e:500, k:1}, {l:2, n:"Մուրացկան", m:5000, e:1000, k:3}, {l:3, n:"Բանվոր", m:20000, e:1500, k:7}, {l:4, n:"Արհեստավոր", m:100000, e:2000, k:15},
+            {l:5, n:"Խանութպան", m:500000, e:2500, k:40}, {l:6, n:"Տնօրեն", m:2000000, e:3000, k:100}, {l:7, n:"Գործարար", m:10000000, e:3500, k:250}, {l:8, n:"Միլիոնատեր", m:50000000, e:4000, k:600},
+            {l:9, n:"Միլիարդատեր", m:200000000, e:4500, k:1500}, {l:10, n:"Մագնատ", m:1000000000, e:5000, k:4000}, {l:11, n:"Օլիգարխ", m:3000000000, e:5500, k:10000}, {l:12, n:"Տիեզ. Օլիգարխ", m:7000000000, e:6000, k:25000}
         ];
 
         const adTargets = { r1k:1, r5k:3, r10k:5, mystery:6, energy:1, x2:3, x3:5 };
@@ -228,9 +227,7 @@
                 state.nickname = val;
                 document.getElementById('nick-screen').style.display = 'none';
                 save();
-            } else {
-                tg.showAlert("Կեղծանունը պետք է ունենա առնվազն 3 տառ:");
-            }
+            } else { tg.showAlert("Կեղծանունը պետք է ունենա առնվազն 3 տառ:"); }
         };
 
         window.handleAd = function(type) {
@@ -321,22 +318,34 @@
             update();
         };
 
-        function save() { state.last = Date.now(); localStorage.setItem('dm_save_v17', JSON.stringify(state)); }
+        function save() { state.last = Date.now(); localStorage.setItem('dm_save_v18', JSON.stringify(state)); }
         function load() {
-            let s = localStorage.getItem('dm_save_v17');
+            let s = localStorage.getItem('dm_save_v18');
             if(s) {
                 let p = JSON.parse(s); state = { ...state, ...p };
                 let diff = (Date.now() - state.last) / 1000;
                 state.bal += state.inc * diff;
+                // Անցած ժամանակի ընթացքում էներգիայի վերականգնում
+                let regenPerSec = state.maxE / 7200;
+                state.energy = Math.min(state.maxE, state.energy + (diff * regenPerSec));
             }
-            // Եթե կեղծանուն չկա, ցույց տալ մուտքի էկրանը
             if(!state.nickname || state.nickname === "") {
-document.getElementById('nick-screen').style.display = 'flex';
+                document.getElementById('nick-screen').style.display = 'flex';
             }
             update();
         }
 
-        setInterval(() => { state.bal += state.inc / 10; if(state.energy < state.maxE) state.energy += 0.05; update(); }, 100);
+        // Էներգիայի լիցքավորում 2 ժամում (7200 վայրկյան)
+        // setInterval-ը աշխատում է 100մվ-ը մեկ (0.1 վայրկյան)
+        setInterval(() => { 
+            state.bal += state.inc / 10; 
+            if(state.energy < state.maxE) {
+                let regenAmount = (state.maxE / 7200) * 0.1; 
+                state.energy = Math.min(state.maxE, state.energy + regenAmount);
+            }
+            update(); 
+        }, 100);
+
         load();
         setInterval(save, 5000);
     </script>
