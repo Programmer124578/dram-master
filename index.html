@@ -318,16 +318,15 @@
             update();
         };
 
-        function save() { state.last = Date.now(); localStorage.setItem('dm_save_v18', JSON.stringify(state)); }
+        function save() { state.last = Date.now(); localStorage.setItem('dm_save_v19', JSON.stringify(state)); }
         function load() {
-            let s = localStorage.getItem('dm_save_v18');
+            let s = localStorage.getItem('dm_save_v19');
             if(s) {
                 let p = JSON.parse(s); state = { ...state, ...p };
                 let diff = (Date.now() - state.last) / 1000;
                 state.bal += state.inc * diff;
-                // Անցած ժամանակի ընթացքում էներգիայի վերականգնում
-                let regenPerSec = state.maxE / 7200;
-                state.energy = Math.min(state.maxE, state.energy + (diff * regenPerSec));
+                let regenOffline = (state.maxE / 7200) * diff;
+                state.energy = Math.min(state.maxE, state.energy + regenOffline);
             }
             if(!state.nickname || state.nickname === "") {
                 document.getElementById('nick-screen').style.display = 'flex';
@@ -335,11 +334,10 @@
             update();
         }
 
-        // Էներգիայի լիցքավորում 2 ժամում (7200 վայրկյան)
-        // setInterval-ը աշխատում է 100մվ-ը մեկ (0.1 վայրկյան)
         setInterval(() => { 
             state.bal += state.inc / 10; 
             if(state.energy < state.maxE) {
+                // Սա ապահովում է ճշգրիտ 2 ժամ (7200 վայրկյան) լիցքավորում
                 let regenAmount = (state.maxE / 7200) * 0.1; 
                 state.energy = Math.min(state.maxE, state.energy + regenAmount);
             }
