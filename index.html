@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dram Master Pro | Elite</title>
+    <title>Dram Master</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://sad.adsgram.ai/js/adsgram-adbox.js"></script>
     <style>
@@ -11,7 +11,6 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         body { background: radial-gradient(circle at top, #1a1c29, var(--bg-dark)); color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; user-select: none; }
         
-        /* Modal System */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 9999; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; }
         .modal-overlay.show { display: flex; opacity: 1; }
         .modal-box { background: linear-gradient(145deg, #1e202e, #14151f); padding: 25px; border-radius: 24px; border: 1px solid rgba(255,215,0,0.3); width: 85%; max-width: 320px; text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.8), inset 0 2px 20px rgba(255,215,0,0.05); transform: translateY(20px); transition: transform 0.3s; }
@@ -21,19 +20,20 @@
         .modal-btn { background: linear-gradient(135deg, var(--gold), #ff8c00); color: #000; border: none; padding: 12px 20px; border-radius: 12px; font-weight: 900; font-size: 14px; width: 100%; cursor: pointer; margin-bottom: 10px; box-shadow: 0 4px 15px rgba(255,140,0,0.4); }
         .modal-btn-close { background: transparent; color: #888; border: 1px solid #444; padding: 10px 20px; border-radius: 12px; font-weight: bold; font-size: 13px; width: 100%; cursor: pointer; }
 
-        /* Nickname Screen */
         #nick-screen { position: fixed; inset: 0; background: var(--bg-dark); z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
         .nick-input { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--gold); background: rgba(0,0,0,0.5); color: #fff; margin: 20px 0; text-align: center; font-size: 18px; outline: none; }
         .nick-input:focus { box-shadow: 0 0 15px rgba(255,215,0,0.5); }
 
-        .header { padding: 20px 15px 15px; background: rgba(10, 11, 16, 0.9); backdrop-filter: blur(15px); text-align: center; border-bottom: 1px solid rgba(255,215,0,0.15); position: sticky; top: 0; z-index: 1000; }
-        .balance-val { font-size: 44px; font-weight: 900; color: var(--gold); text-shadow: 0 4px 20px rgba(255,215,0,0.5); display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .stats { display: flex; justify-content: space-between; font-size: 13px; color: #a0a0a0; margin-top: 12px; font-weight: 700; padding: 0 15px; }
+        .header { padding: 15px 15px; background: rgba(10, 11, 16, 0.9); backdrop-filter: blur(15px); text-align: center; border-bottom: 1px solid rgba(255,215,0,0.15); position: sticky; top: 0; z-index: 1000; }
         
-        .lvl-cont { width: 92%; height: 24px; background: rgba(0,0,0,0.6); border-radius: 12px; margin: 15px auto 0; position: relative; border: 1px solid rgba(255,255,255,0.08); overflow: hidden; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
+        /* Լևլը վերևում */
+        .lvl-cont { width: 92%; height: 24px; background: rgba(0,0,0,0.6); border-radius: 12px; margin: 0 auto 15px; position: relative; border: 1px solid rgba(255,255,255,0.08); overflow: hidden; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
         .lvl-fill { height: 100%; background: linear-gradient(90deg, #b8860b, #ffd700, #ff8c00); width: 0%; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
         .lvl-txt { position: absolute; width: 100%; text-align: center; font-size: 11px; line-height: 24px; font-weight: 900; color: #fff; z-index: 5; text-shadow: 1px 1px 4px #000; letter-spacing: 0.5px; }
 
+        .balance-val { font-size: 44px; font-weight: 900; color: var(--gold); text-shadow: 0 4px 20px rgba(255,215,0,0.5); display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .stats { display: flex; justify-content: space-between; font-size: 13px; color: #a0a0a0; margin-top: 12px; font-weight: 700; padding: 0 15px; }
+        
         .screen { display: none; padding: 20px 15px 95px; height: calc(100vh - 180px); overflow-y: auto; }
         .screen.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -89,14 +89,14 @@
     </div>
 
     <div class="header">
+        <div class="lvl-cont">
+            <div class="lvl-fill" id="lvl-fill"></div>
+            <div class="lvl-txt" id="lvl-txt">Լևլ 1 | 0%</div>
+        </div>
         <div class="balance-val" id="bal">0 ֏</div>
         <div class="stats">
             <span id="inc">0 ֏/վ</span>
             <span id="energy">⚡ 500/500</span>
-        </div>
-        <div class="lvl-cont">
-            <div class="lvl-fill" id="lvl-fill"></div>
-            <div class="lvl-txt" id="lvl-txt">Լևլ 1 | 0%</div>
         </div>
     </div>
 
@@ -121,11 +121,15 @@
         <div class="card"><div class="card-info"><b>📢 Լուրերի Ալիք</b><span>+10,000 ֏ բոնուս</span></div><button class="buy-btn" onclick="subTg()" id="btn-tg">Միանալ</button></div>
         <div class="card"><div class="card-info"><b>👥 Հրավիրել</b><span>+5,000 ֏ ամեն մեկի համար</span></div><button class="buy-btn" onclick="inviteFriend()">Հրավիրել</button></div>
 
+        <h3 class="section-title">🏦 Կապիտալի Բազմապատկում</h3>
+        <div class="card"><div class="card-info"><b style="color:#FFD700">🔥 Կրկնապատկել Բալանսը</b><span>Պահանջվում է 15 գովազդ</span></div><button class="buy-btn" onclick="handleAd('doubleBal')">Դիտել (0/15)</button></div>
+        <div class="card"><div class="card-info"><b style="color:cyan">💎 Եռապատկել Բալանսը</b><span>Պահանջվում է 20 գովազդ</span></div><button class="buy-btn" onclick="handleAd('tripleBal')">Դիտել (0/20)</button></div>
+
         <h3 class="section-title">🚀 Գովազդային Պարգևներ</h3>
         <div class="card"><div class="card-info"><b>💰 Փոքր Պարգև</b><span>+1,000 ֏</span></div><button class="buy-btn" onclick="handleAd('r1k')">Դիտել (0/1)</button></div>
         <div class="card"><div class="card-info"><b>💰 Միջին Պարգև</b><span>+5,000 ֏</span></div><button class="buy-btn" onclick="handleAd('r5k')">Դիտել (0/3)</button></div>
         <div class="card"><div class="card-info"><b>💰 Մեծ Պարգև</b><span>+10,000 ֏</span></div><button class="buy-btn" onclick="handleAd('r10k')">Դիտել (0/5)</button></div>
-        <div class="card"><div class="card-info"><b style="color:#b026ff">🎁 Կախարդական Արկղ</b><span>20k-80k ֏</span></div><button class="buy-btn" onclick="handleAd('mystery')">Դիտել (0/6)</button></div>
+        <div class="card"><div class="card-info"><b style="color:#b026ff">🎁 Կախարդական Արկղ</b><span>20k-80k ֏</span></div><button class="buy-btn" onclick="handleAd('mystery')">Դիտել (0/10)</button></div>
 
         <h3 class="section-title">🔥 Բուստերներ</h3>
         <div class="card"><div class="card-info"><b>🔥 2X Բոնուս</b><span>5 րոպե կրկնակի քլիք</span></div><button class="buy-btn" onclick="handleAd('x2')">Դիտել (0/3)</button></div>
@@ -152,8 +156,8 @@
             x2T:0, x3T:0, lastX3:0, last:Date.now(), lastDaily:0,
             owned:{house:[], car:[], biz:[]}, 
             tgSub:false, nickname: "",
-            adCounts: { r1k:0, r5k:0, r10k:0, mystery:0, x2:0, x3:0 },
-            pendingAds: { energy:0, daily:0 } // Ժամանակավոր հաշվիչներ նոր կոճակների համար
+            adCounts: { r1k:0, r5k:0, r10k:0, mystery:0, x2:0, x3:0, doubleBal:0, tripleBal:0 },
+            pendingAds: { energy:0, daily:0 }
         };
 
         const db = {
@@ -168,7 +172,8 @@
             {l:9, n:"Միլիարդատեր", m:200000000, e:4500, k:1500}, {l:10, n:"Մագնատ", m:1000000000, e:5000, k:4000}, {l:11, n:"Օլիգարխ", m:3000000000, e:5500, k:10000}, {l:12, n:"Տիեզ. Օլիգարխ", m:7000000000, e:6000, k:25000}
         ];
 
-        const adTargets = { r1k:1, r5k:3, r10k:5, mystery:6, x2:3, x3:5 };
+        // Թարմացված թիրախները
+        const adTargets = { r1k:1, r5k:3, r10k:5, mystery:10, x2:3, x3:5, doubleBal:15, tripleBal:20 };
 
         function showModal(title, text, btnText, onBtnClick, showClose = true) {
             document.getElementById('modal-title').innerText = title;
@@ -180,7 +185,7 @@
             if(btnText && onBtnClick) {
                 let mainBtn = document.createElement('button');
                 mainBtn.className = 'modal-btn';
-                mainBtn.id = 'dynamic-modal-btn'; // id ենք տալիս որ հետո տեքստը փոխենք
+                mainBtn.id = 'dynamic-modal-btn'; 
                 mainBtn.innerText = btnText;
                 mainBtn.onclick = onBtnClick;
                 actions.appendChild(mainBtn);
@@ -258,7 +263,10 @@
             if(type === 'mystery') { let p = Math.floor(Math.random() * 60000) + 20000; state.bal += p; tg.showAlert(`🎁 Շահեցիք ${p.toLocaleString()} ֏!`); }
             if(type === 'x2') state.x2T = Date.now() + 300000;
             if(type === 'x3') { state.x3T = Date.now() + 300000; state.lastX3 = Date.now(); tg.showAlert("💎 3X-ը միացավ 5 րոպեով!"); }
-            if(type !== 'mystery' && type !== 'x3') tg.showAlert("✅ Պարգևը ստացված է:");
+            if(type === 'doubleBal') { state.bal *= 2; tg.showAlert("🔥 Շնորհավորում ենք! Ձեր ամբողջ գումարը կրկնապատկվեց:"); }
+            if(type === 'tripleBal') { state.bal *= 3; tg.showAlert("💎 Շնորհավորում ենք! Ձեր ամբողջ գումարը եռապատկվեց:"); }
+            
+            if(type !== 'mystery' && type !== 'x3' && type !== 'doubleBal' && type !== 'tripleBal') tg.showAlert("✅ Պարգևը ստացված է:");
         }
 
         window.nav = function(id) {
@@ -302,7 +310,7 @@
 
         document.getElementById('coin').onpointerdown = function(e) {
             if(state.energy < 1) {
-                state.pendingAds.energy = 0; // Զրոյացնում ենք հաշվիչը ամեն անգամ պատուհանը բացելիս
+                state.pendingAds.energy = 0; 
                 showModal('⚡ Էներգիան Սպառվեց', 'Ամբողջությամբ լիցքավորելու համար դիտիր 3 կարճ գովազդ:', 'Դիտել (0/3)', function energyAd() {
                     playDirectAd(() => {
                         state.pendingAds.energy++;
@@ -333,17 +341,19 @@
             update();
         };
 
-        function save() { state.last = Date.now(); localStorage.setItem('dm_save_v22', JSON.stringify(state)); }
+        function save() { state.last = Date.now(); localStorage.setItem('dm_save_v23', JSON.stringify(state)); }
         
         function load() {
-            let s = localStorage.getItem('dm_save_v22');
+            let s = localStorage.getItem('dm_save_v23');
             if(s) {
                 let p = JSON.parse(s); state = { ...state, ...p };
-                if(!state.pendingAds) state.pendingAds = { energy:0, daily:0 }; // Նոր վարկածի համար
-                let diff = (Date.now() - state.last) / 1000;
+                if(!state.pendingAds) state.pendingAds = { energy:0, daily:0 };
+                if(state.adCounts) {
+                    if(state.adCounts.doubleBal === undefined) state.adCounts.doubleBal = 0;
+                    if(state.adCounts.tripleBal === undefined) state.adCounts.tripleBal = 0;
+                }
                 
-                // Պասիվ եկամուտը (offline) հանված է։ Փող չի գալիս, երբ խաղը փակ է։
-                // Բայց էներգիան շարունակում է կամաց-կամաց լիցքավորվել
+                let diff = (Date.now() - state.last) / 1000;
                 let regenOffline = (state.maxE / 7200) * diff;
                 state.energy = Math.min(state.maxE, state.energy + regenOffline);
 
@@ -355,14 +365,14 @@
         }
 
         function checkDailyBonus() {
-            if(Date.now() - state.lastDaily > 86400000) { // 24 ժամ
+            if(Date.now() - state.lastDaily > 86400000) { 
                 setTimeout(() => {
                     let baseBonus = 5000 * state.lvl;
                     state.bal += baseBonus;
                     state.lastDaily = Date.now();
                     save();
                     
-                    state.pendingAds.daily = 0; // Զրոյացնում ենք
+                    state.pendingAds.daily = 0;
                     showModal('🎁 Օրվա Բոնուս', `Դու ստացար քո ամենօրյա բոնուսը՝ ${baseBonus.toLocaleString()} ֏!\n\nԴիտիր 2 գովազդ և ստացիր ևս ${baseBonus.toLocaleString()} ֏ հավելյալ:`, 'Դիտել (0/2)', function dailyAd() {
                         playDirectAd(() => {
                             state.pendingAds.daily++;
@@ -380,11 +390,11 @@
         }
 
         setInterval(() => { 
-            // Պասիվ եկամուտը գալիս է ՄԻԱՅՆ այն ժամանակ, երբ խաղը միացրած է 
-            state.bal += state.inc / 10; 
-            if(state.energy < state.maxE) { state.energy = Math.min(state.maxE, state.energy + ((state.maxE / 7200) * 0.1)); }
+            // Հիմա եկամուտը ավելանում է ամբողջական՝ 1 վայրկյանը մեկ անգամ, շատ հանգիստ
+            state.bal += state.inc; 
+            if(state.energy < state.maxE) { state.energy = Math.min(state.maxE, state.energy + (state.maxE / 7200)); }
             update(); 
-        }, 100);
+        }, 1000);
 
         load();
         setInterval(save, 5000);
