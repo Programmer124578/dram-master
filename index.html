@@ -3,55 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dram Master Ultimate</title>
+    <title>Dram Master Pro</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://sad.adsgram.ai/js/adsgram-adbox.js"></script>
     <style>
-        :root { --gold: #FFD700; --gold-dark: #D4AF37; --bg: #0a0a0c; --card-bg: rgba(25, 25, 30, 0.9); --mint: #00E676; --text: #ffffff; }
-        * { box-sizing: border-box; }
-        body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; user-select: none; -webkit-tap-highlight-color: transparent; }
+        :root { --gold: #FFD700; --bg: #0a0a0c; --card: #16161d; --text: #ffffff; --mint: #00E676; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; overflow: hidden; }
         
-        /* Header */
-        .header { padding: 20px 15px; background: linear-gradient(180deg, #1a1a24 0%, var(--bg) 100%); text-align: center; border-bottom: 1px solid #333; box-shadow: 0 5px 20px rgba(0,0,0,0.5); z-index: 100; position: relative; }
-        .balance-val { font-size: 42px; font-weight: 900; color: var(--gold); text-shadow: 0 0 20px rgba(255, 215, 0, 0.3); letter-spacing: 1px; }
-        .stats { display: flex; justify-content: space-between; font-size: 14px; color: #bbb; margin-top: 8px; padding: 0 20px; font-weight: bold; }
+        /* Վերևի մասը (Balance & Stats) */
+        .header { padding: 20px 15px; background: #111; text-align: center; border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 1000; }
+        .balance-val { font-size: 38px; font-weight: 900; color: var(--gold); text-shadow: 0 0 15px rgba(255,215,0,0.3); }
+        .stats { display: flex; justify-content: space-around; font-size: 14px; color: #aaa; margin-top: 8px; font-weight: bold; }
         
-        /* 12-Level System */
-        .lvl-cont { width: 85%; height: 22px; background: #111; border-radius: 12px; margin: 15px auto 0; position: relative; border: 1px solid #444; overflow: hidden; box-shadow: inset 0 2px 5px rgba(0,0,0,0.8); }
-        .lvl-fill { height: 100%; background: linear-gradient(90deg, #b8860b, var(--gold)); width: 0%; transition: width 0.3s ease; }
-        .lvl-txt { position: absolute; width: 100%; top: 0; text-align: center; font-size: 12px; line-height: 22px; font-weight: 900; color: #fff; text-shadow: 1px 1px 3px #000; }
+        .lvl-cont { width: 90%; height: 20px; background: #222; border-radius: 10px; margin: 12px auto 0; position: relative; border: 1px solid #444; overflow: hidden; }
+        .lvl-fill { height: 100%; background: linear-gradient(90deg, #b8860b, var(--gold)); width: 0%; transition: width 0.4s ease; }
+        .lvl-txt { position: absolute; width: 100%; text-align: center; font-size: 11px; line-height: 20px; font-weight: bold; color: #fff; z-index: 5; text-shadow: 1px 1px 2px #000; }
 
-        /* Screens (Fixed scrolling cutoff) */
-        .screen { display: none; padding: 20px; padding-bottom: 120px; height: calc(100vh - 165px); overflow-y: auto; animation: fadeIn 0.3s ease-in-out; }
+        /* Էկրանների կառավարում */
+        .screen { display: none; padding: 15px; height: calc(100vh - 170px); overflow-y: auto; -webkit-overflow-scrolling: touch; }
         .screen.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Gameplay Area */
-        .coin-area { height: 80%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .main-coin { width: 240px; height: 240px; background: radial-gradient(circle at 30% 30%, #fff3b0, #d4af37, #8b6914); border-radius: 50%; border: 8px solid #4a3b00; display: flex; align-items: center; justify-content: center; font-size: 100px; color: #4a3b00; font-weight: 900; cursor: pointer; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4), inset 0 -10px 20px rgba(0,0,0,0.5); transition: transform 0.05s; }
-        .main-coin:active { transform: scale(0.93); box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4); }
+        /* Խաղի հատված */
+        .coin-area { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .main-coin { width: 230px; height: 230px; background: radial-gradient(circle, #ffe066, #b8860b); border-radius: 50%; border: 8px solid #5e4a06; display: flex; align-items: center; justify-content: center; font-size: 90px; color: #5e4a06; cursor: pointer; box-shadow: 0 0 30px rgba(212,175,55,0.3); transition: transform 0.05s; }
+        .main-coin:active { transform: scale(0.92); }
 
-        /* Tabs */
-        .tabs { display: flex; gap: 8px; margin-bottom: 20px; position: sticky; top: 0; background: var(--bg); padding: 10px 0; z-index: 10; border-bottom: 1px solid #222; }
-        .tab-btn { flex: 1; padding: 12px; background: #1f1f27; border: 1px solid #333; color: #fff; border-radius: 10px; font-size: 13px; font-weight: bold; cursor: pointer; }
-        .tab-btn.active { background: linear-gradient(135deg, var(--gold), #b8860b); color: #000; border-color: var(--gold); }
+        /* Խանութի տաբեր */
+        .tabs { display: flex; gap: 8px; margin-bottom: 20px; position: sticky; top: 0; background: var(--bg); padding: 5px 0; z-index: 500; }
+        .tab-btn { flex: 1; padding: 12px; background: #222; border: 1px solid #444; color: #fff; border-radius: 10px; font-size: 13px; font-weight: bold; }
+        .tab-btn.active { background: var(--gold); color: #000; border-color: var(--gold); }
 
-        /* Cards */
-        .card { background: var(--card-bg); border-radius: 16px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05); }
-        .card b { color: var(--gold); display: block; font-size: 15px; margin-bottom: 4px; }
-        .card small { color: #a0a0a0; font-size: 11px; }
-        .buy-btn { background: var(--gold); color: #000; border: none; padding: 10px 16px; border-radius: 10px; font-weight: 900; font-size: 13px; cursor: pointer; min-width: 80px; }
-        .buy-btn:disabled { background: #333; color: #666; cursor: not-allowed; }
-
-        /* Nav Bar */
-        .nav { position: fixed; bottom: 0; width: 100%; background: #0f0f13; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; z-index: 100; padding-bottom: calc(15px + env(safe-area-inset-bottom)); }
-        .nav-btn { background: none; border: none; color: #777; font-size: 11px; display: flex; flex-direction: column; align-items: center; font-weight: bold; gap: 5px; cursor: pointer; }
-        .nav-btn span { font-size: 24px; filter: grayscale(100%); transition: 0.2s; }
-        .nav-btn.active { color: var(--gold); }
-        .nav-btn.active span { filter: grayscale(0%); transform: scale(1.1); }
+        /* Քարտեր */
+        .card { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #2a2a30; }
+        .card b { color: var(--gold); font-size: 15px; display: block; margin-bottom: 3px; }
+        .card span { font-size: 11px; color: #999; }
         
-        .float { position: absolute; color: #fff; font-weight: 900; font-size: 32px; text-shadow: 0 2px 5px #000; pointer-events: none; animation: up 0.8s ease-out forwards; z-index: 50; }
-        @keyframes up { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-120px) scale(1.2); } }
+        .buy-btn { background: var(--gold); color: #000; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 900; font-size: 13px; min-width: 90px; }
+        .buy-btn:disabled { background: #333; color: #666; }
+
+        /* Նավիգացիա */
+        .nav { position: fixed; bottom: 0; width: 100%; background: #111; display: flex; justify-content: space-around; padding: 12px 0 30px; border-top: 1px solid #333; z-index: 1000; }
+        .nav-btn { background: none; border: none; color: #666; font-size: 11px; display: flex; flex-direction: column; align-items: center; font-weight: bold; }
+        .nav-btn.active { color: var(--gold); }
+        .nav-btn i { font-style: normal; font-size: 24px; margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -71,221 +66,175 @@
     <div id="game" class="screen active">
         <div class="coin-area">
             <div class="main-coin" id="coin">֏</div>
-            <div id="b-time" style="color:var(--mint); font-weight:900; font-size: 16px; margin-top:20px; display:none;">🔥 2X ՇԱՀՈՒՅԹԸ ԱԿՏԻՎ Է</div>
+            <p id="x2-msg" style="color:var(--mint); font-weight:bold; margin-top:20px; display:none;">🔥 2X ԲՈՆՈՒՍԸ ԱԿՏԻՎ Է</p>
         </div>
     </div>
 
     <div id="shop" class="screen">
         <div class="tabs">
-            <button id="tab-house" class="tab-btn active" onclick="window.setTab('house')">🏠 Գույք</button>
-            <button id="tab-car" class="tab-btn" onclick="window.setTab('car')">🚗 Մեքենա</button>
-            <button id="tab-biz" class="tab-btn" onclick="window.setTab('biz')">🏢 Բիզնես</button>
+            <button class="tab-btn active" id="btn-house" onclick="setTab('house')">🏠 Գույք</button>
+            <button class="tab-btn" id="btn-car" onclick="setTab('car')">🚗 Մեքենա</button>
+            <button class="tab-btn" id="btn-biz" onclick="setTab('biz')">🏢 Բիզնես</button>
         </div>
-        <div id="shop-list"></div>
+        <div id="list-container"></div>
     </div>
 
     <div id="tasks" class="screen">
-        <h3 style="color:var(--gold); border-bottom:1px solid #333; padding-bottom:10px; margin-top:0;">🚀 Գովազդներ</h3>
-        <div class="card"><div><b>💰 +10,000 ֏</b><small>Դիտիր 3 գովազդ <span id="ad-m-cnt" style="color:var(--mint);">(0/3)</span></small></div><button class="buy-btn" onclick="window.watchAd('money')">Դիտել</button></div>
-        <div class="card"><div><b>🎁 +5,000 ֏</b><small>Դիտիր 2 գովազդ <span id="ad-b-cnt" style="color:var(--mint);">(0/2)</span></small></div><button class="buy-btn" onclick="window.watchAd('bonus')">Դիտել</button></div>
-        <div class="card"><div><b>🔥 2X Շահույթ (5ր)</b><small>Դիտիր 3 գովազդ <span id="ad-x-cnt" style="color:var(--mint);">(0/3)</span></small></div><button class="buy-btn" onclick="window.watchAd('x2')">Դիտել</button></div>
-        <div class="card"><div><b>⚡ Էներգիա 100%</b><small>Դիտիր 2 գովազդ <span id="ad-e-cnt" style="color:var(--mint);">(0/2)</span></small></div><button class="buy-btn" onclick="window.watchAd('energy')">Դիտել</button></div>
-
-        <h3 style="color:var(--gold); border-bottom:1px solid #333; padding-bottom:10px; margin-top:20px;">📋 Առաջադրանքներ</h3>
-        <div class="card"><div><b>📢 Միանալ Ալիքին</b><small>Պարգև՝ +10,000 ֏</small></div><button class="buy-btn" id="sub-b" onclick="window.doTask('sub')">Միանալ</button></div>
-        <div class="card"><div><b>🔗 Հրավիրել Ընկեր</b><small>Պարգև՝ +10,000 ֏</small></div><button class="buy-btn" onclick="window.doTask('inv')">Հրավիրել</button></div>
+        <h3 style="color:var(--gold); margin-bottom:15px;">🚀 Գովազդի Պարգևներ</h3>
+        <div class="card">
+            <div><b>💰 Մեծ Գումար</b><span>Դիտել գովազդ (+15,000 ֏)</span></div>
+            <button class="buy-btn" onclick="showAd('money')">Դիտել</button>
+        </div>
+        <div class="card">
+            <div><b>🔥 2X Շահույթ</b><span>5 րոպե կրկնակի կլիկ</span></div>
+            <button class="buy-btn" onclick="showAd('x2')">Դիտել</button>
+        </div>
+        <div class="card">
+            <div><b>⚡ Էներգիա</b><span>Ամբողջական լիցքավորում</span></div>
+            <button class="buy-btn" onclick="showAd('energy')">Դիտել</button>
+        </div>
     </div>
 
     <div class="nav">
-        <button id="nav-game" class="nav-btn active" onclick="window.nav('game')"><span>🪙</span>Խաղալ</button>
-        <button id="nav-shop" class="nav-btn" onclick="window.nav('shop')"><span>🛒</span>Խանութ</button>
-        <button id="nav-tasks" class="nav-btn" onclick="window.nav('tasks')"><span>🎁</span>Պարգևներ</button>
+        <button class="nav-btn active" id="nav-game" onclick="nav('game')"><i>🪙</i>Խաղալ</button>
+        <button class="nav-btn" id="nav-shop" onclick="nav('shop')"><i>🛒</i>Խանութ</button>
+        <button class="nav-btn" id="nav-tasks" onclick="nav('tasks')"><i>🎁</i>Պարգևներ</button>
     </div>
 
     <script>
-        // Ապահով միացում Telegram-ին
-        let tg = null;
-        try { tg = window.Telegram.WebApp; tg.expand(); } catch(e) { console.log("Ոչ Telegram միջավայր"); }
+        const tg = window.Telegram.WebApp;
+        tg.expand();
 
-        // Adsgram նախնականացում
-        let adsgram = null;
-        try { adsgram = window.Adsgram.init({ blockId: "dd66" }); } catch(e) { console.log("Adsgram սխալ"); }
+        let state = { bal:0, inc:0, energy:500, maxE:500, lvl:1, x2T:0, last:Date.now() };
 
-        let state = { 
-            bal: 0, inc: 0, energy: 500, maxE: 500, lvl: 1, x2T: 0, 
-            adsCount: { money: 0, bonus: 0, x2: 0, energy: 0 }, 
-            sub: false, lastS: Date.now() 
-        };
-
-        const config = {
-            lvls: [
-                {l:1, m:0, e:500, k:1}, {l:2, m:2000, e:1000, k:2}, {l:3, m:5000, e:1500, k:3}, {l:4, m:10000, e:2000, k:5},
-                {l:5, m:50000, e:3000, k:10}, {l:6, m:100000, e:4000, k:20}, {l:7, m:250000, e:5000, k:35}, {l:8, m:500000, e:6000, k:60},
-                {l:9, m:1000000, e:8000, k:100}, {l:10, m:2000000, e:10000, k:200}, {l:11, m:3500000, e:12000, k:350}, {l:12, m:5000000, e:15000, k:500}
+        // Բոլոր 45 իրերը
+        const db = {
+            house: [
+                {n:'Սենյակ', p:1000, i:2}, {n:'Բնակարան', p:5000, i:12}, {n:'Տնակ', p:15000, i:40}, {n:'Գյուղական տուն', p:40000, i:110}, {n:'Առանձնատուն', p:100000, i:300},
+                {n:'Դուպլեքս', p:250000, i:800}, {n:'Վիլլա Դիլիջանում', p:600000, i:2000}, {n:'Modern House', p:1500000, i:5500}, {n:'Smart Home', p:4000000, i:15000}, {n:'Ocean Villa', p:10000000, i:40000},
+                {n:'Պենտհաուս', p:25000000, i:110000}, {n:'Ամրոց', p:70000000, i:350000}, {n:'Կղզի', p:200000000, i:1000000}, {n:'Թաղամաս', p:500000000, i:3000000}, {n:'Պալատ', p:1000000000, i:7000000}
             ],
-            items: {
-                house: [
-                    {n:'Սենյակ', p:1000, i:2}, {n:'Բնակարան', p:5000, i:12}, {n:'Գյուղական տուն', p:20000, i:55}, {n:'Առանձնատուն', p:80000, i:220}, {n:'Դուպլեքս', p:250000, i:700}, {n:'Վիլլա Դիլիջանում', p:600000, i:1800}, {n:'Modern House', p:1500000, i:4500}, {n:'Smart Home', p:4000000, i:13000}, {n:'Ocean Villa', p:10000000, i:35000}, {n:'Պենտհաուս', p:25000000, i:90000}, {n:'Ամրոց', p:70000000, i:250000}, {n:'Կղզի', p:180000000, i:700000}, {n:'Թաղամաս', p:450000000, i:1800000}, {n:'Պալատ', p:1000000000, i:4500000}, {n:'Քաղաք', p:3000000000, i:15000000}
-                ],
-                car: [
-                    {n:'Հեծանիվ', p:500, i:1}, {n:'VAZ 2107', p:3000, i:8}, {n:'Opel Astra', p:10000, i:30}, {n:'Toyota Camry', p:40000, i:120}, {n:'Mercedes C', p:120000, i:400}, {n:'Tesla Model 3', p:300000, i:1100}, {n:'BMW M5', p:800000, i:3200}, {n:'Porsche 911', p:2000000, i:9000}, {n:'Lamborghini', p:6000000, i:28000}, {n:'Rolls Royce', p:15000000, i:75000}, {n:'Ferrari F8', p:40000000, i:220000}, {n:'Bugatti', p:100000000, i:600000}, {n:'Ուղղաթիռ', p:300000000, i:2000000}, {n:'Private Jet', p:800000000, i:6000000}, {n:'Տիեզերանավ', p:2500000000, i:20000000}
-                ],
-                biz: [
-                    {n:'Կրպակ', p:2500, i:6}, {n:'Ավտոլվացում', p:12000, i:35}, {n:'Սրճարան', p:45000, i:140}, {n:'Սրահ', p:150000, i:500}, {n:'Մարզասրահ', p:400000, i:1500}, {n:'Ավտոսերվիս', p:1000000, i:4000}, {n:'Ռեստորան', p:3000000, i:13000}, {n:'Շինարարություն', p:8000000, i:38000}, {n:'IT Բիզնես', p:20000000, i:100000}, {n:'Բանկ', p:50000000, i:280000}, {n:'Գործարան', p:120000000, i:750000}, {n:'Կորպորացիա', p:350000000, i:2200000}, {n:'Հանքեր', p:900000000, i:6500000}, {n:'Էներգոցանց', p:2000000000, i:16000000}, {n:'Կայսրություն', p:5000000000, i:45000000}
-                ]
-            }
+            car: [
+                {n:'Հեծանիվ', p:500, i:1}, {n:'Մոպեդ', p:1500, i:4}, {n:'VAZ 2107', p:4000, i:10}, {n:'Opel Astra', p:12000, i:35}, {n:'Toyota Camry', p:35000, i:100},
+                {n:'Mercedes C', p:90000, i:280}, {n:'Tesla Model 3', p:200000, i:700}, {n:'BMW M5', p:500000, i:1800}, {n:'Porsche 911', p:1200000, i:4500}, {n:'Lamborghini', p:4000000, i:16000},
+                {n:'Rolls Royce', p:10000000, i:45000}, {n:'Ferrari', p:30000000, i:140000}, {n:'Bugatti', p:80000000, i:400000}, {n:'Ուղղաթիռ', p:250000000, i:1500000}, {n:'Յախտա', p:700000000, i:5000000}
+            ],
+            biz: [
+                {n:'Կրպակ', p:2000, i:5}, {n:'Ավտոլվացում', p:8000, i:25}, {n:'Սրճարան', p:25000, i:80}, {n:'Վարսավիրանոց', p:60000, i:200}, {n:'Մարզասրահ', p:150000, i:550},
+                {n:'Ավտոսերվիս', p:400000, i:1600}, {n:'Ռեստորան', p:1000000, i:4500}, {n:'Գիշերային ակումբ', p:2500000, i:12000}, {n:'Շինարարություն', p:7000000, i:35000}, {n:'IT Բիզնես', p:18000000, i:100000},
+                {n:'Բանկ', p:50000000, i:300000}, {n:'Գործարան', p:150000000, i:1000000}, {n:'Կորպորացիա', p:400000000, i:3000000}, {n:'Հանքեր', p:900000000, i:8000000}, {n:'Կայսրություն', p:2500000000, i:25000000}
+            ]
         };
 
-        window.update = function() {
-            // Ապահով լևլի հաշվարկ
-            let currentLvl = config.lvls[0];
-            for (let i = 0; i < config.lvls.length; i++) {
-                if (state.bal >= config.lvls[i].m) currentLvl = config.lvls[i];
-            }
-            state.lvl = currentLvl.l; 
-            state.maxE = currentLvl.e;
-            
+        const levels = [
+            {l:1, m:0, e:500, k:1}, {l:2, m:5000, e:1000, k:3}, {l:3, m:20000, e:1500, k:7}, {l:4, m:100000, e:2500, k:15},
+            {l:5, m:500000, e:4000, k:40}, {l:6, m:2000000, e:6000, k:100}, {l:7, m:10000000, e:8000, k:250}, {l:8, m:50000000, e:10000, k:600},
+            {l:9, m:200000000, e:15000, k:1500}, {l:10, m:1000000000, e:20000, k:4000}, {l:11, m:3000000000, e:30000, k:10000}, {l:12, m:7000000000, e:50000, k:25000}
+        ];
+
+        function update() {
+            // Լևլի հաշվարկ
+            let current = levels[0];
+            for(let lv of levels) { if(state.bal >= lv.m) current = lv; }
+            state.lvl = current.l; state.maxE = current.e;
+
             document.getElementById('bal').innerText = Math.floor(state.bal).toLocaleString() + ' ֏';
             document.getElementById('inc').innerText = state.inc.toLocaleString() + ' ֏/վ';
             document.getElementById('energy').innerText = `⚡ ${Math.floor(state.energy)}/${state.maxE}`;
             
-            let nxtLvl = config.lvls.find(x => x.l === currentLvl.l + 1);
-            let prg = 100;
-            if (nxtLvl && nxtLvl.m > currentLvl.m) {
-                prg = ((state.bal - currentLvl.m) / (nxtLvl.m - currentLvl.m)) * 100;
-            }
+            let nxt = levels.find(x => x.l === current.l + 1);
+            let prg = nxt ? ((state.bal - current.m) / (nxt.m - current.m)) * 100 : 100;
+            document.getElementById('lvl-fill').style.width = Math.min(prg, 100) + '%';
+            document.getElementById('lvl-txt').innerText = `Լևլ ${current.l} | ${Math.floor(prg)}%`;
             
-            document.getElementById('lvl-fill').style.width = Math.min(Math.max(prg, 0), 100) + '%';
-            document.getElementById('lvl-txt').innerText = `Լևլ ${state.lvl} | ${Math.floor(prg)}%`;
-            
-            document.getElementById('b-time').style.display = (Date.now() < state.x2T) ? 'block' : 'none';
-            if (state.sub) { 
-                let sb = document.getElementById('sub-b');
-                if(sb) { sb.innerText = "✅"; sb.disabled = true; }
-            }
+            document.getElementById('x2-msg').style.display = (Date.now() < state.x2T) ? 'block' : 'none';
+        }
 
-            document.getElementById('ad-m-cnt').innerText = `(${state.adsCount.money}/3)`;
-            document.getElementById('ad-b-cnt').innerText = `(${state.adsCount.bonus}/2)`;
-            document.getElementById('ad-x-cnt').innerText = `(${state.adsCount.x2}/3)`;
-            document.getElementById('ad-e-cnt').innerText = `(${state.adsCount.energy}/2)`;
+        // Նավիգացիա
+        window.nav = function(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.getElementById('nav-'+id).classList.add('active');
+            if(id === 'shop') setTab('house');
         };
 
-        document.getElementById('coin').addEventListener('pointerdown', function(e) {
-            if (state.energy < 1) { 
-                if(tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning'); 
-                return; 
-            }
-            state.energy--;
-            
-            let currentLvl = config.lvls.find(x => x.l === state.lvl) || config.lvls[0];
-            let earn = currentLvl.k * (Date.now() < state.x2T ? 2 : 1);
-            state.bal += earn;
-            
-            let f = document.createElement('div'); 
-            f.className = 'float'; 
-            f.style.left = (e.clientX - 20) + 'px'; 
-            f.style.top = (e.clientY - 20) + 'px'; 
-            f.innerText = '+' + earn;
-            document.body.appendChild(f); 
-            setTimeout(() => f.remove(), 800);
-            
-            if(tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-            window.update();
-        });
-
-        window.nav = function(targetScreen) {
-            document.querySelectorAll('.screen').forEach(x => x.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
-            document.getElementById(targetScreen).classList.add('active'); 
-            document.getElementById('nav-' + targetScreen).classList.add('active');
-            
-            if (targetScreen === 'shop') { window.setTab('house'); }
-        };
-
-        let currentTab = 'house';
+        // Խանութի տաբեր
         window.setTab = function(t) {
-            currentTab = t;
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('tab-' + t).classList.add('active');
-            
-            const list = document.getElementById('shop-list'); 
-            list.innerHTML = '';
-            config.items[t].forEach((item, i) => {
-                let disabled = state.bal < item.p ? 'disabled' : '';
-                list.innerHTML += `
-                <div class="card">
-                    <div><b>${item.n}</b><small>Գին: ${item.p.toLocaleString()} ֏ | +${item.i}/վ</small></div>
-                    <button class="buy-btn" onclick="window.buy('${t}', ${i})" ${disabled}>Գնել</button>
-                </div>`;
+            document.getElementById('btn-'+t).classList.add('active');
+            const container = document.getElementById('list-container');
+            container.innerHTML = '';
+            db[t].forEach((item, index) => {
+                let canBuy = state.bal >= item.p;
+                container.innerHTML += `
+                    <div class="card">
+                        <div><b>${item.n}</b><span>${item.p.toLocaleString()} ֏ | +${item.i}/վ</span></div>
+                        <button class="buy-btn" ${!canBuy ? 'disabled' : ''} onclick="buy('${t}', ${index})">Գնել</button>
+                    </div>`;
             });
         };
 
         window.buy = function(t, i) {
-            let item = config.items[t][i];
-            if (state.bal >= item.p) { 
-                state.bal -= item.p; 
-                state.inc += item.i; 
-                if(tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-                window.update(); 
-                window.setTab(t); 
-                window.save(); 
+            let item = db[t][i];
+            if(state.bal >= item.p) {
+                state.bal -= item.p;
+                state.inc += item.i;
+                tg.HapticFeedback.notificationOccurred('success');
+                update();
+                setTab(t);
+                save();
             }
         };
 
-        window.watchAd = function(type) {
-            if (!adsgram) { alert("Գովազդի համակարգը հասանելի է միայն Telegram-ի միջից միանալիս:"); return; }
+        // Կլիկ
+        document.getElementById('coin').onclick = function(e) {
+            if(state.energy < 1) return;
+            state.energy--;
+            let mult = (Date.now() < state.x2T) ? 2 : 1;
+            let earn = levels[state.lvl-1].k * mult;
+            state.bal += earn;
+            tg.HapticFeedback.impactOccurred('light');
+            update();
+        };
+
+        // ԳՈՎԱԶԴ (Adsgram)
+        window.showAd = function(type) {
+            // Երբ բլոկը ակտիվ լինի, սա ավտոմատ կբերի գովազդը
+            const AdController = window.Adsgram.init({ blockId: "dd66" });
             
-            adsgram.show().then(() => {
-                state.adsCount[type]++;
-                if (type === 'money' && state.adsCount.money >= 3) { state.bal += 10000; state.adsCount.money = 0; alert("💰 Շնորհավոր! Ստացաք 10,000 ֏!"); }
-                else if (type === 'bonus' && state.adsCount.bonus >= 2) { state.bal += 5000; state.adsCount.bonus = 0; alert("🎁 Շնորհավոր! Ստացաք 5,000 ֏!"); }
-                else if (type === 'x2' && state.adsCount.x2 >= 3) { state.x2T = Date.now() + 300000; state.adsCount.x2 = 0; alert("🔥 2X Շահույթը ակտիվացավ 5 րոպեով!"); }
-                else if (type === 'energy' && state.adsCount.energy >= 2) { state.energy = state.maxE; state.adsCount.energy = 0; alert("⚡ Էներգիան լիցքավորվեց!"); }
-                
-                window.update(); window.save();
-            }).catch((e) => {
-                alert("Այս պահին հասանելի գովազդ չկա կամ կապի խնդիր կա: Փորձեք ավելի ուշ:");
+            AdController.show().then(() => {
+                if(type === 'money') state.bal += 15000;
+                if(type === 'x2') state.x2T = Date.now() + 300000;
+                if(type === 'energy') state.energy = state.maxE;
+                tg.showAlert("Շնորհավոր! Պարգևը ստացված է:");
+                update(); save();
+            }).catch(() => {
+                tg.showAlert("Գովազդը դեռ հասանելի չէ։ Փորձեք մի փոքր ուշ։");
             });
         };
 
-        window.doTask = function(t) {
-            if (!tg) { alert("Սա աշխատում է միայն Telegram-ի մեջ:"); return; }
-            
-            if (t === 'sub' && !state.sub) { 
-                tg.openTelegramLink("https://t.me/qobot_channel");
-                setTimeout(() => { state.sub = true; state.bal += 10000; window.update(); window.save(); }, 3000);
+        // Պահպանում
+        function save() { state.last = Date.now(); localStorage.setItem('dm_save_v12', JSON.stringify(state)); }
+        function load() {
+            let s = localStorage.getItem('dm_save_v12');
+            if(s) {
+                state = JSON.parse(s);
+                let diff = (Date.now() - state.last) / 1000;
+                if(diff > 0) state.bal += state.inc * diff;
             }
-            if (t === 'inv') { 
-                tg.openTelegramLink("https://t.me/share/url?url=https://t.me/qobot&text=Արի%20խաղանք%20և%20գումար%20վաստակենք!");
-                setTimeout(() => { state.bal += 10000; window.update(); window.save(); }, 3000);
-            }
-        };
+            update();
+        }
 
-        window.save = function() { 
-            state.lastS = Date.now(); 
-            localStorage.setItem('dram_master_v5', JSON.stringify(state)); 
-        };
-        
-        window.load = function() {
-            let d = localStorage.getItem('dram_master_v5');
-            if(d) { 
-                let parsed = JSON.parse(d);
-                state = { ...state, ...parsed }; 
-                let offlineTime = (Date.now() - state.lastS) / 1000;
-                if(offlineTime > 0 && state.inc > 0) { state.bal += state.inc * offlineTime; }
-            }
-            window.update();
-        };
-
-        setInterval(() => { 
-            if(state.inc > 0) state.bal += state.inc / 10; 
-            if(state.energy < state.maxE) state.energy += 0.5; 
-            window.update(); 
+        // Հիմնական ցիկլ
+        setInterval(() => {
+            state.bal += state.inc / 10;
+            if(state.energy < state.maxE) state.energy += 0.4;
+            update();
         }, 100);
-        
-        setInterval(window.save, 5000);
-        
-        window.onload = function() { window.load(); };
+
+        load();
+        setInterval(save, 5000);
     </script>
 </body>
 </html>
