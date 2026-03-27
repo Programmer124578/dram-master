@@ -7,11 +7,10 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://sad.adsgram.ai/js/adsgram-adbox.js"></script>
     <style>
-        :root { --gold: #FFD700; --bg: #0a0a0c; --card: #16161d; --text: #ffffff; --mint: #00E676; }
+        :root { --gold: #FFD700; --bg: #0a0a0c; --card: #16161d; --text: #ffffff; --mint: #00E676; --epic: #b026ff; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body { background: var(--bg); color: var(--text); font-family: sans-serif; overflow: hidden; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; overflow: hidden; user-select: none; }
         
-        /* Վերևի մասը (Balance & Stats) */
         .header { padding: 20px 15px; background: #111; text-align: center; border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 1000; }
         .balance-val { font-size: 38px; font-weight: 900; color: var(--gold); text-shadow: 0 0 15px rgba(255,215,0,0.3); }
         .stats { display: flex; justify-content: space-around; font-size: 14px; color: #aaa; margin-top: 8px; font-weight: bold; }
@@ -20,33 +19,32 @@
         .lvl-fill { height: 100%; background: linear-gradient(90deg, #b8860b, var(--gold)); width: 0%; transition: width 0.4s ease; }
         .lvl-txt { position: absolute; width: 100%; text-align: center; font-size: 11px; line-height: 20px; font-weight: bold; color: #fff; z-index: 5; text-shadow: 1px 1px 2px #000; }
 
-        /* Էկրանների կառավարում */
-        .screen { display: none; padding: 15px; height: calc(100vh - 170px); overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .screen { display: none; padding: 15px; height: calc(100vh - 170px); overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 90px; }
         .screen.active { display: block; }
 
-        /* Խաղի հատված */
         .coin-area { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .main-coin { width: 230px; height: 230px; background: radial-gradient(circle, #ffe066, #b8860b); border-radius: 50%; border: 8px solid #5e4a06; display: flex; align-items: center; justify-content: center; font-size: 90px; color: #5e4a06; cursor: pointer; box-shadow: 0 0 30px rgba(212,175,55,0.3); transition: transform 0.05s; }
+        .main-coin { width: 230px; height: 230px; background: radial-gradient(circle, #ffe066, #b8860b); border-radius: 50%; border: 8px solid #5e4a06; display: flex; align-items: center; justify-content: center; font-size: 90px; color: #5e4a06; cursor: pointer; box-shadow: 0 0 30px rgba(212,175,55,0.3); transition: transform 0.05s; touch-action: manipulation; }
         .main-coin:active { transform: scale(0.92); }
 
-        /* Խանութի տաբեր */
         .tabs { display: flex; gap: 8px; margin-bottom: 20px; position: sticky; top: 0; background: var(--bg); padding: 5px 0; z-index: 500; }
         .tab-btn { flex: 1; padding: 12px; background: #222; border: 1px solid #444; color: #fff; border-radius: 10px; font-size: 13px; font-weight: bold; }
         .tab-btn.active { background: var(--gold); color: #000; border-color: var(--gold); }
 
-        /* Քարտեր */
         .card { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #2a2a30; }
         .card b { color: var(--gold); font-size: 15px; display: block; margin-bottom: 3px; }
-        .card span { font-size: 11px; color: #999; }
+        .card span { font-size: 11px; color: #999; display: block; }
         
-        .buy-btn { background: var(--gold); color: #000; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 900; font-size: 13px; min-width: 90px; }
+        .buy-btn { background: var(--gold); color: #000; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 900; font-size: 13px; min-width: 90px; cursor: pointer; }
         .buy-btn:disabled { background: #333; color: #666; }
 
-        /* Նավիգացիա */
         .nav { position: fixed; bottom: 0; width: 100%; background: #111; display: flex; justify-content: space-around; padding: 12px 0 30px; border-top: 1px solid #333; z-index: 1000; }
-        .nav-btn { background: none; border: none; color: #666; font-size: 11px; display: flex; flex-direction: column; align-items: center; font-weight: bold; }
+        .nav-btn { background: none; border: none; color: #666; font-size: 11px; display: flex; flex-direction: column; align-items: center; font-weight: bold; cursor: pointer; }
         .nav-btn.active { color: var(--gold); }
         .nav-btn i { font-style: normal; font-size: 24px; margin-bottom: 5px; }
+
+        /* Թռչող թվերի անիմացիան */
+        .float-text { position: absolute; font-weight: 900; font-size: 32px; pointer-events: none; animation: floatUp 0.8s ease-out forwards; z-index: 2000; text-shadow: 0px 2px 4px rgba(0,0,0,0.8); }
+        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-120px) scale(1.2); } }
     </style>
 </head>
 <body>
@@ -66,7 +64,7 @@
     <div id="game" class="screen active">
         <div class="coin-area">
             <div class="main-coin" id="coin">֏</div>
-            <p id="x2-msg" style="color:var(--mint); font-weight:bold; margin-top:20px; display:none;">🔥 2X ԲՈՆՈՒՍԸ ԱԿՏԻՎ Է</p>
+            <p id="boost-msg" style="font-weight:bold; margin-top:20px; display:none; font-size: 18px;"></p>
         </div>
     </div>
 
@@ -81,17 +79,26 @@
 
     <div id="tasks" class="screen">
         <h3 style="color:var(--gold); margin-bottom:15px;">🚀 Գովազդի Պարգևներ</h3>
+        
         <div class="card">
-            <div><b>💰 Մեծ Գումար</b><span>Դիտել գովազդ (+15,000 ֏)</span></div>
-            <button class="buy-btn" onclick="showAd('money')">Դիտել</button>
+            <div><b style="color:var(--epic)">🎁 Անակնկալ արկղ</b><span>Շահիր 10k-50k ֏ (Պատահական)</span></div>
+            <button class="buy-btn" onclick="showAd('mystery')">Բացել</button>
+        </div>
+        <div class="card">
+            <div><b>⚡ Էներգիա</b><span>Ամբողջական լիցքավորում</span></div>
+            <button class="buy-btn" onclick="showAd('energy')">Դիտել</button>
         </div>
         <div class="card">
             <div><b>🔥 2X Շահույթ</b><span>5 րոպե կրկնակի կլիկ</span></div>
             <button class="buy-btn" onclick="showAd('x2')">Դիտել</button>
         </div>
         <div class="card">
-            <div><b>⚡ Էներգիա</b><span>Ամբողջական լիցքավորում</span></div>
-            <button class="buy-btn" onclick="showAd('energy')">Դիտել</button>
+            <div><b style="color:var(--mint)">🚀 3X Շահույթ</b><span>3 րոպե եռակի կլիկ</span></div>
+            <button class="buy-btn" onclick="showAd('x3')">Դիտել</button>
+        </div>
+        <div class="card">
+            <div><b>⏳ Ժամանակի մեքենա</b><span>Ստացիր 1 ժամվա պասիվ եկամուտը</span></div>
+            <button class="buy-btn" onclick="showAd('time')">Դիտել</button>
         </div>
     </div>
 
@@ -105,9 +112,15 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        let state = { bal:0, inc:0, energy:500, maxE:500, lvl:1, x2T:0, last:Date.now() };
+        // Ստեղծում ենք գովազդի կոնտրոլերը միանգամից (ՔՈ ԻՐԱԿԱՆ ID-ն)
+        let AdController;
+        try {
+            AdController = window.Adsgram.init({ blockId: "26025" });
+        } catch(e) { console.log("Adsgram-ը չի կարողացել միանալ"); }
 
-        // Բոլոր 45 իրերը
+        let state = { bal:0, inc:0, energy:500, maxE:500, lvl:1, x2T:0, x3T:0, last:Date.now() };
+
+        // Բազան մնացել է նույնը (45 իրեր)
         const db = {
             house: [
                 {n:'Սենյակ', p:1000, i:2}, {n:'Բնակարան', p:5000, i:12}, {n:'Տնակ', p:15000, i:40}, {n:'Գյուղական տուն', p:40000, i:110}, {n:'Առանձնատուն', p:100000, i:300},
@@ -133,7 +146,6 @@
         ];
 
         function update() {
-            // Լևլի հաշվարկ
             let current = levels[0];
             for(let lv of levels) { if(state.bal >= lv.m) current = lv; }
             state.lvl = current.l; state.maxE = current.e;
@@ -147,10 +159,18 @@
             document.getElementById('lvl-fill').style.width = Math.min(prg, 100) + '%';
             document.getElementById('lvl-txt').innerText = `Լևլ ${current.l} | ${Math.floor(prg)}%`;
             
-            document.getElementById('x2-msg').style.display = (Date.now() < state.x2T) ? 'block' : 'none';
+            // Բոնուսների տեքստի ցուցադրում
+            let boostMsg = document.getElementById('boost-msg');
+            let now = Date.now();
+            if(now < state.x3T) {
+                boostMsg.style.display = 'block'; boostMsg.style.color = '#00E676'; boostMsg.innerText = '🚀 3X ԲՈՆՈՒՍԸ ԱԿՏԻՎ Է';
+            } else if(now < state.x2T) {
+                boostMsg.style.display = 'block'; boostMsg.style.color = '#FFD700'; boostMsg.innerText = '🔥 2X ԲՈՆՈՒՍԸ ԱԿՏԻՎ Է';
+            } else {
+                boostMsg.style.display = 'none';
+            }
         }
 
-        // Նավիգացիա
         window.nav = function(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -159,7 +179,6 @@
             if(id === 'shop') setTab('house');
         };
 
-        // Խանութի տաբեր
         window.setTab = function(t) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-'+t).classList.add('active');
@@ -180,48 +199,98 @@
             if(state.bal >= item.p) {
                 state.bal -= item.p;
                 state.inc += item.i;
-                tg.HapticFeedback.notificationOccurred('success');
-                update();
-                setTab(t);
-                save();
+                if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+                update(); setTab(t); save();
             }
         };
 
-        // Կլիկ
-        document.getElementById('coin').onclick = function(e) {
+        // Կլիկ անելու ֆունկցիան՝ թռչող թվերով (onpointerdown-ը ավելի արագ է քան onclick-ը)
+        document.getElementById('coin').onpointerdown = function(e) {
             if(state.energy < 1) return;
             state.energy--;
-            let mult = (Date.now() < state.x2T) ? 2 : 1;
+            
+            let now = Date.now();
+            let mult = 1;
+            if (now < state.x3T) mult = 3;
+            else if (now < state.x2T) mult = 2;
+
             let earn = levels[state.lvl-1].k * mult;
             state.bal += earn;
-            tg.HapticFeedback.impactOccurred('light');
+            if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+            
+            // Ստեղծում ենք թռչող տեքստը (+)
+            let floatEl = document.createElement('div');
+            floatEl.className = 'float-text';
+            floatEl.innerText = '+' + earn;
+            
+            // Որոշում ենք գույնը
+            if(mult === 3) floatEl.style.color = '#00E676';
+            else if(mult === 2) floatEl.style.color = '#FFD700';
+            else floatEl.style.color = '#FFFFFF';
+
+            // Դիրքավորում ենք այնտեղ, որտեղ մատով սեղմել են
+            let rect = e.target.getBoundingClientRect();
+            let x = e.clientX || (e.touches && e.touches[0].clientX) || (rect.left + rect.width/2);
+            let y = e.clientY || (e.touches && e.touches[0].clientY) || (rect.top + rect.height/2);
+            
+            floatEl.style.left = (x - 20) + 'px';
+            floatEl.style.top = (y - 30) + 'px';
+            document.body.appendChild(floatEl);
+
+            // Ջնջում ենք անիմացիան ավարտվելուց հետո
+            setTimeout(() => floatEl.remove(), 800);
+
             update();
         };
 
-        // ԳՈՎԱԶԴ (Adsgram)
+        // ԳՈՎԱԶԴ (Adsgram) Ֆունկցիան
         window.showAd = function(type) {
-            // Երբ բլոկը ակտիվ լինի, սա ավտոմատ կբերի գովազդը
-            const AdController = window.Adsgram.init({ blockId: "dd66" });
-            
+            if (!AdController) {
+                tg.showAlert("Գովազդի համակարգը բեռնվում է: Սպասեք մի փոքր:");
+                return;
+            }
+
             AdController.show().then(() => {
-                if(type === 'money') state.bal += 15000;
-                if(type === 'x2') state.x2T = Date.now() + 300000;
-                if(type === 'energy') state.energy = state.maxE;
-                tg.showAlert("Շնորհավոր! Պարգևը ստացված է:");
+                if(type === 'mystery') {
+                    let randomPrize = Math.floor(Math.random() * (50000 - 10000 + 1)) + 10000;
+                    state.bal += randomPrize;
+                    tg.showAlert(`🎁 Շնորհավոր! Դուք շահեցիք ${randomPrize.toLocaleString()} ֏!`);
+                }
+                if(type === 'energy') {
+                    state.energy = state.maxE;
+                    tg.showAlert("⚡ Էներգիան ամբողջությամբ լիցքավորվեց!");
+                }
+                if(type === 'x2') {
+                    state.x2T = Date.now() + 300000; // 5 րոպե
+                    tg.showAlert("🔥 2X Շահույթը միացավ 5 րոպեով!");
+                }
+                if(type === 'x3') {
+                    state.x3T = Date.now() + 180000; // 3 րոպե
+                    tg.showAlert("🚀 3X Շահույթը միացավ 3 րոպեով!");
+                }
+                if(type === 'time') {
+                    let hourIncome = state.inc * 3600;
+                    if(hourIncome === 0) { hourIncome = 5000; } // Եթե եկամուտ չունի, գոնե 5000 տանք
+                    state.bal += hourIncome;
+                    tg.showAlert(`⏳ Դուք ստացաք 1 ժամվա եկամուտ՝ ${hourIncome.toLocaleString()} ֏!`);
+                }
                 update(); save();
-            }).catch(() => {
-                tg.showAlert("Գովազդը դեռ հասանելի չէ։ Փորձեք մի փոքր ուշ։");
+            }).catch((err) => {
+                tg.showAlert("Գովազդը այս պահին հասանելի չէ: Խնդրում ենք փորձել մի փոքր ուշ կամ բացել խաղը Telegram-ի միջոցով:");
             });
         };
 
-        // Պահպանում
-        function save() { state.last = Date.now(); localStorage.setItem('dm_save_v12', JSON.stringify(state)); }
+        function save() { state.last = Date.now(); localStorage.setItem('dm_save_v13', JSON.stringify(state)); }
         function load() {
-            let s = localStorage.getItem('dm_save_v12');
+            let s = localStorage.getItem('dm_save_v13');
             if(s) {
                 state = JSON.parse(s);
                 let diff = (Date.now() - state.last) / 1000;
                 if(diff > 0) state.bal += state.inc * diff;
+                
+                // Ապահովագրություն, որ x2/x3 ժամանակը սխալ չպահվի
+                if(!state.x2T) state.x2T = 0;
+                if(!state.x3T) state.x3T = 0;
             }
             update();
         }
@@ -229,7 +298,8 @@
         // Հիմնական ցիկլ
         setInterval(() => {
             state.bal += state.inc / 10;
-            if(state.energy < state.maxE) state.energy += 0.4;
+            // ԷՆԵՐԳԻԱՆ ՀԻՄԱ ԼՑՎՈՒՄ Է ՇԱՏ ԱՎԵԼԻ ԴԱՆԴԱՂ (0.05 ամեն 0.1 վայրկյանում = 0.5 վայրկյանում)
+            if(state.energy < state.maxE) state.energy += 0.05; 
             update();
         }, 100);
 
