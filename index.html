@@ -3,288 +3,301 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dram Master Pro | Official</title>
+    <title>Dram Master Pro | Ultimate</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://sad.adsgram.ai/js/adsgram-adbox.js"></script>
     <style>
         :root {
             --gold: #FFD700;
             --gold-dark: #B8860B;
-            --bg: #0a0a0a;
-            --card: #161616;
-            --accent: #FF4500;
-            --success: #00FA9A;
+            --bg: #050505;
+            --card-bg: #111111;
+            --mint: #00FA9A;
+            --text: #ffffff;
+            --text-gray: #aaaaaa;
         }
 
         body {
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             background-color: var(--bg);
-            color: white;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text);
+            font-family: 'Segoe UI', sans-serif;
             overflow: hidden;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- Header --- */
+        /* Header */
         .header {
-            padding: 20px 15px;
-            background: linear-gradient(to bottom, #1c1c1c, var(--bg));
-            border-bottom: 3px solid var(--gold);
+            padding: 15px;
+            background: linear-gradient(180deg, #181818 0%, var(--bg) 100%);
+            border-bottom: 2px solid var(--gold);
             text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.7);
         }
 
-        .balance-container {
-            font-size: 42px;
-            font-weight: 900;
+        .balance-val {
+            font-size: 38px; font-weight: 900;
             color: var(--gold);
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-            margin-bottom: 5px;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
         }
 
-        .stats-row {
-            display: flex;
-            justify-content: space-around;
-            font-size: 13px;
-            color: #888;
-            font-weight: bold;
+        .stats-info {
+            display: flex; justify-content: space-around;
+            font-size: 13px; color: var(--text-gray); margin-top: 5px;
         }
 
-        /* --- Game Screen --- */
-        .screen {
-            display: none;
-            height: calc(100vh - 180px);
-            overflow-y: auto;
-            padding: 20px;
-            box-sizing: border-box;
+        .level-bar-container {
+            width: 100%; height: 20px;
+            background-color: #222;
+            border-radius: 10px;
+            margin-top: 12px;
+            position: relative;
+            border: 1px solid #333;
+            overflow: hidden;
         }
 
+        .level-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-dark) 0%, var(--gold) 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .level-bar-text {
+            position: absolute; width: 100%; top: 0; left: 0;
+            line-height: 20px; font-size: 11px; font-weight: bold; color: white;
+            text-shadow: 1px 1px 2px black;
+            text-align: center;
+        }
+
+        /* Screens */
+        .screen { display: none; padding: 20px; padding-bottom: 110px; height: calc(100vh - 160px); overflow-y: auto; box-sizing: border-box; }
         .screen.active { display: block; }
 
-        /* --- ՈՍԿԵԳՈՒՅՆ ԿՈՊԵԿ --- */
-        .coin-wrapper {
-            height: 55vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+        /* Game Area */
+        .coin-area {
+            height: 50vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
         .main-coin {
-            width: 260px;
-            height: 260px;
+            width: 250px; height: 250px;
             background: radial-gradient(circle, #ffe066 0%, #b8860b 70%, #8b6914 100%);
             border-radius: 50%;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 12px solid #5e4a06;
-            box-shadow: 0 0 50px rgba(184, 134, 11, 0.4), inset 0 0 30px rgba(255,255,255,0.2);
-            cursor: pointer;
-            transition: transform 0.05s;
+            display: flex; align-items: center; justify-content: center;
+            border: 10px solid #5e4a06;
+            box-shadow: 0 0 40px rgba(184, 134, 11, 0.5);
+            cursor: pointer; transition: transform 0.05s;
         }
 
         .main-coin:active { transform: scale(0.92); }
+        .coin-symbol { font-size: 100px; color: #5e4a06; font-weight: bold; pointer-events: none; }
 
-        .coin-symbol {
-            font-size: 120px;
-            color: #5e4a06;
-            font-weight: bold;
-            text-shadow: 2px 2px 0px rgba(255,255,255,0.1);
-        }
-
-        /* --- Shop Styling --- */
-        .shop-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 12px;
-            background: #222;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .tab-btn.active {
-            background: var(--gold);
-            color: black;
-        }
-
-        .item-card {
-            background: var(--card);
-            border-radius: 20px;
-            padding: 15px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #333;
-        }
-
-        .item-info b { font-size: 17px; display: block; color: var(--gold); }
-        .item-info span { font-size: 13px; color: #aaa; }
-
-        .buy-btn {
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-            color: black;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 10px;
-            font-weight: 900;
-            cursor: pointer;
-        }
-
-        .buy-btn:disabled {
-            background: #444;
-            color: #777;
-        }
-
-        /* --- Navigation --- */
-        .nav-bar {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background: #111;
-            display: flex;
-            justify-content: space-around;
-            padding: 15px 0;
-            border-top: 2px solid #333;
-        }
-
-        .nav-item {
-            background: none;
-            border: none;
-            color: #666;
-            font-size: 11px;
-            font-weight: bold;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .nav-item.active { color: var(--gold); }
-        .nav-icon { font-size: 24px; }
-
-        /* Floating Text */
         .float-text {
-            position: absolute;
-            color: var(--gold);
-            font-weight: bold;
-            font-size: 30px;
-            pointer-events: none;
+            position: absolute; pointer-events: none;
+            color: #ffffff; font-weight: 900; font-size: 32px;
             animation: floatUp 0.8s ease-out forwards;
+            text-shadow: 0 0 10px var(--gold);
         }
 
         @keyframes floatUp {
             0% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-120px); }
+            100% { opacity: 0; transform: translateY(-130px); }
         }
+
+        /* Shop Tabs */
+        .tab-menu { display: flex; gap: 8px; margin-bottom: 15px; position: sticky; top: 0; background: var(--bg); padding: 5px 0; z-index: 5; }
+        .tab-btn { flex: 1; padding: 12px; border: none; background: #222; color: white; border-radius: 12px; font-weight: bold; }
+        .tab-btn.active { background: var(--gold); color: black; }
+
+        /* Cards */
+        .item-card {
+            background: var(--card-bg); border-radius: 18px; padding: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid #333; margin-bottom: 10px;
+        }
+
+        .item-info b { color: var(--gold); font-size: 16px; display: block; }
+        .item-info small { color: var(--text-gray); }
+
+        .buy-btn {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: black; border: none; padding: 10px 18px; border-radius: 12px; font-weight: bold;
+        }
+        .buy-btn:disabled { background: #444; color: #777; }
+
+        /* Navigation */
+        .nav-bar {
+            position: fixed; bottom: 0; width: 100%;
+            background: #111; display: flex; justify-content: space-around;
+            padding: 15px 0; border-top: 2px solid #333;
+        }
+
+        .nav-item { background: none; border: none; color: #666; font-size: 11px; display: flex; flex-direction: column; align-items: center; }
+        .nav-item.active { color: var(--gold); }
+        .nav-icon { font-size: 24px; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="balance-container" id="bal">0 ֏</div>
-        <div class="stats-row">
-            <span id="inc">Շահույթ: 0/վ</span>
-            <span id="lvl">Լևլ: 1 (Սկսնակ)</span>
+        <div class="balance-val" id="bal">0 ֏</div>
+        <div class="stats-info">
+            <span id="inc">0/վ</span>
+            <span id="energy">⚡ 500/500</span>
         </div>
-        <div style="width: 100%; height: 6px; background: #333; border-radius: 3px; margin-top: 10px;">
-            <div id="en-bar" style="width: 100%; height: 100%; background: var(--success); border-radius: 3px;"></div>
+        <div class="level-bar-container">
+            <div class="level-bar-fill" id="lvl-bar-fill"></div>
+            <div class="level-bar-text" id="lvl-bar-text">Լևլ 1 (0%)</div>
         </div>
     </div>
 
     <div id="game" class="screen active">
-        <div class="coin-wrapper">
+        <div class="coin-area">
             <div class="main-coin" onclick="clickCoin(event)">
                 <div class="coin-symbol">֏</div>
             </div>
-            <p id="en-text" style="margin-top: 20px; color: #888;">⚡ Էներգիա: 500 / 500</p>
+            <p id="boost-timer" style="color:var(--mint); font-weight:bold; margin-top:15px; display:none;"></p>
         </div>
     </div>
 
     <div id="shop" class="screen">
-        <div class="shop-tabs">
-            <button class="tab-btn active" onclick="tab('house')">🏠 Գույք</button>
-            <button class="tab-btn" onclick="tab('car')">🚗 Մեքենա</button>
-            <button class="tab-btn" onclick="tab('biz')">🏢 Բիզնես</button>
+        <div class="tab-menu">
+            <button class="tab-btn active" onclick="tab('house', this)">🏠 Գույք</button>
+            <button class="tab-btn" onclick="tab('car', this)">🚗 Մեքենա</button>
+            <button class="tab-btn" onclick="tab('biz', this)">🏢 Բիզնես</button>
         </div>
         <div id="shop-list"></div>
     </div>
 
-    <div id="extra" class="screen">
-        <h2 style="color: var(--gold)">🚀 Բոնուսներ</h2>
+    <div id="tasks" class="screen">
+        <h3 style="color:var(--gold);">🚀 Բոնուսներ (Գովազդ)</h3>
         <div class="item-card">
-            <div class="item-info"><b>Դիտել Գովազդ</b><span>+1,000 ֏ և Էներգիա</span></div>
-            <button class="buy-btn" onclick="showAd()">Դիտել</button>
+            <div class="item-info"><b>🔥 2X Շահույթ (5ր)</b><small>3 գովազդ = 5 րոպե</small></div>
+            <button class="buy-btn" onclick="watchAd('x2')">Դիտել</button>
         </div>
         <div class="item-card">
-            <div class="item-info"><b>Հրավիրիր Ընկեր</b><span>Յուրաքանչյուրը՝ 5,000 ֏</span></div>
-            <button class="buy-btn" onclick="shareLink()">Հրավիրել</button>
+            <div class="item-info"><b>⚡ Էներգիայի լիցքավորում</b><small>2 գովազդ = 100%</small></div>
+            <button class="buy-btn" onclick="watchAd('energy')">Դիտել</button>
+        </div>
+        <div class="item-card">
+            <div class="item-info"><b>💰 Արագ գումար</b><small>1 գովազդ = +10,000 ֏</small></div>
+            <button class="buy-btn" onclick="watchAd('money')">Դիտել</button>
         </div>
     </div>
 
     <div class="nav-bar">
         <button class="nav-item active" onclick="nav('game', this)"><span class="nav-icon">🪙</span>Խաղալ</button>
         <button class="nav-item" onclick="nav('shop', this)"><span class="nav-icon">🛒</span>Խանութ</button>
-        <button class="nav-item" onclick="nav('extra', this)"><span class="nav-icon">💎</span>Բոնուս</button>
+        <button class="nav-item" onclick="nav('tasks', this)"><span class="nav-icon">🎁</span>Պարգևներ</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
+        // --- ADSGRAM CONFIG ---
+        const adsgram = window.Adsgram.init({ blockId: "dd66" });
+        let lastInterstitial = 0;
+
         let state = {
-            bal: 0, inc: 0, energy: 500, maxE: 500, lvl: 1, 
-            inv: {}, lastSave: Date.now()
+            bal: 0, inc: 0, energy: 500, maxE: 500, lvl: 1,
+            x2Ads: 0, x2Time: 0, energyAds: 0, lastSave: Date.now()
         };
 
         const config = {
             levels: [
-                { l: 1, n: "Սկսնակ", m: 0, mult: 1 },
-                { l: 2, n: "Փորձնակ", m: 10000, mult: 2 },
-                { l: 3, n: "Աշխատավոր", m: 50000, mult: 5 },
-                { l: 4, n: "Գործարար", m: 200000, mult: 10 },
-                { l: 5, n: "Միլիոնատեր", m: 1000000, mult: 25 },
-                { l: 6, n: "Օլիգարխ", m: 10000000, mult: 100 }
+                {l:1, m:0, e:500, k:1}, {l:2, m:20000, e:1000, k:2}, {l:3, m:100000, e:1500, k:5},
+                {l:4, m:500000, e:2000, k:10}, {l:5, m:2000000, e:3000, k:25}, {l:6, m:10000000, e:5000, k:60},
+                {l:7, m:50000000, e:7500, k:150}, {l:8, m:250000000, e:10000, k:400}
             ],
             items: {
-                house: [{id:'h1', n:'Հին սենյակ', p:1000, i:2}, {id:'h2', n:'Բնակարան', p:5000, i:12}, {id:'h3', n:'Առանձնատուն', p:25000, i:70}],
-                car: [{id:'c1', n:'VAZ 2107', p:2000, i:5}, {id:'c2', n:'Mercedes C', p:15000, i:40}, {id:'c3', n:'Tesla 3', p:60000, i:180}],
-                biz: [{id:'b1', n:'Կրպակ', p:3000, i:10}, {id:'b2', n:'Սրճարան', p:20000, i:60}, {id:'b3', n:'Բանկ', p:500000, i:1500}]
+                house: [
+                    {n:'Սենյակ', p:1000, i:2}, {n:'Բնակարան', p:5000, i:12}, {n:'Գյուղական տուն', p:20000, i:55},
+                    {n:'Առանձնատուն', p:80000, i:220}, {n:'Դուպլեքս', p:250000, i:700}, {n:'Վիլլա Դիլիջանում', p:600000, i:1800},
+                    {n:'Modern House', p:1500000, i:4500}, {n:'Smart Home', p:4000000, i:13000}, {n:'Ocean Villa', p:10000000, i:35000},
+                    {n:'Պենտհաուս', p:25000000, i:90000}, {n:'Ամրոց', p:70000000, i:250000}, {n:'Կղզի', p:180000000, i:700000},
+                    {n:'Սեփական Թաղամաս', p:450000000, i:1800000}, {n:'Պալատ', p:1000000000, i:4500000}, {n:'Քաղաք', p:3000000000, i:15000000}
+                ],
+                car: [
+                    {n:'Հեծանիվ', p:500, i:1}, {n:'VAZ 2107', p:3000, i:8}, {n:'Opel Astra', p:10000, i:30},
+                    {n:'Toyota Camry', p:40000, i:120}, {n:'Mercedes C', p:120000, i:400}, {n:'Tesla 3', p:300000, i:1100},
+                    {n:'BMW M5', p:800000, i:3200}, {n:'Porsche 911', p:2000000, i:9000}, {n:'Lambo', p:6000000, i:28000},
+                    {n:'Rolls Royce', p:15000000, i:75000}, {n:'Ferrari', p:40000000, i:220000}, {n:'Bugatti', p:100000000, i:600000},
+                    {n:'Ուղղաթիռ', p:300000000, i:2000000}, {n:'Jet', p:800000000, i:6000000}, {n:'Rocket', p:2500000000, i:20000000}
+                ],
+                biz: [
+                    {n:'Կրպակ', p:2500, i:6}, {n:'Ավտոլվացում', p:12000, i:35}, {n:'Սրճարան', p:45000, i:140},
+                    {n:'Սրահ', p:150000, i:500}, {n:'Մարզասրահ', p:400000, i:1500}, {n:'Ավտոսերվիս', p:1000000, i:4000},
+                    {n:'Ռեստորան', p:3000000, i:13000}, {n:'Շինարարություն', p:8000000, i:38000}, {n:'IT Բիզնես', p:20000000, i:100000},
+                    {n:'Բանկ', p:50000000, i:280000}, {n:'Գործարան', p:120000000, i:750000}, {n:'Կորպորացիա', p:350000000, i:2200000},
+                    {n:'Հանքեր', p:900000000, i:6500000}, {n:'Էներգոցանց', p:2000000000, i:16000000}, {n:'Կայսրություն', p:5000000000, i:45000000}
+                ]
             }
         };
 
-        // Adsgram Ինտեգրում
-        const AdController = window.Adsgram ? window.Adsgram.init({ blockId: "26025" }) : null;
-
+        // UI Logic
         function updateUI() {
             let cl = config.levels.findLast(x => state.bal >= x.m) || config.levels[0];
-            state.lvl = cl.l;
-            state.maxE = 500 + (cl.l * 100);
+            state.lvl = cl.l; state.maxE = cl.e;
 
             document.getElementById('bal').innerText = Math.floor(state.bal).toLocaleString() + ' ֏';
-            document.getElementById('inc').innerText = `Շահույթ: ${state.inc.toLocaleString()}/վ`;
-            document.getElementById('lvl').innerText = `Լևլ: ${cl.l} (${cl.n})`;
-            document.getElementById('en-text').innerText = `⚡ Էներգիա: ${Math.floor(state.energy)} / ${state.maxE}`;
-            document.getElementById('en-bar').style.width = (state.energy / state.maxE * 100) + '%';
+            document.getElementById('inc').innerText = state.inc.toLocaleString() + '/վ';
+            document.getElementById('energy').innerText = `⚡ ${Math.floor(state.energy)}/${state.maxE}`;
+
+            let next = config.levels[cl.l];
+            let prog = next ? ((state.bal - cl.m) / (next.m - cl.m)) * 100 : 100;
+            document.getElementById('lvl-bar-fill').style.width = Math.min(prog, 100) + '%';
+            document.getElementById('lvl-bar-text').innerText = `Լևլ ${cl.l} (${Math.floor(prog)}%)`;
+
+            let boost = document.getElementById('boost-timer');
+            if(Date.now() < state.x2Time) {
+                boost.innerText = "🔥 2X ՇԱՀՈՒՅԹ"; boost.style.display = 'block';
+            } else { boost.style.display = 'none'; }
         }
 
+        // --- ADSGRAM FUNCTIONS ---
+        async function watchAd(type) {
+            adsgram.show().then(() => {
+                handleAdReward(type);
+                tg.HapticFeedback.notificationOccurred('success');
+            }).catch((e) => {
+                tg.showAlert(e.done === false ? "Գովազդը կիսատ մնաց:" : "Գովազդ չգտնվեց, փորձեք ուշ:");
+            });
+        }
+
+        function handleAdReward(type) {
+            if(type === 'x2') {
+                state.x2Ads++;
+                if(state.x2Ads >= 3) {
+                    state.x2Time = Date.now() + 300000; state.x2Ads = 0;
+                    tg.showAlert("Շնորհավոր! 2X-ը ակտիվ է 5 րոպեով:");
+                } else tg.showAlert(`Մնաց դիտել ${3 - state.x2Ads} գովազդ:`);
+            } else if(type === 'energy') {
+                state.energyAds++;
+                if(state.energyAds >= 2) {
+                    state.energy = state.maxE; state.energyAds = 0;
+                    tg.showAlert("⚡ Էներգիան լրիվ լիցքավորվեց!");
+                } else tg.showAlert("Մնաց դիտել 1 գովազդ:");
+            } else if(type === 'money') {
+                state.bal += 10000;
+                tg.showAlert("💰 Դուք ստացաք 10,000 ֏!");
+            }
+            save(); updateUI();
+        }
+
+        async function triggerInterstitial() {
+            if(Date.now() - lastInterstitial > 60000) {
+                adsgram.show().then(() => { lastInterstitial = Date.now(); }).catch(() => {});
+            }
+        }
+
+        // Gameplay
         function clickCoin(e) {
-            if (state.energy < 1) return;
+            if(state.energy < 1) { tg.HapticFeedback.notificationOccurred('warning'); return; }
             state.energy--;
-            let cl = config.levels.find(x => x.l === state.lvl);
-            let earn = 1 * cl.mult;
+            let mult = (Date.now() < state.x2Time) ? 2 : 1;
+            let earn = config.levels[state.lvl-1].k * mult;
             state.bal += earn;
 
             const f = document.createElement('div');
@@ -294,80 +307,66 @@
             document.body.appendChild(f);
             setTimeout(() => f.remove(), 800);
             
-            tg.HapticFeedback.impactOccurred('medium');
+            tg.HapticFeedback.impactOccurred('light');
             updateUI();
         }
 
-        async function showAd() {
-            if (!AdController) {
-                alert("Գովազդը չի բեռնվել, ստուգեք ինտերնետը կամ անջատեք AdBlock:");
-                return;
-            }
-            try {
-                await AdController.show();
-                state.bal += 1000;
-                state.energy = state.maxE;
-                updateUI();
-                save();
-            } catch(e) { console.log("Ad closed"); }
+        function nav(s, btn) {
+            document.querySelectorAll('.screen').forEach(x => x.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
+            document.getElementById(s).classList.add('active');
+            btn.classList.add('active');
+            
+            triggerInterstitial(); // Ամեն էկրան փոխելիս փորձում է գովազդ բացել
+            if(s === 'shop') tab('house', document.querySelector('.tab-btn'));
         }
 
-        function tab(t) {
+        function tab(t, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
             const list = document.getElementById('shop-list');
             list.innerHTML = '';
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-
-            config.items[t].forEach(item => {
+            config.items[t].forEach((item, idx) => {
                 const card = document.createElement('div');
                 card.className = 'item-card';
                 card.innerHTML = `
-                    <div class="item-info"><b>${item.n}</b><span>Գին: ${item.p.toLocaleString()} ֏ | +${item.i}/վ</span></div>
-                    <button class="buy-btn" onclick="buy('${t}','${item.id}')" ${state.bal < item.p ? 'disabled' : ''}>Գնել</button>
+                    <div class="item-info"><b>${item.n}</b><small>${item.p.toLocaleString()} ֏ | +${item.i}/վ</small></div>
+                    <button class="buy-btn" onclick="buy('${t}', ${idx})" ${state.bal < item.p ? 'disabled':''}>Գնել</button>
                 `;
                 list.appendChild(card);
             });
         }
 
-        function buy(t, id) {
-            const item = config.items[t].find(x => x.id === id);
-            if (state.bal >= item.p) {
-                state.bal -= item.p;
-                state.inc += item.i;
+        function buy(t, idx) {
+            let item = config.items[t][idx];
+            if(state.bal >= item.p) {
+                state.bal -= item.p; state.inc += item.i;
                 tg.HapticFeedback.notificationOccurred('success');
-                tab(t);
-                updateUI();
-                save();
+                tab(t, document.querySelector('.tab-btn.active'));
+                updateUI(); save();
             }
         }
 
-        function nav(s, b) {
-            document.querySelectorAll('.screen').forEach(x => x.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
-            document.getElementById(s).classList.add('active');
-            b.classList.add('active');
-            if(s === 'shop') tab('house');
-        }
-
-        function shareLink() {
-            const url = `https://t.me/share/url?url=https://t.me/${tg.initDataUnsafe.user.username}?start=${tg.initDataUnsafe.user.id}&text=Միացիր ինձ Dram Master-ում և ստացիր բոնուսներ!`;
-            tg.openTelegramLink(url);
-        }
-
+        // Timer & Save
         setInterval(() => {
-            state.bal += (state.inc / 10);
-            if (state.energy < state.maxE) state.energy += 0.2;
+            state.bal += state.inc/10;
+            if(state.energy < state.maxE) state.energy += 0.15;
             updateUI();
         }, 100);
 
-        function save() { localStorage.setItem('dm_pro_state', JSON.stringify(state)); }
+        function save() { state.lastSave = Date.now(); localStorage.setItem('dram_master_data', JSON.stringify(state)); }
         function load() {
-            const s = localStorage.getItem('dm_pro_state');
-            if (s) state = JSON.parse(s);
+            let data = localStorage.getItem('dram_master_data');
+            if(data) {
+                state = JSON.parse(data);
+                let passed = (Date.now() - state.lastSave) / 1000;
+                state.bal += state.inc * passed;
+            }
             updateUI();
         }
 
         load();
+        setInterval(save, 5000);
     </script>
 </body>
 </html>
