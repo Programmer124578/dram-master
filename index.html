@@ -131,6 +131,7 @@
         tg.setHeaderColor('#0a0b10');
 
         let AdController;
+        // ՓՈԽԻՐ 26025-ը ՔՈ ԻՐԱԿԱՆ ID-ՈՎ
         try { AdController = window.Adsgram.init({ blockId: "25257" }); } catch(e) {}
 
         let state = { 
@@ -152,7 +153,7 @@
                 tr1k: "💵 Փոքր Պարգև", tr5k: "💰 Միջին Պարգև", tmystery: "🎁 Կախարդական Արկղ", 
                 tdouble: "🔥 Կրկնապատկել Բալանսը", tx2c: "⚡ 2x Քլիք (5 րոպե)", tx3c: "💥 3x Քլիք (5 րոպե)",
                 lvlText: "Լևլ", errEng: "⚡ Էներգիան Սպառվեց", errEngT: "Լիցքավորելու համար դիտիր գովազդ:",
-                adMsg: "Գովազդը ժամանակավորապես անջատված է: Ահա ձեր բոնուսը:",
+                adMsg: "Գովազդը բեռնվում է...",
                 min5: "5 րոպեով"
             },
             en: {
@@ -163,7 +164,7 @@
                 tr1k: "💵 Small Reward", tr5k: "💰 Medium Reward", tmystery: "🎁 Mystery Box", 
                 tdouble: "🔥 Double Balance", tx2c: "⚡ 2x Click (5 Min)", tx3c: "💥 3x Click (5 Min)",
                 lvlText: "Level", errEng: "⚡ Out of Energy", errEngT: "Watch an ad to refill:",
-                adMsg: "Ads are temporarily disabled. Here is your bonus.",
+                adMsg: "Ad is loading...",
                 min5: "For 5 Min"
             },
             ru: {
@@ -174,7 +175,7 @@
                 tr1k: "💵 Малая Награда", tr5k: "💰 Средняя Награда", tmystery: "🎁 Тайный Ящик", 
                 tdouble: "🔥 Удвоить Баланс", tx2c: "⚡ 2x Клик (5 Мин)", tx3c: "💥 3x Клик (5 Мин)",
                 lvlText: "Уровень", errEng: "⚡ Энергия закончилась", errEngT: "Посмотрите рекламу для пополнения:",
-                adMsg: "Реклама временно отключена. Вот ваш бонус.",
+                adMsg: "Реклама загружается...",
                 min5: "на 5 мин"
             }
         };
@@ -233,7 +234,6 @@
                 let count = state.adCounts[type] || 0;
                 let btn = document.getElementById('btn-' + type);
                 if (btn) {
-                    // Եթե 5 րոպեն դեռ չի անցել x2/x3-ի համար
                     if ((type === 'x2c' || type === 'x3c') && state.multExpiry > now) {
                         let diff = Math.ceil((state.multExpiry - now) / 1000);
                         btn.innerText = `${t.btnBought} (${diff}s)`; btn.disabled = true; btn.className = "buy-btn bought";
@@ -297,16 +297,16 @@
             document.getElementById('modal-overlay').classList.add('show');
         }
 
+        // --- ՈՒՂՂՎԱԾ ՖՈՒՆԿՑԻԱ ---
         function playDirectAd(onSuccess) {
-            if (!AdController) {
-                tg.showAlert(dict[state.lang].adMsg);
-                onSuccess(); return;
-            }
-            AdController.show().then(() => { onSuccess(); }).catch(() => {
-                tg.showAlert(dict[state.lang].adMsg);
-                onSuccess();
+            if (!AdController) return;
+            AdController.show().then(() => { 
+                onSuccess(); 
+            }).catch((e) => {
+                console.log("Ad Error/Closed:", e);
             });
         }
+        // ------------------------
 
         function update() {
             let current = levels[0];
@@ -417,12 +417,11 @@
         window.inviteFriend = function() { tg.openTelegramLink(`https://t.me/share/url?url=https://t.me/DramMasterBot`); state.bal += 5000; update(); save(); };
 
         document.getElementById('coin').onpointerdown = function(e) {
-            // Ստուգում ենք՝ արդյոք բոնուսի ժամանակը լրացել է
             let currentMult = 1;
             if (state.multExpiry > Date.now()) {
                 currentMult = state.clickMult || 1;
             } else {
-                state.clickMult = 1; // Reset
+                state.clickMult = 1;
             }
 
             let earn = Math.pow(2, state.lvl - 1) * currentMult;
@@ -453,7 +452,7 @@
             state.bal += state.inc; 
             if(state.energy < state.maxE) state.energy = Math.min(state.maxE, state.energy + (state.maxE/3600)); 
             update();
-            updateTasksUI(); // Թարմացնել կոճակների ժամանակը ամեն վայրկյան
+            updateTasksUI();
         }, 1000);
         setInterval(save, 5000); load();
     </script>
