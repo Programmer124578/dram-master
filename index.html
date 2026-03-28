@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dram Master</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://sad.adsgram.ai/js/adsgram-adbox.js"></script>
+    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
     <style>
         :root { --gold: #FFD700; --bg-dark: #0a0b10; --mint: #00E676; --glass: rgba(255, 255, 255, 0.05); }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
@@ -131,8 +131,8 @@
         tg.setHeaderColor('#0a0b10');
 
         let AdController;
-        // ՓՈԽԻՐ 26025-ը ՔՈ ԻՐԱԿԱՆ ID-ՈՎ
-        try { AdController = window.Adsgram.init({ blockId: "2364" }); } catch(e) {}
+        
+        try { AdController = window.Adsgram.init({ blockId: "26119" }); } catch(e) {}
 
         let state = { 
             bal:0, inc:0, energy:1000, maxE:1000, lvl:1, 
@@ -299,11 +299,22 @@
 
         // --- ՈՒՂՂՎԱԾ ՖՈՒՆԿՑԻԱ ---
         function playDirectAd(onSuccess) {
-            if (!AdController) return;
+            if (!AdController && window.Adsgram) {
+                try { AdController = window.Adsgram.init({ blockId: "26119" }); } catch(e) {}
+            }
+            
+            if (!AdController) {
+                tg.showAlert(dict[state.lang].adMsg || "Գովազդը բեռնվում է...");
+                return;
+            }
+            
             AdController.show().then(() => { 
                 onSuccess(); 
             }).catch((e) => {
-                console.log("Ad Error/Closed:", e);
+                let err = state.lang === 'hy' ? "Գովազդ այս պահին չկա, կամ փակել եք այն: Փորձեք մի փոքր ուշ:" : 
+                         (state.lang === 'ru' ? "Рекламы пока нет, или вы ее закрыли. Попробуйте позже." : 
+                         "No ads available right now, or you closed it. Try again later.");
+                tg.showAlert(err);
             });
         }
         // ------------------------
