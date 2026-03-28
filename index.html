@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="hy">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -48,8 +48,8 @@
         .card-info b { color: var(--gold); font-size: 15px; display: block; margin-bottom: 6px; }
         .card-info span { font-size: 11px; color: #999; }
         
-        .buy-btn { background: linear-gradient(135deg, var(--gold), #ff8c00); color: #000; border: none; padding: 12px 16px; border-radius: 12px; font-weight: 900; font-size: 12px; min-width: 95px; cursor: pointer; }
-        .buy-btn.bought { background: var(--mint); color: #000; }
+        .buy-btn { background: linear-gradient(135deg, var(--gold), #ff8c00); color: #000; border: none; padding: 12px 16px; border-radius: 12px; font-weight: 900; font-size: 12px; min-width: 105px; cursor: pointer; }
+        .buy-btn.bought { background: #333; color: #fff; }
         .buy-btn:disabled { opacity: 0.4; }
 
         .nav { position: fixed; bottom: 0; width: 100%; background: rgba(10, 11, 16, 0.95); display: flex; justify-content: space-around; padding: 12px 0 25px; border-top: 1px solid rgba(255,255,255,0.05); z-index: 1000; }
@@ -75,15 +75,15 @@
     <div class="header">
         <div class="top-bar">
             <span style="font-weight: bold; color: #888;">Dram Master</span>
-            <button class="lang-btn" onclick="toggleLang()" id="lang-btn">🇦🇲 HY</button>
+            <button class="lang-btn" onclick="toggleLang()" id="lang-btn">🇬🇧 EN</button>
         </div>
         <div class="lvl-cont">
             <div class="lvl-fill" id="lvl-fill"></div>
-            <div class="lvl-txt" id="lvl-txt">Լևլ 1 | 0%</div>
+            <div class="lvl-txt" id="lvl-txt">Level 1 | 0%</div>
         </div>
         <div class="balance-val" id="bal">0 ֏</div>
         <div class="stats">
-            <span id="inc">0 ֏/վ</span>
+            <span id="inc">0 ֏/s</span>
             <span id="energy">⚡ 1000/1000</span>
         </div>
     </div>
@@ -96,28 +96,33 @@
 
     <div id="shop" class="screen">
         <div class="tabs">
-            <button class="tab-btn active" id="btn-house" onclick="setTab('house')">🏠 Գույք</button>
-            <button class="tab-btn" id="btn-car" onclick="setTab('car')">🚗 Մեքենա</button>
-            <button class="tab-btn" id="btn-biz" onclick="setTab('biz')">🏢 Բիզնես</button>
+            <button class="tab-btn active" id="btn-house" onclick="setTab('house')">🏠 Real Estate</button>
+            <button class="tab-btn" id="btn-car" onclick="setTab('car')">🚗 Cars</button>
+            <button class="tab-btn" id="btn-biz" onclick="setTab('biz')">🏢 Business</button>
         </div>
         <div id="list-container"></div>
     </div>
 
     <div id="tasks" class="screen">
-        <h3 class="section-title" id="t-social">🌟 Սոցիալական</h3>
-        <div class="card"><div class="card-info"><b id="t-news">📢 Լուրերի Ալիք</b><span id="t-news-sub">+10,000 ֏ բոնուս</span></div><button class="buy-btn" onclick="subTg()" id="btn-tg">Միանալ</button></div>
-        <div class="card"><div class="card-info"><b id="t-invite">👥 Հրավիրել</b><span id="t-invite-sub">+5,000 ֏ ամեն մեկի համար</span></div><button class="buy-btn" onclick="inviteFriend()" id="btn-inv">Հրավիրել</button></div>
+        <h3 class="section-title" id="t-social">🌟 Social</h3>
+        <div class="card"><div class="card-info"><b id="t-news">📢 News Channel</b><span>+10,000 ֏</span></div><button class="buy-btn" onclick="subTg()" id="btn-tg">Join</button></div>
+        <div class="card"><div class="card-info"><b id="t-invite">👥 Invite Friend</b><span>+5,000 ֏</span></div><button class="buy-btn" onclick="inviteFriend()" id="btn-inv">Invite</button></div>
 
-        <h3 class="section-title" id="t-ads-section">🚀 Գովազդային Պարգևներ</h3>
-        <div class="card"><div class="card-info"><b style="color:#FFD700" id="t-x2">🔥 Կրկնապատկել Բալանսը</b><span id="t-x2-sub">15 գովազդ</span></div><button class="buy-btn btn-watch" onclick="handleAd('doubleBal')">Դիտել</button></div>
-        <div class="card"><div class="card-info"><b id="t-ad1">💰 Միջին Պարգև</b><span id="t-ad1-sub">+5,000 ֏</span></div><button class="buy-btn btn-watch" onclick="handleAd('r5k')">Դիտել</button></div>
-        <div class="card"><div class="card-info"><b style="color:#b026ff" id="t-ad2">🎁 Կախարդական Արկղ</b><span id="t-ad2-sub">20k-80k ֏</span></div><button class="buy-btn btn-watch" onclick="handleAd('mystery')">Դիտել</button></div>
+        <h3 class="section-title" id="t-ads-section">🚀 Ad Rewards</h3>
+        
+        <div class="card"><div class="card-info"><b id="t-r1k">💵 Small Reward</b><span>+1,000 ֏</span></div><button class="buy-btn" id="btn-r1k" onclick="handleTaskAd('r1k')">Watch</button></div>
+        <div class="card"><div class="card-info"><b id="t-r5k">💰 Medium Reward</b><span>+5,000 ֏</span></div><button class="buy-btn" id="btn-r5k" onclick="handleTaskAd('r5k')">Watch</button></div>
+        <div class="card"><div class="card-info"><b style="color:#b026ff" id="t-mystery">🎁 Mystery Box</b><span>20k-80k ֏</span></div><button class="buy-btn" id="btn-mystery" onclick="handleTaskAd('mystery')">Watch</button></div>
+        
+        <div class="card"><div class="card-info"><b style="color:#FFD700" id="t-double">🔥 Double Balance</b><span>x2 Balance</span></div><button class="buy-btn" id="btn-doubleBal" onclick="handleTaskAd('doubleBal')">Watch</button></div>
+        <div class="card"><div class="card-info"><b style="color:#00E676" id="t-x2c">⚡ 2x Click Power</b><span id="s-x2c">For 5 Min</span></div><button class="buy-btn" id="btn-x2c" onclick="handleTaskAd('x2c')">Watch</button></div>
+        <div class="card"><div class="card-info"><b style="color:#FF3D00" id="t-x3c">💥 3x Click Power</b><span id="s-x3c">For 5 Min</span></div><button class="buy-btn" id="btn-x3c" onclick="handleTaskAd('x3c')">Watch</button></div>
     </div>
 
     <div class="nav">
-        <button class="nav-btn active" id="nav-game" onclick="nav('game')"><i>🪙</i><span id="n-game">Խաղալ</span></button>
-        <button class="nav-btn" id="nav-shop" onclick="nav('shop')"><i>🛒</i><span id="n-shop">Խանութ</span></button>
-        <button class="nav-btn" id="nav-tasks" onclick="nav('tasks')"><i>🎁</i><span id="n-tasks">Պարգևներ</span></button>
+        <button class="nav-btn active" id="nav-game" onclick="nav('game')"><i>🪙</i><span id="n-game">Play</span></button>
+        <button class="nav-btn" id="nav-shop" onclick="nav('shop')"><i>🛒</i><span id="n-shop">Shop</span></button>
+        <button class="nav-btn" id="nav-tasks" onclick="nav('tasks')"><i>🎁</i><span id="n-tasks">Rewards</span></button>
     </div>
 
     <script>
@@ -132,60 +137,79 @@
             bal:0, inc:0, energy:1000, maxE:1000, lvl:1, 
             lastDaily:0, streak:1, dailyAdDone:0,
             owned:{house:[], car:[], biz:[]}, 
-            tgSub:false, adCounts: { r5k:0, mystery:0, doubleBal:0 },
-            lang: 'hy' // Լեզվի պահպանում
+            tgSub:false, clickMult: 1, multExpiry: 0, lang: 'en',
+            adCounts: { r1k:0, r5k:0, mystery:0, doubleBal:0, x2c:0, x3c:0 }
         };
+
+        const AD_REQS = { r1k: 1, r5k: 3, mystery: 10, doubleBal: 15, x2c: 3, x3c: 5 };
 
         const dict = {
             hy: {
-                btnBuy: "Գնել", btnBought: "Գնված է", close: "Ոչ, շնորհակալություն", watch: "Դիտել", get: "Ստանալ", done: "Արված է",
+                btnBuy: "Գնել", btnBought: "Ակտիվ է", close: "Ոչ, շնորհակալություն", watch: "Դիտել", get: "Ստանալ", done: "Արված է",
                 h: "🏠 Գույք", c: "🚗 Մեքենա", b: "🏢 Բիզնես",
                 nGame: "Խաղալ", nShop: "Խանութ", nTasks: "Պարգևներ",
                 tsoc: "🌟 Սոցիալական", tnews: "📢 Լուրերի Ալիք", tinv: "👥 Հրավիրել", tads: "🚀 Գովազդային Պարգևներ",
-                tx2: "🔥 Կրկնապատկել Բալանսը", tad1: "💰 Միջին Պարգև", tad2: "🎁 Կախարդական Արկղ",
-                lvlText: "Լևլ", errEng: "⚡ Էներգիան Սպառվեց", errEngT: "Լիցքավորելու համար դիտիր գովազդ:"
+                tr1k: "💵 Փոքր Պարգև", tr5k: "💰 Միջին Պարգև", tmystery: "🎁 Կախարդական Արկղ", 
+                tdouble: "🔥 Կրկնապատկել Բալանսը", tx2c: "⚡ 2x Քլիք (5 րոպե)", tx3c: "💥 3x Քլիք (5 րոպե)",
+                lvlText: "Լևլ", errEng: "⚡ Էներգիան Սպառվեց", errEngT: "Լիցքավորելու համար դիտիր գովազդ:",
+                adMsg: "Գովազդը ժամանակավորապես անջատված է: Ահա ձեր բոնուսը:",
+                min5: "5 րոպեով"
             },
             en: {
-                btnBuy: "Buy", btnBought: "Bought", close: "No, thanks", watch: "Watch", get: "Claim", done: "Done",
+                btnBuy: "Buy", btnBought: "Active", close: "No, thanks", watch: "Watch", get: "Claim", done: "Done",
                 h: "🏠 Real Estate", c: "🚗 Cars", b: "🏢 Business",
                 nGame: "Play", nShop: "Shop", nTasks: "Rewards",
                 tsoc: "🌟 Social", tnews: "📢 News Channel", tinv: "👥 Invite", tads: "🚀 Ad Rewards",
-                tx2: "🔥 Double Balance", tad1: "💰 Medium Reward", tad2: "🎁 Mystery Box",
-                lvlText: "Level", errEng: "⚡ Out of Energy", errEngT: "Watch an ad to refill:"
+                tr1k: "💵 Small Reward", tr5k: "💰 Medium Reward", tmystery: "🎁 Mystery Box", 
+                tdouble: "🔥 Double Balance", tx2c: "⚡ 2x Click (5 Min)", tx3c: "💥 3x Click (5 Min)",
+                lvlText: "Level", errEng: "⚡ Out of Energy", errEngT: "Watch an ad to refill:",
+                adMsg: "Ads are temporarily disabled. Here is your bonus.",
+                min5: "For 5 Min"
+            },
+            ru: {
+                btnBuy: "Купить", btnBought: "Активно", close: "Нет, спасибо", watch: "Смотреть", get: "Получить", done: "Готово",
+                h: "🏠 Недвижимость", c: "🚗 Авто", b: "🏢 Бизнес",
+                nGame: "Играть", nShop: "Магазин", nTasks: "Награды",
+                tsoc: "🌟 Социальные", tnews: "📢 Новостной Канал", tinv: "👥 Пригласить", tads: "🚀 Награды за рекламу",
+                tr1k: "💵 Малая Награда", tr5k: "💰 Средняя Награда", tmystery: "🎁 Тайный Ящик", 
+                tdouble: "🔥 Удвоить Баланс", tx2c: "⚡ 2x Клик (5 Мин)", tx3c: "💥 3x Клик (5 Мин)",
+                lvlText: "Уровень", errEng: "⚡ Энергия закончилась", errEngT: "Посмотрите рекламу для пополнения:",
+                adMsg: "Реклама временно отключена. Вот ваш бонус.",
+                min5: "на 5 мин"
             }
         };
 
         const db = {
             house: [
-                {n:{hy:'Սենյակ',en:'Room'}, p:1000, i:2}, {n:{hy:'Բնակարան',en:'Apartment'}, p:5000, i:12}, {n:{hy:'Տնակ',en:'Cabin'}, p:15000, i:40}, 
-                {n:{hy:'Գյուղական տուն',en:'Country House'}, p:40000, i:110}, {n:{hy:'Առանձնատուն',en:'Mansion'}, p:100000, i:300}, {n:{hy:'Դուպլեքս',en:'Duplex'}, p:250000, i:800}, 
-                {n:{hy:'Վիլլա',en:'Villa'}, p:600000, i:2000}, {n:{hy:'Smart Home',en:'Smart Home'}, p:4000000, i:15000}, {n:{hy:'Ocean Villa',en:'Ocean Villa'}, p:10000000, i:40000}, 
-                {n:{hy:'Պենտհաուս',en:'Penthouse'}, p:25000000, i:110000}, {n:{hy:'Ամրոց',en:'Castle'}, p:70000000, i:350000}, {n:{hy:'Կղզի',en:'Island'}, p:200000000, i:1000000},
-                {n:{hy:'Երկնաքեր',en:'Skyscraper'}, p:500000000, i:3000000}, {n:{hy:'Ստորջրյա Բազա',en:'Underwater Base'}, p:1500000000, i:10000000}, {n:{hy:'Մարսի Գաղութ',en:'Mars Colony'}, p:5000000000, i:50000000}
+                {n:{hy:'Սենյակ',en:'Room',ru:'Комната'}, p:1000, i:2}, {n:{hy:'Բնակարան',en:'Apartment',ru:'Квартира'}, p:5000, i:12}, {n:{hy:'Տնակ',en:'Cabin',ru:'Домик'}, p:15000, i:40}, 
+                {n:{hy:'Գյուղական տուն',en:'Country House',ru:'Загородный дом'}, p:40000, i:110}, {n:{hy:'Առանձնատուն',en:'Mansion',ru:'Особняк'}, p:100000, i:300}, {n:{hy:'Դուպլեքս',en:'Duplex',ru:'Дуплекс'}, p:250000, i:800}, 
+                {n:{hy:'Վիլլա',en:'Villa',ru:'Вилла'}, p:600000, i:2000}, {n:{hy:'Smart Home',en:'Smart Home',ru:'Умный Дом'}, p:4000000, i:15000}, {n:{hy:'Ocean Villa',en:'Ocean Villa',ru:'Вилла у Океана'}, p:10000000, i:40000}, 
+                {n:{hy:'Պենտհաուս',en:'Penthouse',ru:'Пентхаус'}, p:25000000, i:110000}, {n:{hy:'Ամրոց',en:'Castle',ru:'Замок'}, p:70000000, i:350000}, {n:{hy:'Կղզի',en:'Island',ru:'Остров'}, p:200000000, i:1000000},
+                {n:{hy:'Երկնաքեր',en:'Skyscraper',ru:'Небоскреб'}, p:500000000, i:3000000}, {n:{hy:'Ստորջրյա Բազա',en:'Underwater Base',ru:'Подводная База'}, p:1500000000, i:10000000}, {n:{hy:'Մարսի Գաղութ',en:'Mars Colony',ru:'Колония на Марсе'}, p:5000000000, i:50000000}
             ],
             car: [
-                {n:{hy:'Հեծանիվ',en:'Bicycle'}, p:500, i:1}, {n:{hy:'Մոպեդ',en:'Moped'}, p:1500, i:4}, {n:{hy:'VAZ 2107',en:'VAZ 2107'}, p:4000, i:10}, 
-                {n:{hy:'Opel Astra',en:'Opel Astra'}, p:12000, i:35}, {n:{hy:'Toyota Camry',en:'Toyota Camry'}, p:35000, i:100}, {n:{hy:'Mercedes C',en:'Mercedes C'}, p:90000, i:280}, 
-                {n:{hy:'Tesla Model 3',en:'Tesla Model 3'}, p:200000, i:700}, {n:{hy:'BMW M5',en:'BMW M5'}, p:500000, i:1800}, {n:{hy:'Porsche 911',en:'Porsche 911'}, p:1200000, i:4500}, 
-                {n:{hy:'Lamborghini',en:'Lamborghini'}, p:4000000, i:16000}, {n:{hy:'Bugatti',en:'Bugatti'}, p:80000000, i:400000}, {n:{hy:'Rolls-Royce',en:'Rolls-Royce'}, p:150000000, i:800000},
-                {n:{hy:'Ուղղաթիռ',en:'Helicopter'}, p:400000000, i:2500000}, {n:{hy:'Մասնավոր Ինքնաթիռ',en:'Private Jet'}, p:1200000000, i:8000000}, {n:{hy:'Տիեզերանավ',en:'Spaceship'}, p:8000000000, i:60000000}
+                {n:{hy:'Հեծանիվ',en:'Bicycle',ru:'Велосипед'}, p:500, i:1}, {n:{hy:'Մոպեդ',en:'Moped',ru:'Мопед'}, p:1500, i:4}, {n:{hy:'VAZ 2107',en:'VAZ 2107',ru:'ВАЗ 2107'}, p:4000, i:10}, 
+                {n:{hy:'Opel Astra',en:'Opel Astra',ru:'Opel Astra'}, p:12000, i:35}, {n:{hy:'Toyota Camry',en:'Toyota Camry',ru:'Toyota Camry'}, p:35000, i:100}, {n:{hy:'Mercedes C',en:'Mercedes C',ru:'Mercedes C'}, p:90000, i:280}, 
+                {n:{hy:'Tesla Model 3',en:'Tesla Model 3',ru:'Tesla Model 3'}, p:200000, i:700}, {n:{hy:'BMW M5',en:'BMW M5',ru:'BMW M5'}, p:500000, i:1800}, {n:{hy:'Porsche 911',en:'Porsche 911',ru:'Porsche 911'}, p:1200000, i:4500}, 
+                {n:{hy:'Lamborghini',en:'Lamborghini',ru:'Lamborghini'}, p:4000000, i:16000}, {n:{hy:'Bugatti',en:'Bugatti',ru:'Bugatti'}, p:80000000, i:400000}, {n:{hy:'Rolls-Royce',en:'Rolls-Royce',ru:'Rolls-Royce'}, p:150000000, i:800000},
+                {n:{hy:'Ուղղաթիռ',en:'Helicopter',ru:'Вертолет'}, p:400000000, i:2500000}, {n:{hy:'Մասնավոր Ինքնաթիռ',en:'Private Jet',ru:'Частный Самолет'}, p:1200000000, i:8000000}, {n:{hy:'Տիեզերանավ',en:'Spaceship',ru:'Космический Корабль'}, p:8000000000, i:60000000}
             ],
             biz: [
-                {n:{hy:'Կրպակ',en:'Kiosk'}, p:2000, i:5}, {n:{hy:'Ավտոլվացում',en:'Car Wash'}, p:8000, i:25}, {n:{hy:'Սրճարան',en:'Cafe'}, p:25000, i:80}, 
-                {n:{hy:'Վարսավիրանոց',en:'Barbershop'}, p:60000, i:200}, {n:{hy:'Մարզասրահ',en:'Gym'}, p:150000, i:550}, {n:{hy:'Ավտոսերվիս',en:'Auto Service'}, p:400000, i:1600}, 
-                {n:{hy:'Ռեստորան',en:'Restaurant'}, p:1000000, i:4500}, {n:{hy:'IT Բիզնես',en:'IT Business'}, p:18000000, i:100000}, {n:{hy:'Բանկ',en:'Bank'}, p:50000000, i:300000},
-                {n:{hy:'Գործարան',en:'Factory'}, p:120000000, i:700000}, {n:{hy:'Նավթային Հոր',en:'Oil Well'}, p:350000000, i:2000000}, {n:{hy:'Ավիաընկերություն',en:'Airline'}, p:800000000, i:5000000},
-                {n:{hy:'Տեխնոլոգիական Հսկա',en:'Tech Giant'}, p:2000000000, i:15000000}, {n:{hy:'Էներգետիկ Ցանց',en:'Energy Grid'}, p:6000000000, i:50000000}, {n:{hy:'Գլոբալ Կորպորացիա',en:'Global Corp'}, p:15000000000, i:150000000}
+                {n:{hy:'Կրպակ',en:'Kiosk',ru:'Киоск'}, p:2000, i:5}, {n:{hy:'Ավտոլվացում',en:'Car Wash',ru:'Автомойка'}, p:8000, i:25}, {n:{hy:'Սրճարան',en:'Cafe',ru:'Кафе'}, p:25000, i:80}, 
+                {n:{hy:'Վարսավիրանոց',en:'Barbershop',ru:'Барбершоп'}, p:60000, i:200}, {n:{hy:'Մարզասրահ',en:'Gym',ru:'Спортзал'}, p:150000, i:550}, {n:{hy:'Ավտոսերվիս',en:'Auto Service',ru:'Автосервис'}, p:400000, i:1600}, 
+                {n:{hy:'Ռեստորան',en:'Restaurant',ru:'Ресторан'}, p:1000000, i:4500}, {n:{hy:'IT Բիզնես',en:'IT Business',ru:'IT Бизнес'}, p:18000000, i:100000}, {n:{hy:'Բանկ',en:'Bank',ru:'Банк'}, p:50000000, i:300000},
+                {n:{hy:'Գործարան',en:'Factory',ru:'Завод'}, p:120000000, i:700000}, {n:{hy:'Նավթային Հոր',en:'Oil Well',ru:'Нефтяная Вышка'}, p:350000000, i:2000000}, {n:{hy:'Ավիաընկերություն',en:'Airline',ru:'Авиакомпания'}, p:800000000, i:5000000},
+                {n:{hy:'Տեխնոլոգիական Հսկա',en:'Tech Giant',ru:'Тех Гигант'}, p:2000000000, i:15000000}, {n:{hy:'Էներգետիկ Ցանց',en:'Energy Grid',ru:'Энергосеть'}, p:6000000000, i:50000000}, {n:{hy:'Գլոբալ Կորպորացիա',en:'Global Corp',ru:'Глобальная Корп'}, p:15000000000, i:150000000}
             ]
         };
 
         const levels = [
-            {l:1, n:{hy:"Անօթևան",en:"Homeless"}, m:0, e:1000}, {l:2, n:{hy:"Մուրացկան",en:"Beggar"}, m:2000, e:2500}, 
-            {l:3, n:{hy:"Բանվոր",en:"Worker"}, m:10000, e:5000}, {l:4, n:{hy:"Արհեստավոր",en:"Craftsman"}, m:50000, e:10000},
-            {l:5, n:{hy:"Խանութպան",en:"Shopkeeper"}, m:150000, e:25000}, {l:6, n:{hy:"Տնօրեն",en:"Director"}, m:400000, e:50000}, 
-            {l:7, n:{hy:"Գործարար",en:"Businessman"}, m:1000000, e:100000}, {l:8, n:{hy:"Միլիոնատեր",en:"Millionaire"}, m:2500000, e:250000},
-            {l:9, n:{hy:"Միլիարդատեր",en:"Billionaire"}, m:5000000, e:500000}, {l:10, n:{hy:"Մագնատ",en:"Magnate"}, m:15000000, e:1000000}, 
-            {l:11, n:{hy:"Օլիգարխ",en:"Oligarch"}, m:50000000, e:2000000}, {l:12, n:{hy:"Տիեզ. Օլիգարխ",en:"Space Oligarch"}, m:5000000000, e:5000000}
+            {l:1, n:{hy:"Անօթևան",en:"Homeless",ru:"Бездомный"}, m:0, e:1000}, {l:2, n:{hy:"Մուրացկան",en:"Beggar",ru:"Нищий"}, m:2000, e:2500}, 
+            {l:3, n:{hy:"Բանվոր",en:"Worker",ru:"Рабочий"}, m:10000, e:5000}, {l:4, n:{hy:"Արհեստավոր",en:"Craftsman",ru:"Ремесленник"}, m:50000, e:10000},
+            {l:5, n:{hy:"Խանութպան",en:"Shopkeeper",ru:"Лавочник"}, m:150000, e:25000}, {l:6, n:{hy:"Տնօրեն",en:"Director",ru:"Директор"}, m:400000, e:50000}, 
+            {l:7, n:{hy:"Գործարար",en:"Businessman",ru:"Бизнесмен"}, m:1000000, e:100000}, {l:8, n:{hy:"Միլիոնատեր",en:"Millionaire",ru:"Миллионер"}, m:2500000, e:250000},
+            {l:9, n:{hy:"Միլիարդատեր",en:"Billionaire",ru:"Миллиардер"}, m:5000000, e:500000}, {l:10, n:{hy:"Մագնատ",en:"Magnate",ru:"Магнат"}, m:15000000, e:1000000}, 
+            {l:11, n:{hy:"Օլիգարխ",en:"Oligarch",ru:"Олигарх"}, m:50000000, e:2000000}, {l:12, n:{hy:"Տիեզ. Օլիգարխ",en:"Space Oligarch",ru:"Космический Олигарх"}, m:5000000000, e:5000000}
         ];
 
         const dailyConfig = {
@@ -195,13 +219,36 @@
         };
 
         function toggleLang() {
-            state.lang = state.lang === 'hy' ? 'en' : 'hy';
-            applyLang(); save(); setTab('house'); // Թարմացնում ենք խանութը
+            if(state.lang === 'en') state.lang = 'hy';
+            else if(state.lang === 'hy') state.lang = 'ru';
+            else state.lang = 'en';
+            applyLang(); save(); setTab('house'); 
+        }
+
+        function updateTasksUI() {
+            let t = dict[state.lang];
+            let now = Date.now();
+            ['r1k', 'r5k', 'mystery', 'doubleBal', 'x2c', 'x3c'].forEach(type => {
+                let req = AD_REQS[type];
+                let count = state.adCounts[type] || 0;
+                let btn = document.getElementById('btn-' + type);
+                if (btn) {
+                    // Եթե 5 րոպեն դեռ չի անցել x2/x3-ի համար
+                    if ((type === 'x2c' || type === 'x3c') && state.multExpiry > now) {
+                        let diff = Math.ceil((state.multExpiry - now) / 1000);
+                        btn.innerText = `${t.btnBought} (${diff}s)`; btn.disabled = true; btn.className = "buy-btn bought";
+                    } else {
+                        btn.innerText = `${t.watch} (${count}/${req})`; btn.disabled = false; btn.className = "buy-btn";
+                    }
+                }
+            });
         }
 
         function applyLang() {
             let t = dict[state.lang];
-            document.getElementById('lang-btn').innerText = state.lang === 'hy' ? "🇦🇲 HY" : "🇬🇧 EN";
+            let flag = { hy: '🇦🇲 HY', en: '🇬🇧 EN', ru: '🇷🇺 RU' };
+            document.getElementById('lang-btn').innerText = flag[state.lang];
+            
             document.getElementById('btn-house').innerText = t.h;
             document.getElementById('btn-car').innerText = t.c;
             document.getElementById('btn-biz').innerText = t.b;
@@ -213,16 +260,22 @@
             document.getElementById('t-news').innerText = t.tnews;
             document.getElementById('t-invite').innerText = t.tinv;
             document.getElementById('t-ads-section').innerText = t.tads;
-            document.getElementById('t-x2').innerText = t.tx2;
-            document.getElementById('t-ad1').innerText = t.tad1;
-            document.getElementById('t-ad2').innerText = t.tad2;
             
+            document.getElementById('t-r1k').innerText = t.tr1k;
+            document.getElementById('t-r5k').innerText = t.tr5k;
+            document.getElementById('t-mystery').innerText = t.tmystery;
+            document.getElementById('t-double').innerText = t.tdouble;
+            document.getElementById('t-x2c').innerText = t.tx2c;
+            document.getElementById('t-x3c').innerText = t.tx3c;
+            
+            document.getElementById('s-x2c').innerText = t.min5;
+            document.getElementById('s-x3c').innerText = t.min5;
+
             if(state.tgSub) { document.getElementById('btn-tg').innerText = t.done; }
             else { document.getElementById('btn-tg').innerText = t.btnBuy; }
             document.getElementById('btn-inv').innerText = t.btnBuy;
             
-            document.querySelectorAll('.btn-watch').forEach(b => b.innerText = t.watch);
-            update();
+            updateTasksUI(); update();
         }
 
         function showModal(title, text, btnText, onBtnClick) {
@@ -236,7 +289,6 @@
                 mainBtn.innerText = btnText; mainBtn.onclick = onBtnClick; actions.appendChild(mainBtn);
             }
             
-            // ՄԻՇՏ ավելացնում ենք "Ոչ, շնորհակալություն" կոճակը, որ ոչ ոք չլռվի
             let closeBtn = document.createElement('button'); closeBtn.className = 'modal-btn-close';
             closeBtn.innerText = dict[state.lang].close; 
             closeBtn.onclick = () => document.getElementById('modal-overlay').classList.remove('show');
@@ -245,18 +297,14 @@
             document.getElementById('modal-overlay').classList.add('show');
         }
 
-        // Գովազդի ապահովագրված ֆունկցիան (եթե մերժված է, տալիս է բոնուսը)
         function playDirectAd(onSuccess) {
             if (!AdController) {
-                // Քանի որ գովազդ չկա կամ մերժվել է, միանգամից տալիս ենք բոնուսը (կարող ես ջնջել այս 2 տողը, երբ գովազդը վերականգնվի)
-                tg.showAlert(state.lang === 'hy' ? "Գովազդը ժամանակավորապես անջատված է։ Ահա ձեր բոնուսը։" : "Ads are temporarily disabled. Here is your bonus.");
-                onSuccess(); save();
-                return;
+                tg.showAlert(dict[state.lang].adMsg);
+                onSuccess(); return;
             }
-            AdController.show().then(() => { onSuccess(); save(); }).catch(() => {
-                // Եթե սեղմեց բայց խափանվեց
-                tg.showAlert(state.lang === 'hy' ? "Գովազդ չկա։ Բոնուսը տրվեց անվճար։" : "No ad available. Bonus given for free.");
-                onSuccess(); save();
+            AdController.show().then(() => { onSuccess(); }).catch(() => {
+                tg.showAlert(dict[state.lang].adMsg);
+                onSuccess();
             });
         }
 
@@ -266,7 +314,7 @@
             state.lvl = current.l; state.maxE = current.e;
 
             document.getElementById('bal').innerText = Math.floor(state.bal).toLocaleString() + ' ֏';
-            document.getElementById('inc').innerText = state.inc.toLocaleString() + ' ֏/վ';
+            document.getElementById('inc').innerText = state.inc.toLocaleString() + ' ֏/s';
             document.getElementById('energy').innerText = `⚡ ${Math.floor(state.energy)}/${state.maxE}`;
             
             let nxt = levels.find(x => x.l === current.l + 1);
@@ -279,15 +327,18 @@
             let now = Date.now();
             let diff = now - state.lastDaily;
             if (diff > 86400000) {
-                if (diff > 172800000) { state.streak = 1; }
+                if (diff > 172800000) { state.streak = 1; state.dailyAdDone = 0; }
                 let config = dailyConfig[state.streak];
                 let remainingAds = config.ads - state.dailyAdDone;
                 
-                let title = state.lang === 'hy' ? `🎁 Օր ${state.streak}-ի Բոնուս` : `🎁 Day ${state.streak} Bonus`;
+                let t = dict[state.lang];
+                let title = state.lang === 'hy' ? `🎁 Օր ${state.streak}-ի Բոնուս` : (state.lang === 'ru' ? `🎁 Бонус дня ${state.streak}` : `🎁 Day ${state.streak} Bonus`);
                 let desc = state.lang === 'hy' 
                     ? (remainingAds > 0 ? `Դիտիր ${config.ads} գովազդ՝ ${config.prize.toLocaleString()} ֏ ստանալու համար: (Մնաց՝ ${remainingAds})` : "Պարգևը պատրաստ է:")
-                    : (remainingAds > 0 ? `Watch ${config.ads} ads to get ${config.prize.toLocaleString()} ֏: (Left: ${remainingAds})` : "Reward ready!");
-                let btnTxt = remainingAds > 0 ? `${dict[state.lang].watch} (${state.dailyAdDone}/${config.ads})` : dict[state.lang].get;
+                    : (state.lang === 'ru' ? (remainingAds > 0 ? `Посмотри ${config.ads} рекламы для ${config.prize.toLocaleString()} ֏: (Осталось: ${remainingAds})` : "Награда готова!") 
+                    : (remainingAds > 0 ? `Watch ${config.ads} ads to get ${config.prize.toLocaleString()} ֏: (Left: ${remainingAds})` : "Reward ready!"));
+                
+                let btnTxt = remainingAds > 0 ? `${t.watch} (${state.dailyAdDone}/${config.ads})` : t.get;
 
                 showModal(
                     title, desc, btnTxt,
@@ -304,12 +355,29 @@
             }
         }
 
-        window.handleAd = function(type) {
+        window.handleTaskAd = function(type) {
             playDirectAd(() => {
-                if(type === 'r5k') state.bal += 5000;
-                if(type === 'mystery') state.bal += Math.floor(Math.random()*60000)+20000;
-                if(type === 'doubleBal') { state.adCounts.doubleBal++; if(state.adCounts.doubleBal >= 15) { state.bal *= 2; state.adCounts.doubleBal = 0; } }
-                update(); save();
+                if(typeof state.adCounts[type] === 'undefined') state.adCounts[type] = 0;
+                state.adCounts[type]++;
+                
+                if (state.adCounts[type] >= AD_REQS[type]) {
+                    if(type === 'r1k') state.bal += 1000;
+                    if(type === 'r5k') state.bal += 5000;
+                    if(type === 'mystery') state.bal += Math.floor(Math.random()*60000)+20000;
+                    if(type === 'doubleBal') state.bal *= 2;
+                    
+                    if(type === 'x2c') { 
+                        state.clickMult = 2; 
+                        state.multExpiry = Date.now() + (5 * 60 * 1000); 
+                    }
+                    if(type === 'x3c') { 
+                        state.clickMult = 3; 
+                        state.multExpiry = Date.now() + (5 * 60 * 1000); 
+                    }
+                    
+                    state.adCounts[type] = 0;
+                }
+                updateTasksUI(); update(); save();
             });
         };
 
@@ -332,7 +400,7 @@
                 let btnClass = bought ? "buy-btn bought" : "buy-btn";
                 let disabled = bought ? "disabled" : (state.bal < item.p ? "disabled" : "");
                 
-                c.innerHTML += `<div class="card"><div class="card-info"><b>${item.n[state.lang]}</b><span>${item.p.toLocaleString()} ֏ | +${item.i}/վ</span></div>
+                c.innerHTML += `<div class="card"><div class="card-info"><b>${item.n[state.lang]}</b><span>${item.p.toLocaleString()} ֏ | +${item.i}/s</span></div>
                 <button class="${btnClass}" ${disabled} onclick="buy('${t}', ${index})">${btnText}</button></div>`;
             });
         };
@@ -349,7 +417,15 @@
         window.inviteFriend = function() { tg.openTelegramLink(`https://t.me/share/url?url=https://t.me/DramMasterBot`); state.bal += 5000; update(); save(); };
 
         document.getElementById('coin').onpointerdown = function(e) {
-            let earn = Math.pow(2, state.lvl - 1);
+            // Ստուգում ենք՝ արդյոք բոնուսի ժամանակը լրացել է
+            let currentMult = 1;
+            if (state.multExpiry > Date.now()) {
+                currentMult = state.clickMult || 1;
+            } else {
+                state.clickMult = 1; // Reset
+            }
+
+            let earn = Math.pow(2, state.lvl - 1) * currentMult;
             if(state.energy < earn) {
                 showModal(dict[state.lang].errEng, dict[state.lang].errEngT, dict[state.lang].watch, () => { playDirectAd(() => { state.energy = state.maxE; document.getElementById('modal-overlay').classList.remove('show'); update(); }); });
                 return;
@@ -366,11 +442,19 @@
         function save() { localStorage.setItem('DramMaster_SecureSave', JSON.stringify(state)); }
         function load() {
             try { let s = localStorage.getItem('DramMaster_SecureSave'); if(s) { state = { ...state, ...JSON.parse(s) }; } } catch(e) {}
-            if(!state.lang) state.lang = 'hy';
+            if(!state.lang) state.lang = 'en';
+            if(!state.adCounts) state.adCounts = { r1k:0, r5k:0, mystery:0, doubleBal:0, x2c:0, x3c:0 };
+            if(!state.clickMult) state.clickMult = 1;
+            if(!state.multExpiry) state.multExpiry = 0;
             applyLang(); update(); setTimeout(checkDailyBonus, 1000);
         }
 
-        setInterval(() => { state.bal += state.inc; if(state.energy < state.maxE) state.energy = Math.min(state.maxE, state.energy + (state.maxE/3600)); update(); }, 1000);
+        setInterval(() => { 
+            state.bal += state.inc; 
+            if(state.energy < state.maxE) state.energy = Math.min(state.maxE, state.energy + (state.maxE/3600)); 
+            update();
+            updateTasksUI(); // Թարմացնել կոճակների ժամանակը ամեն վայրկյան
+        }, 1000);
         setInterval(save, 5000); load();
     </script>
 </body>
