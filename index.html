@@ -75,7 +75,7 @@
     <div class="header">
         <div class="top-bar">
             <span style="font-weight: bold; color: #888;">Dram Master</span>
-            <button class="lang-btn" onclick="toggleLang()" id="lang-btn">🇬🇧 EN</button>
+            <button class="lang-btn" onclick="toggleLang()" id="lang-btn"> EN</button>
         </div>
         <div class="lvl-cont">
             <div class="lvl-fill" id="lvl-fill"></div>
@@ -84,7 +84,7 @@
         <div class="balance-val" id="bal">0 ֏</div>
         <div class="stats">
             <span id="inc">0 ֏/s</span>
-            <span id="energy">⚡ 1000/1000</span>
+            <span id="energy"> 1000/1000</span>
         </div>
     </div>
 
@@ -96,33 +96,49 @@
 
     <div id="shop" class="screen">
         <div class="tabs">
-            <button class="tab-btn active" id="btn-house" onclick="setTab('house')">🏠 Real Estate</button>
-            <button class="tab-btn" id="btn-car" onclick="setTab('car')">🚗 Cars</button>
-            <button class="tab-btn" id="btn-biz" onclick="setTab('biz')">🏢 Business</button>
+            <button class="tab-btn active" id="btn-house" onclick="setTab('house')"> Real Estate</button>
+            <button class="tab-btn" id="btn-car" onclick="setTab('car')"> Cars</button>
+            <button class="tab-btn" id="btn-biz" onclick="setTab('biz')"> Business</button>
         </div>
         <div id="list-container"></div>
     </div>
 
     <div id="tasks" class="screen">
-        <h3 class="section-title" id="t-social">🌟 Social</h3>
-        <div class="card"><div class="card-info"><b id="t-news">📢 News Channel</b><span>+10,000 ֏</span></div><button class="buy-btn" onclick="subTg()" id="btn-tg">Join</button></div>
-        <div class="card"><div class="card-info"><b id="t-invite">👥 Invite Friend</b><span>+5,000 ֏</span></div><button class="buy-btn" onclick="inviteFriend()" id="btn-inv">Invite</button></div>
+        <h3 class="section-title" id="t-social"> Social</h3>
+        <div class="card"><div class="card-info"><b id="t-news"> News Channel</b><span>+10,000 ֏</span></div><button class="buy-btn" onclick="subTg()" id="btn-tg">Join</button></div>
+        <div class="card"><div class="card-info"><b id="t-invite"> Invite Friend</b><span>+5,000 ֏</span></div><button class="buy-btn" onclick="inviteFriend()" id="btn-inv">Invite</button></div>
 
-        <h3 class="section-title" id="t-ads-section">🚀 Ad Rewards</h3>
+        <h3 class="section-title" id="t-ads-section"> Ad Rewards (20 Tasks)</h3>
         
-        <div class="card"><div class="card-info"><b id="t-r1k">💵 Small Reward</b><span>+1,000 ֏</span></div><button class="buy-btn" id="btn-r1k" onclick="handleTaskAd('r1k')">Watch</button></div>
-        <div class="card"><div class="card-info"><b id="t-r5k">💰 Medium Reward</b><span>+5,000 ֏</span></div><button class="buy-btn" id="btn-r5k" onclick="handleTaskAd('r5k')">Watch</button></div>
-        <div class="card"><div class="card-info"><b style="color:#b026ff" id="t-mystery">🎁 Mystery Box</b><span>20k-80k ֏</span></div><button class="buy-btn" id="btn-mystery" onclick="handleTaskAd('mystery')">Watch</button></div>
+        <div class="card"><div class="card-info"><b id="t-r1k"> Small Reward</b><span>+1,000 ֏</span></div><button class="buy-btn" id="btn-r1k" onclick="handleTaskAd('r1k')">Watch</button></div>
+        <div class="card"><div class="card-info"><b id="t-r5k"> Medium Reward</b><span>+5,000 ֏</span></div><button class="buy-btn" id="btn-r5k" onclick="handleTaskAd('r5k')">Watch</button></div>
+        <div class="card"><div class="card-info"><b id="t-r10k"> 10k Reward</b><span>+10,000 ֏</span></div><button class="buy-btn" id="btn-r10k" onclick="handleTaskAd('r10k')">Watch</button></div>
+        <div class="card"><div class="card-info"><b id="t-r25k"> 25k Reward</b><span>+25,000 ֏</span></div><button class="buy-btn" id="btn-r25k" onclick="handleTaskAd('r25k')">Watch</button></div>
+        <div class="card"><div class="card-info"><b id="t-r50k"> 50k Reward</b><span>+50,000 ֏</span></div><button class="buy-btn" id="btn-r50k" onclick="handleTaskAd('r50k')">Watch</button></div>
+        <div class="card"><div class="card-info"><b id="t-r100k"> 100k Reward</b><span>+100,000 ֏</span></div><button class="buy-btn" id="btn-r100k" onclick="handleTaskAd('r100k')">Watch</button></div>
+        <div class="card"><div class="card-info"><b id="t-r250k"> 250k Reward</b><span>+250,000 ֏</span></div><button class="buy-btn" id="btn-r250k" onclick="handleTaskAd('r250k')">Watch</button></div>
+        <div class="card"><div class="card-info"><b id="t-r500k"> 500k Reward</b><span>+500,000 ֏</span></div><button class="buy-btn" id="btn-r500k" onclick="handleTaskAd('r500k')">Watch</button></div>
+        <div class="card"><div class="card-info"><b id="t-r1m"> 1M Reward</b><span>+1,000,000 ֏</span></div><button class="buy-btn" id="btn-r1m" onclick="handleTaskAd('r1m')">Watch</button></div>
+        <div class="card"><div class="card-info"><b id="t-r5m"> 5M Reward</b><span>+5,000,000 ֏</span></div><button class="buy-btn" id="btn-r5m" onclick="handleTaskAd('r5m')">Watch</button></div>
+
+        <div class="card"><div class="card-info"><b style="color:#b026ff" id="t-mystery"> Mystery Box</b><span>20k-80k ֏</span></div><button class="buy-btn" id="btn-mystery" onclick="handleTaskAd('mystery')">Watch</button></div>
+        <div class="card"><div class="card-info"><b style="color:#d500f9" id="t-mysteryBig"> Big Box</b><span>100k-500k ֏</span></div><button class="buy-btn" id="btn-mysteryBig" onclick="handleTaskAd('mysteryBig')">Watch</button></div>
+        <div class="card"><div class="card-info"><b style="color:#ff1744" id="t-mysteryMega"> Mega Box</b><span>1M-5M ֏</span></div><button class="buy-btn" id="btn-mysteryMega" onclick="handleTaskAd('mysteryMega')">Watch</button></div>
         
-        <div class="card"><div class="card-info"><b style="color:#FFD700" id="t-double">🔥 Double Balance</b><span>x2 Balance</span></div><button class="buy-btn" id="btn-doubleBal" onclick="handleTaskAd('doubleBal')">Watch</button></div>
-        <div class="card"><div class="card-info"><b style="color:#00E676" id="t-x2c">⚡ 2x Click Power</b><span id="s-x2c">For 5 Min</span></div><button class="buy-btn" id="btn-x2c" onclick="handleTaskAd('x2c')">Watch</button></div>
-        <div class="card"><div class="card-info"><b style="color:#FF3D00" id="t-x3c">💥 3x Click Power</b><span id="s-x3c">For 5 Min</span></div><button class="buy-btn" id="btn-x3c" onclick="handleTaskAd('x3c')">Watch</button></div>
+        <div class="card"><div class="card-info"><b style="color:#FFD700" id="t-double"> Double Balance</b><span>x2 Balance</span></div><button class="buy-btn" id="btn-doubleBal" onclick="handleTaskAd('doubleBal')">Watch</button></div>
+        <div class="card"><div class="card-info"><b style="color:#FFB300" id="t-triple"> Triple Balance</b><span>x3 Balance</span></div><button class="buy-btn" id="btn-tripleBal" onclick="handleTaskAd('tripleBal')">Watch</button></div>
+        
+        <div class="card"><div class="card-info"><b style="color:#00E676" id="t-x2c"> 2x Click Power</b><span class="s-min5">For 5 Min</span></div><button class="buy-btn" id="btn-x2c" onclick="handleTaskAd('x2c')">Watch</button></div>
+        <div class="card"><div class="card-info"><b style="color:#FF3D00" id="t-x3c"> 3x Click Power</b><span class="s-min5">For 5 Min</span></div><button class="buy-btn" id="btn-x3c" onclick="handleTaskAd('x3c')">Watch</button></div>
+        <div class="card"><div class="card-info"><b style="color:#D50000" id="t-x4c"> 4x Click Power</b><span class="s-min5">For 5 Min</span></div><button class="buy-btn" id="btn-x4c" onclick="handleTaskAd('x4c')">Watch</button></div>
+        <div class="card"><div class="card-info"><b style="color:#AA00FF" id="t-x5c"> 5x Click Power</b><span class="s-min5">For 5 Min</span></div><button class="buy-btn" id="btn-x5c" onclick="handleTaskAd('x5c')">Watch</button></div>
+        <div class="card"><div class="card-info"><b style="color:#000000; background:#FFD700; padding:2px 5px; border-radius:4px;" id="t-x10c"> 10x Click Power</b><span class="s-min5">For 5 Min</span></div><button class="buy-btn" id="btn-x10c" onclick="handleTaskAd('x10c')">Watch</button></div>
     </div>
 
     <div class="nav">
-        <button class="nav-btn active" id="nav-game" onclick="nav('game')"><i>🪙</i><span id="n-game">Play</span></button>
-        <button class="nav-btn" id="nav-shop" onclick="nav('shop')"><i>🛒</i><span id="n-shop">Shop</span></button>
-        <button class="nav-btn" id="nav-tasks" onclick="nav('tasks')"><i>🎁</i><span id="n-tasks">Rewards</span></button>
+        <button class="nav-btn active" id="nav-game" onclick="nav('game')"><i></i><span id="n-game">Play</span></button>
+        <button class="nav-btn" id="nav-shop" onclick="nav('shop')"><i></i><span id="n-shop">Shop</span></button>
+        <button class="nav-btn" id="nav-tasks" onclick="nav('tasks')"><i></i><span id="n-tasks">Rewards</span></button>
     </div>
 
     <script>
@@ -132,49 +148,74 @@
 
         let AdController;
         
-        try { AdController = window.Adsgram.init({ blockId: "26344" }); } catch(e) {}
+        try { AdController = window.Adsgram.init({ blockId: "26119" }); } catch(e) {}
 
         let state = { 
             bal:0, inc:0, energy:1000, maxE:1000, lvl:1, 
             lastDaily:0, streak:1, dailyAdDone:0,
             owned:{house:[], car:[], biz:[]}, 
             tgSub:false, clickMult: 1, multExpiry: 0, lang: 'en',
-            adCounts: { r1k:0, r5k:0, mystery:0, doubleBal:0, x2c:0, x3c:0 }
+            // Ավելացված են բոլոր 20 տեսակները
+            adCounts: { r1k:0, r5k:0, r10k:0, r25k:0, r50k:0, r100k:0, r250k:0, r500k:0, r1m:0, r5m:0, mystery:0, mysteryBig:0, mysteryMega:0, doubleBal:0, tripleBal:0, x2c:0, x3c:0, x4c:0, x5c:0, x10c:0 }
         };
 
-        const AD_REQS = { r1k: 1, r5k: 3, mystery: 10, doubleBal: 15, x2c: 3, x3c: 5 };
+        // Քանակի պահանջները յուրաքանչյուրի համար
+        const AD_REQS = { 
+            r1k: 1, r5k: 3, r10k: 5, r25k: 10, r50k: 15, r100k: 20, r250k: 30, r500k: 40, r1m: 60, r5m: 100, 
+            mystery: 10, mysteryBig: 25, mysteryMega: 50, 
+            doubleBal: 15, tripleBal: 35, 
+            x2c: 3, x3c: 5, x4c: 8, x5c: 12, x10c: 20 
+        };
 
         const dict = {
             hy: {
                 btnBuy: "Գնել", btnBought: "Ակտիվ է", close: "Ոչ, շնորհակալություն", watch: "Դիտել", get: "Ստանալ", done: "Արված է",
-                h: "🏠 Գույք", c: "🚗 Մեքենա", b: "🏢 Բիզնես",
+                h: " Գույք", c: " Մեքենա", b: " Բիզնես",
                 nGame: "Խաղալ", nShop: "Խանութ", nTasks: "Պարգևներ",
-                tsoc: "🌟 Սոցիալական", tnews: "📢 Լուրերի Ալիք", tinv: "👥 Հրավիրել", tads: "🚀 Գովազդային Պարգևներ",
-                tr1k: "💵 Փոքր Պարգև", tr5k: "💰 Միջին Պարգև", tmystery: "🎁 Կախարդական Արկղ", 
-                tdouble: "🔥 Կրկնապատկել Բալանսը", tx2c: "⚡ 2x Քլիք (5 րոպե)", tx3c: "💥 3x Քլիք (5 րոպե)",
-                lvlText: "Լևլ", errEng: "⚡ Էներգիան Սպառվեց", errEngT: "Լիցքավորելու համար դիտիր գովազդ:",
+                tsoc: " Սոցիալական", tnews: " Լուրերի Ալիք", tinv: " Հրավիրել", tads: " Գովազդային Պարգևներ",
+                
+                tr1k: " Փոքր Պարգև", tr5k: " Միջին Պարգև", tr10k: " 10k Պարգև", tr25k: " 25k Պարգև", tr50k: " 50k Պարգև", 
+                tr100k: " 100k Պարգև", tr250k: " 250k Պարգև", tr500k: " 500k Պարգև", tr1m: " 1M Պարգև", tr5m: " 5M Պարգև",
+                
+                tmystery: " Կախարդական Արկղ", tmysteryBig: " Մեծ Արկղ", tmysteryMega: " Մեգա Արկղ", 
+                tdouble: " Կրկնապատկել Բալանսը", ttriple: " Եռապատկել Բալանսը", 
+                tx2c: " 2x Քլիք (5 րոպե)", tx3c: " 3x Քլիք (5 րոպե)", tx4c: " 4x Քլիք (5 րոպե)", tx5c: " 5x Քլիք (5 րոպե)", tx10c: " 10x Քլիք (5 րոպե)",
+                
+                lvlText: "Լևլ", errEng: " Էներգիան Սպառվեց", errEngT: "Լիցքավորելու համար դիտիր գովազդ:",
                 adMsg: "Գովազդը բեռնվում է...",
                 min5: "5 րոպեով"
             },
             en: {
                 btnBuy: "Buy", btnBought: "Active", close: "No, thanks", watch: "Watch", get: "Claim", done: "Done",
-                h: "🏠 Real Estate", c: "🚗 Cars", b: "🏢 Business",
+                h: " Real Estate", c: " Cars", b: " Business",
                 nGame: "Play", nShop: "Shop", nTasks: "Rewards",
-                tsoc: "🌟 Social", tnews: "📢 News Channel", tinv: "👥 Invite", tads: "🚀 Ad Rewards",
-                tr1k: "💵 Small Reward", tr5k: "💰 Medium Reward", tmystery: "🎁 Mystery Box", 
-                tdouble: "🔥 Double Balance", tx2c: "⚡ 2x Click (5 Min)", tx3c: "💥 3x Click (5 Min)",
-                lvlText: "Level", errEng: "⚡ Out of Energy", errEngT: "Watch an ad to refill:",
+                tsoc: " Social", tnews: " News Channel", tinv: " Invite", tads: " Ad Rewards",
+                
+                tr1k: " Small Reward", tr5k: " Medium Reward", tr10k: " 10k Reward", tr25k: " 25k Reward", tr50k: " 50k Reward", 
+                tr100k: " 100k Reward", tr250k: " 250k Reward", tr500k: " 500k Reward", tr1m: " 1M Reward", tr5m: " 5M Reward",
+                
+                tmystery: " Mystery Box", tmysteryBig: " Big Box", tmysteryMega: " Mega Box", 
+                tdouble: " Double Balance", ttriple: " Triple Balance", 
+                tx2c: " 2x Click (5 Min)", tx3c: " 3x Click (5 Min)", tx4c: " 4x Click (5 Min)", tx5c: " 5x Click (5 Min)", tx10c: " 10x Click (5 Min)",
+                
+                lvlText: "Level", errEng: " Out of Energy", errEngT: "Watch an ad to refill:",
                 adMsg: "Ad is loading...",
                 min5: "For 5 Min"
             },
             ru: {
                 btnBuy: "Купить", btnBought: "Активно", close: "Нет, спасибо", watch: "Смотреть", get: "Получить", done: "Готово",
-                h: "🏠 Недвижимость", c: "🚗 Авто", b: "🏢 Бизнес",
+                h: " Недвижимость", c: " Авто", b: " Бизнес",
                 nGame: "Играть", nShop: "Магазин", nTasks: "Награды",
-                tsoc: "🌟 Социальные", tnews: "📢 Новостной Канал", tinv: "👥 Пригласить", tads: "🚀 Награды за рекламу",
-                tr1k: "💵 Малая Награда", tr5k: "💰 Средняя Награда", tmystery: "🎁 Тайный Ящик", 
-                tdouble: "🔥 Удвоить Баланс", tx2c: "⚡ 2x Клик (5 Мин)", tx3c: "💥 3x Клик (5 Мин)",
-                lvlText: "Уровень", errEng: "⚡ Энергия закончилась", errEngT: "Посмотрите рекламу для пополнения:",
+                tsoc: " Социальные", tnews: " Новостной Канал", tinv: " Пригласить", tads: " Награды за рекламу",
+                
+                tr1k: " Малая Награда", tr5k: " Средняя Награда", tr10k: " Награда 10k", tr25k: " Награда 25k", tr50k: " Награда 50k", 
+                tr100k: " Награда 100k", tr250k: " Награда 250k", tr500k: " Награда 500k", tr1m: " Награда 1M", tr5m: " Награда 5M",
+                
+                tmystery: " Тайный Ящик", tmysteryBig: " Большой Ящик", tmysteryMega: " Мега Ящик", 
+                tdouble: " Удвоить Баланс", ttriple: " Утроить Баланс", 
+                tx2c: " 2x Клик (5 Мин)", tx3c: " 3x Клик (5 Мин)", tx4c: " 4x Клик (5 Мин)", tx5c: " 5x Клик (5 Мин)", tx10c: " 10x Клик (5 Мин)",
+                
+                lvlText: "Уровень", errEng: " Энергия закончилась", errEngT: "Посмотрите рекламу для пополнения:",
                 adMsg: "Реклама загружается...",
                 min5: "на 5 мин"
             }
@@ -229,12 +270,14 @@
         function updateTasksUI() {
             let t = dict[state.lang];
             let now = Date.now();
-            ['r1k', 'r5k', 'mystery', 'doubleBal', 'x2c', 'x3c'].forEach(type => {
+            let adTypes = ['r1k', 'r5k', 'r10k', 'r25k', 'r50k', 'r100k', 'r250k', 'r500k', 'r1m', 'r5m', 'mystery', 'mysteryBig', 'mysteryMega', 'doubleBal', 'tripleBal', 'x2c', 'x3c', 'x4c', 'x5c', 'x10c'];
+            
+            adTypes.forEach(type => {
                 let req = AD_REQS[type];
                 let count = state.adCounts[type] || 0;
                 let btn = document.getElementById('btn-' + type);
                 if (btn) {
-                    if ((type === 'x2c' || type === 'x3c') && state.multExpiry > now) {
+                    if ((type.startsWith('x') && type.endsWith('c')) && state.multExpiry > now) {
                         let diff = Math.ceil((state.multExpiry - now) / 1000);
                         btn.innerText = `${t.btnBought} (${diff}s)`; btn.disabled = true; btn.className = "buy-btn bought";
                     } else {
@@ -246,7 +289,7 @@
 
         function applyLang() {
             let t = dict[state.lang];
-            let flag = { hy: '🇦🇲 HY', en: '🇬🇧 EN', ru: '🇷🇺 RU' };
+            let flag = { hy: ' HY', en: ' EN', ru: ' RU' };
             document.getElementById('lang-btn').innerText = flag[state.lang];
             
             document.getElementById('btn-house').innerText = t.h;
@@ -259,17 +302,15 @@
             document.getElementById('t-social').innerText = t.tsoc;
             document.getElementById('t-news').innerText = t.tnews;
             document.getElementById('t-invite').innerText = t.tinv;
-            document.getElementById('t-ads-section').innerText = t.tads;
+            document.getElementById('t-ads-section').innerText = t.tads + " (20)";
             
-            document.getElementById('t-r1k').innerText = t.tr1k;
-            document.getElementById('t-r5k').innerText = t.tr5k;
-            document.getElementById('t-mystery').innerText = t.tmystery;
-            document.getElementById('t-double').innerText = t.tdouble;
-            document.getElementById('t-x2c').innerText = t.tx2c;
-            document.getElementById('t-x3c').innerText = t.tx3c;
+            let elements = ['r1k', 'r5k', 'r10k', 'r25k', 'r50k', 'r100k', 'r250k', 'r500k', 'r1m', 'r5m', 'mystery', 'mysteryBig', 'mysteryMega', 'double', 'triple', 'x2c', 'x3c', 'x4c', 'x5c', 'x10c'];
+            elements.forEach(id => {
+                let el = document.getElementById('t-' + id);
+                if(el && t['t' + id]) el.innerText = t['t' + id];
+            });
             
-            document.getElementById('s-x2c').innerText = t.min5;
-            document.getElementById('s-x3c').innerText = t.min5;
+            document.querySelectorAll('.s-min5').forEach(el => el.innerText = t.min5);
 
             if(state.tgSub) { document.getElementById('btn-tg').innerText = t.done; }
             else { document.getElementById('btn-tg').innerText = t.btnBuy; }
@@ -297,10 +338,9 @@
             document.getElementById('modal-overlay').classList.add('show');
         }
 
-        // --- ՈՒՂՂՎԱԾ ՖՈՒՆԿՑԻԱ ---
         function playDirectAd(onSuccess) {
             if (!AdController && window.Adsgram) {
-                try { AdController = window.Adsgram.init({ blockId: "26119" }); } catch(e) {}
+                try { AdController = window.Adsgram.init({ blockId: "26344" }); } catch(e) {}
             }
             
             if (!AdController) {
@@ -317,7 +357,6 @@
                 tg.showAlert(err);
             });
         }
-        // ------------------------
 
         function update() {
             let current = levels[0];
@@ -326,7 +365,7 @@
 
             document.getElementById('bal').innerText = Math.floor(state.bal).toLocaleString() + ' ֏';
             document.getElementById('inc').innerText = state.inc.toLocaleString() + ' ֏/s';
-            document.getElementById('energy').innerText = `⚡ ${Math.floor(state.energy)}/${state.maxE}`;
+            document.getElementById('energy').innerText = ` ${Math.floor(state.energy)}/${state.maxE}`;
             
             let nxt = levels.find(x => x.l === current.l + 1);
             let prg = nxt ? ((state.bal - current.m) / (nxt.m - current.m)) * 100 : 100;
@@ -343,7 +382,7 @@
                 let remainingAds = config.ads - state.dailyAdDone;
                 
                 let t = dict[state.lang];
-                let title = state.lang === 'hy' ? `🎁 Օր ${state.streak}-ի Բոնուս` : (state.lang === 'ru' ? `🎁 Бонус дня ${state.streak}` : `🎁 Day ${state.streak} Bonus`);
+                let title = state.lang === 'hy' ? ` Օր ${state.streak}-ի Բոնուս` : (state.lang === 'ru' ? ` Бонус дня ${state.streak}` : ` Day ${state.streak} Bonus`);
                 let desc = state.lang === 'hy' 
                     ? (remainingAds > 0 ? `Դիտիր ${config.ads} գովազդ՝ ${config.prize.toLocaleString()} ֏ ստանալու համար: (Մնաց՝ ${remainingAds})` : "Պարգևը պատրաստ է:")
                     : (state.lang === 'ru' ? (remainingAds > 0 ? `Посмотри ${config.ads} рекламы для ${config.prize.toLocaleString()} ֏: (Осталось: ${remainingAds})` : "Награда готова!") 
@@ -372,21 +411,35 @@
                 state.adCounts[type]++;
                 
                 if (state.adCounts[type] >= AD_REQS[type]) {
+                    // Գումարային պարգևներ
                     if(type === 'r1k') state.bal += 1000;
                     if(type === 'r5k') state.bal += 5000;
+                    if(type === 'r10k') state.bal += 10000;
+                    if(type === 'r25k') state.bal += 25000;
+                    if(type === 'r50k') state.bal += 50000;
+                    if(type === 'r100k') state.bal += 100000;
+                    if(type === 'r250k') state.bal += 250000;
+                    if(type === 'r500k') state.bal += 500000;
+                    if(type === 'r1m') state.bal += 1000000;
+                    if(type === 'r5m') state.bal += 5000000;
+                    
+                    // Արկղեր
                     if(type === 'mystery') state.bal += Math.floor(Math.random()*60000)+20000;
+                    if(type === 'mysteryBig') state.bal += Math.floor(Math.random()*400000)+100000;
+                    if(type === 'mysteryMega') state.bal += Math.floor(Math.random()*4000000)+1000000;
+                    
+                    // Բազմապատկիչներ (Բալանս)
                     if(type === 'doubleBal') state.bal *= 2;
+                    if(type === 'tripleBal') state.bal *= 3;
                     
-                    if(type === 'x2c') { 
-                        state.clickMult = 2; 
-                        state.multExpiry = Date.now() + (5 * 60 * 1000); 
-                    }
-                    if(type === 'x3c') { 
-                        state.clickMult = 3; 
-                        state.multExpiry = Date.now() + (5 * 60 * 1000); 
-                    }
+                    // Բազմապատկիչներ (Քլիք)
+                    if(type === 'x2c') { state.clickMult = 2; state.multExpiry = Date.now() + (5 * 60 * 1000); }
+                    if(type === 'x3c') { state.clickMult = 3; state.multExpiry = Date.now() + (5 * 60 * 1000); }
+                    if(type === 'x4c') { state.clickMult = 4; state.multExpiry = Date.now() + (5 * 60 * 1000); }
+                    if(type === 'x5c') { state.clickMult = 5; state.multExpiry = Date.now() + (5 * 60 * 1000); }
+                    if(type === 'x10c') { state.clickMult = 10; state.multExpiry = Date.now() + (5 * 60 * 1000); }
                     
-                    state.adCounts[type] = 0;
+                    state.adCounts[type] = 0; // Reset քանակը
                 }
                 updateTasksUI(); update(); save();
             });
@@ -453,7 +506,12 @@
         function load() {
             try { let s = localStorage.getItem('DramMaster_SecureSave'); if(s) { state = { ...state, ...JSON.parse(s) }; } } catch(e) {}
             if(!state.lang) state.lang = 'en';
-            if(!state.adCounts) state.adCounts = { r1k:0, r5k:0, mystery:0, doubleBal:0, x2c:0, x3c:0 };
+            
+            // Ապահովում ենք, որ նոր բանալիները լինեն
+            let defaultAds = { r1k:0, r5k:0, r10k:0, r25k:0, r50k:0, r100k:0, r250k:0, r500k:0, r1m:0, r5m:0, mystery:0, mysteryBig:0, mysteryMega:0, doubleBal:0, tripleBal:0, x2c:0, x3c:0, x4c:0, x5c:0, x10c:0 };
+            if(!state.adCounts) state.adCounts = defaultAds;
+            else state.adCounts = { ...defaultAds, ...state.adCounts };
+            
             if(!state.clickMult) state.clickMult = 1;
             if(!state.multExpiry) state.multExpiry = 0;
             applyLang(); update(); setTimeout(checkDailyBonus, 1000);
