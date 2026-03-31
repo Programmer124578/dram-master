@@ -7,59 +7,81 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://sad.adsgram.ai/js/adsgram-adbox.js"></script>
     <style>
-        :root { --gold: #FFD700; --bg-dark: #0a0b10; --mint: #00E676; --glass: rgba(255, 255, 255, 0.05); }
+        :root { --gold: #FFD700; --bg-dark: #050608; --mint: #00E676; --glass: rgba(255, 255, 255, 0.04); --neon-blue: #00f3ff; --neon-pink: #ff00ea; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body { background: radial-gradient(circle at top, #1a1c29, var(--bg-dark)); color: #fff; font-family: 'Segoe UI', sans-serif; overflow: hidden; user-select: none; }
+        body { background: radial-gradient(circle at top, #11131c, var(--bg-dark)); color: #fff; font-family: 'Segoe UI', Roboto, sans-serif; overflow: hidden; user-select: none; }
         
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 9999; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.88); backdrop-filter: blur(10px); z-index: 9999; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; }
         .modal-overlay.show { display: flex; opacity: 1; }
-        .modal-box { background: linear-gradient(145deg, #1e202e, #14151f); padding: 25px; border-radius: 24px; border: 1px solid rgba(255,215,0,0.3); width: 85%; max-width: 320px; text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.8); transform: translateY(20px); transition: transform 0.3s; }
-        .modal-overlay.show .modal-box { transform: translateY(0); }
-        .modal-title { color: var(--gold); font-size: 22px; font-weight: 900; margin-bottom: 10px; }
-        .modal-text { font-size: 14px; color: #ccc; margin-bottom: 20px; line-height: 1.5; }
-        .modal-btn { background: linear-gradient(135deg, var(--gold), #ff8c00); color: #000; border: none; padding: 12px 20px; border-radius: 12px; font-weight: 900; font-size: 14px; width: 100%; cursor: pointer; margin-bottom: 10px; }
-        .modal-btn-close { background: transparent; color: #888; border: 1px solid #444; padding: 10px 20px; border-radius: 12px; font-weight: bold; font-size: 13px; width: 100%; cursor: pointer; }
+        .modal-box { background: linear-gradient(145deg, #171924, #0a0b0f); padding: 30px 25px; border-radius: 24px; border: 1px solid rgba(255,215,0,0.5); width: 88%; max-width: 340px; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 20px rgba(255,215,0,0.1); transform: translateY(20px) scale(0.95); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .modal-overlay.show .modal-box { transform: translateY(0) scale(1); }
+        .modal-title { color: var(--gold); font-size: 24px; font-weight: 900; margin-bottom: 12px; letter-spacing: 0.5px; }
+        .modal-text { font-size: 15px; color: #ddd; margin-bottom: 25px; line-height: 1.6; }
+        .modal-btn { background: linear-gradient(135deg, var(--gold), #ff8c00); color: #000; border: none; padding: 15px 20px; border-radius: 14px; font-weight: 900; font-size: 15px; width: 100%; cursor: pointer; margin-bottom: 12px; transition: transform 0.1s, box-shadow 0.2s; box-shadow: 0 5px 15px rgba(255,140,0,0.4); }
+        .modal-btn:active { transform: scale(0.96); }
+        .modal-btn-close { background: rgba(255,255,255,0.03); color: #aaa; border: 1px solid rgba(255,255,255,0.1); padding: 14px 20px; border-radius: 14px; font-weight: bold; font-size: 14px; width: 100%; cursor: pointer; }
 
-        .header { padding: 15px; background: rgba(10, 11, 16, 0.9); backdrop-filter: blur(15px); text-align: center; border-bottom: 1px solid rgba(255,215,0,0.15); position: sticky; top: 0; z-index: 1000; display: flex; flex-direction: column; }
+        .header { padding: 15px 20px; background: rgba(5, 6, 8, 0.85); backdrop-filter: blur(25px); text-align: center; border-bottom: 1px solid rgba(255,215,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .lang-btn { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 10px; padding: 6px 12px; font-size: 13px; cursor: pointer; font-weight: 800; transition: background 0.2s; }
         
-        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .lang-btn { background: var(--glass); border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 8px; padding: 5px 10px; font-size: 12px; cursor: pointer; font-weight: bold; }
-        
-        .lvl-cont { width: 100%; height: 26px; background: rgba(0,0,0,0.8); border-radius: 13px; margin: 0 auto 15px; position: relative; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .lvl-fill { position: absolute; left: 0; top: 0; height: 100%; background: linear-gradient(90deg, #b8860b, #ffd700, #ff8c00); width: 0%; transition: width 0.3s ease; }
-        .lvl-txt { position: relative; z-index: 10; font-size: 12px; font-weight: 900; color: #ffffff; text-shadow: 1px 1px 3px rgba(0,0,0,0.9); }
+        .lvl-cont { width: 100%; height: 28px; background: rgba(0,0,0,0.7); border-radius: 14px; position: relative; border: 1px solid rgba(255,255,255,0.06); overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; box-shadow: inset 0 3px 6px rgba(0,0,0,0.6); }
+        .lvl-fill { position: absolute; left: 0; top: 0; height: 100%; background: linear-gradient(90deg, #b8860b, #ffd700, #ffaa00); width: 0%; transition: width 0.4s ease-out; box-shadow: 0 0 10px rgba(255,215,0,0.5); }
+        .lvl-txt { position: relative; z-index: 10; font-size: 13px; font-weight: 900; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.9); }
 
-        .balance-val { font-size: 42px; font-weight: 900; color: var(--gold); text-shadow: 0 4px 15px rgba(255,215,0,0.4); margin: 5px 0; }
-        .stats { display: flex; justify-content: space-between; font-size: 13px; color: #a0a0a0; font-weight: 700; padding: 0 5px; }
+        .balance-val { font-size: 46px; font-weight: 900; color: var(--gold); text-shadow: 0 5px 25px rgba(255,215,0,0.35); margin: 5px 0 10px; letter-spacing: -1px; }
+        .stats { display: flex; justify-content: space-between; font-size: 14px; color: #b0b0b0; font-weight: 800; padding: 0 10px; }
         
-        .screen { display: none; padding: 20px 15px 95px; height: calc(100vh - 180px); overflow-y: auto; }
-        .screen.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .screen { display: none; padding: 20px 15px 110px; height: calc(100vh - 200px); overflow-y: auto; scroll-behavior: smooth; }
+        .screen.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
         .coin-area { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-        .main-coin { width: 250px; height: 250px; background: radial-gradient(circle at 30% 30%, #fff9c4, #ffd700, #996515); border-radius: 50%; border: 8px solid #6b4c0a; display: flex; align-items: center; justify-content: center; font-size: 110px; color: #4a3600; cursor: pointer; box-shadow: 0 20px 50px rgba(0,0,0,0.6); transition: transform 0.05s; touch-action: manipulation; }
-        .main-coin:active { transform: scale(0.95); }
+        .main-coin { width: 290px; height: 290px; background: radial-gradient(circle at 35% 35%, #fff9c4, #ffd700, #b8860b, #4a3300); border-radius: 50%; border: 12px solid rgba(255,215,0,0.15); display: flex; align-items: center; justify-content: center; font-size: 135px; color: #3d2b00; cursor: pointer; box-shadow: 0 30px 70px rgba(0,0,0,0.8), inset 0 -15px 35px rgba(0,0,0,0.6), 0 0 40px rgba(255,215,0,0.2); transition: transform 0.05s, box-shadow 0.05s; touch-action: manipulation; text-shadow: 0 3px 6px rgba(255,255,255,0.4); }
+        .main-coin:active { transform: scale(0.95); box-shadow: 0 15px 40px rgba(0,0,0,0.9), inset 0 -8px 25px rgba(0,0,0,0.7), 0 0 20px rgba(255,215,0,0.3); }
 
-        .tabs { display: flex; gap: 8px; margin-bottom: 20px; position: sticky; top: 0; background: var(--bg-dark); padding: 10px 0; z-index: 500; }
-        .tab-btn { flex: 1; padding: 14px 5px; background: var(--glass); border: 1px solid rgba(255,255,255,0.05); color: #aaa; border-radius: 14px; font-size: 12px; font-weight: 800; }
-        .tab-btn.active { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; }
+        .tabs { display: flex; gap: 8px; margin-bottom: 25px; position: sticky; top: 0; background: rgba(5, 6, 8, 0.98); padding: 15px 0; z-index: 500; backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .tab-btn { flex: 1; padding: 16px 4px; background: var(--glass); border: 1px solid rgba(255,255,255,0.04); color: #777; border-radius: 16px; font-size: 13px; font-weight: 900; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .tab-btn.active { background: linear-gradient(135deg, #ffd700, #ffaa00); color: #000; border-color: transparent; box-shadow: 0 6px 20px rgba(255,215,0,0.35); transform: translateY(-2px); }
 
-        .card { background: rgba(25, 27, 38, 0.7); backdrop-filter: blur(10px); border-radius: 18px; padding: 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.03); }
-        .card-info b { color: var(--gold); font-size: 15px; display: block; margin-bottom: 6px; }
-        .card-info span { font-size: 11px; color: #999; }
+        .card { background: linear-gradient(145deg, rgba(35, 38, 51, 0.7), rgba(20, 22, 31, 0.85)); border-radius: 20px; padding: 20px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.03); transition: transform 0.2s, background 0.3s; box-shadow: 0 10px 25px rgba(0,0,0,0.4); position: relative; overflow: hidden; }
+        .card:active { transform: scale(0.97); }
+        .card.glowing { border: 1px solid rgba(0, 243, 255, 0.3); box-shadow: 0 10px 30px rgba(0, 243, 255, 0.1); }
+        .card.epic { border: 1px solid rgba(255, 0, 234, 0.3); box-shadow: 0 10px 30px rgba(255, 0, 234, 0.15); }
         
-        .buy-btn { background: linear-gradient(135deg, var(--gold), #ff8c00); color: #000; border: none; padding: 12px 16px; border-radius: 12px; font-weight: 900; font-size: 12px; min-width: 105px; cursor: pointer; }
-        .buy-btn.bought { background: #333; color: #fff; }
-        .buy-btn:disabled { opacity: 0.4; }
+        .card-info { flex: 1; padding-right: 15px; position: relative; z-index: 2; }
+        .card-info b { color: #fff; font-size: 16px; display: block; margin-bottom: 8px; font-weight: 800; letter-spacing: 0.3px; }
+        .card-info span { font-size: 13px; color: var(--gold); font-weight: 800; background: rgba(255,215,0,0.08); padding: 5px 10px; border-radius: 8px; display: inline-block; letter-spacing: 0.5px; }
+        .card-info .desc { font-size: 11.5px; color: #888; display: block; margin-top: 8px; font-weight: 500; }
+        
+        .progress-bar { width: 100%; height: 6px; background: rgba(0,0,0,0.5); border-radius: 4px; margin-top: 12px; overflow: hidden; position: relative; box-shadow: inset 0 1px 3px rgba(0,0,0,0.8); }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #ff8c00, #ffd700); width: 0%; transition: width 0.4s ease-out; }
 
-        .nav { position: fixed; bottom: 0; width: 100%; background: rgba(10, 11, 16, 0.95); display: flex; justify-content: space-around; padding: 12px 0 25px; border-top: 1px solid rgba(255,255,255,0.05); z-index: 1000; }
-        .nav-btn { background: none; border: none; color: #555; font-size: 11px; display: flex; flex-direction: column; align-items: center; font-weight: 800; }
+        .buy-btn { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; border: none; padding: 14px 18px; border-radius: 14px; font-weight: 900; font-size: 13px; min-width: 110px; cursor: pointer; box-shadow: 0 6px 20px rgba(255,215,0,0.25); transition: all 0.2s; position: relative; z-index: 2; }
+        .buy-btn.bought { background: rgba(255,255,255,0.03); color: #666; box-shadow: none; border: 1px solid rgba(255,255,255,0.08); }
+        .buy-btn.claim { background: linear-gradient(135deg, #00E676, #00B8D4); color: #000; box-shadow: 0 6px 20px rgba(0,230,118,0.3); animation: pulseGreen 2s infinite; }
+        @keyframes pulseGreen { 0% { box-shadow: 0 0 0 0 rgba(0,230,118,0.4); } 70% { box-shadow: 0 0 0 15px rgba(0,230,118,0); } 100% { box-shadow: 0 0 0 0 rgba(0,230,118,0); } }
+        .buy-btn:disabled:not(.bought) { opacity: 0.5; filter: grayscale(1); box-shadow: none; }
+
+        .daily-box { background: linear-gradient(145deg, rgba(255,215,0,0.08), rgba(255,140,0,0.03)); border: 1px solid rgba(255,215,0,0.25); border-radius: 24px; padding: 25px 20px; margin-bottom: 30px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.5); position: relative; overflow: hidden; }
+        .daily-box::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent); transform: skewX(-20deg); animation: shine 4s infinite; }
+        @keyframes shine { 100% { left: 200%; } }
+        .daily-box h4 { color: var(--gold); margin-bottom: 12px; font-size: 20px; font-weight: 900; letter-spacing: 0.5px; }
+        .milestone-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px; }
+        .milestone-btn { padding: 12px 5px; font-size: 11px; font-weight: 800; border-radius: 12px; }
+
+        .nav { position: fixed; bottom: 0; width: 100%; background: rgba(5, 6, 8, 0.98); display: flex; justify-content: space-around; padding: 15px 0 25px; border-top: 1px solid rgba(255,255,255,0.04); z-index: 1000; backdrop-filter: blur(25px); }
+        .nav-btn { background: none; border: none; color: #555; font-size: 12px; display: flex; flex-direction: column; align-items: center; font-weight: 900; transition: color 0.3s; }
         .nav-btn.active { color: var(--gold); }
-        .nav-btn i { font-style: normal; font-size: 26px; margin-bottom: 5px; }
+        .nav-btn i { font-style: normal; font-size: 30px; margin-bottom: 6px; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .nav-btn.active i { transform: translateY(-4px) scale(1.15); text-shadow: 0 5px 15px rgba(255,215,0,0.4); }
 
-        .float-text { position: absolute; font-weight: 900; font-size: 32px; pointer-events: none; animation: floatUp 0.8s ease-out forwards; z-index: 2000; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
-        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-100px); } }
-        .section-title { color: #fff; font-size: 18px; margin: 25px 0 15px; border-left: 4px solid var(--gold); padding-left: 10px; font-weight: 900; }
+        .float-text { position: absolute; font-weight: 900; font-size: 38px; pointer-events: none; animation: floatUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; z-index: 2000; text-shadow: 0 4px 10px rgba(0,0,0,0.9); }
+        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(0.8); } 20% { transform: translateY(-20px) scale(1.1); } 100% { opacity: 0; transform: translateY(-130px) scale(1); } }
+        
+        .section-title { color: #fff; font-size: 22px; margin: 35px 0 15px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; }
+        .section-title::before { content: ''; width: 6px; height: 24px; background: var(--gold); display: inline-block; margin-right: 12px; border-radius: 3px; box-shadow: 0 0 10px var(--gold); }
+        .sub-category { font-size: 15px; color: #888; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin: 25px 0 15px; padding-bottom: 8px; border-bottom: 1px dashed rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
@@ -74,7 +96,7 @@
 
     <div class="header">
         <div class="top-bar">
-            <span style="font-weight: bold; color: #888;">Dram Master</span>
+            <span style="font-weight: 900; color: #888; font-size: 17px; letter-spacing: 2px;">DRAM MASTER</span>
             <button class="lang-btn" onclick="toggleLang()" id="lang-btn">🇦🇲 HY</button>
         </div>
         <div class="lvl-cont">
@@ -104,298 +126,260 @@
     </div>
 
     <div id="tasks" class="screen">
-        <h3 class="section-title" id="t-social">🌟 Սոցիալական</h3>
+        
+        <div class="daily-box">
+            <h4 id="t-daily-title">🌟 Օրական Գովազդներ</h4>
+            <div style="font-size:14px; color:#bbb; margin-bottom:12px; font-weight:600;" id="t-daily-desc">Դիտիր գովազդներ և ստացիր հսկայական բոնուսներ:</div>
+            <div class="progress-bar" style="height:10px; border-radius:5px;"><div class="progress-fill" id="daily-fill"></div></div>
+            <div style="font-size:15px; font-weight:900; color:#fff; margin:12px 0; letter-spacing:1px;" id="daily-count">0/100</div>
+            
+            <div class="milestone-grid">
+                <button class="buy-btn milestone-btn" id="btn-claim30" onclick="claimDaily(30)">30 = 1Մ ֏</button>
+                <button class="buy-btn milestone-btn" id="btn-claim50" onclick="claimDaily(50)">50 = 2Մ ֏</button>
+                <button class="buy-btn milestone-btn" id="btn-claim100" onclick="claimDaily(100)">100 = 5Մ ֏</button>
+            </div>
+        </div>
+
+        <h3 class="section-title" id="t-social">🤝 Սոցիալական</h3>
         <div class="card"><div class="card-info"><b id="t-news">📢 Լուրերի Ալիք</b><span>+10,000 ֏</span></div><button class="buy-btn" onclick="subTg()" id="btn-tg">Միանալ</button></div>
-        <div class="card"><div class="card-info"><b id="t-invite">👥 Հրավիրել Ընկեր</b><span>+5,000 ֏</span></div><button class="buy-btn" onclick="inviteFriend()" id="btn-inv">Հրավիրել</button></div>
+        <div class="card"><div class="card-info"><b id="t-invite">👥 Հրավիրել Ընկեր</b><span>+5,000 ֏</span><div class="desc" id="d-invite">Յուրաքանչյուր ընկերոջ համար</div></div><button class="buy-btn" onclick="inviteFriend()" id="btn-inv">Հրավիրել</button></div>
 
         <h3 class="section-title" id="t-ads-section">🚀 Գովազդային Պարգևներ</h3>
         
-        <div class="card"><div class="card-info"><b id="t-r1k">💵 Փոքր Պարգև</b><span>+1,000 ֏</span></div><button class="buy-btn" id="btn-r1k" onclick="handleTaskAd('r1k')">Դիտել</button></div>
-        <div class="card"><div class="card-info"><b id="t-r5k">💰 Միջին Պարգև</b><span>+5,000 ֏</span></div><button class="buy-btn" id="btn-r5k" onclick="handleTaskAd('r5k')">Դիտել</button></div>
-        <div class="card"><div class="card-info"><b style="color:#b026ff" id="t-mystery">🎁 Կախարդական Արկղ</b><span>20k-80k ֏</span></div><button class="buy-btn" id="btn-mystery" onclick="handleTaskAd('mystery')">Դիտել</button></div>
-        
-        <div class="card"><div class="card-info"><b style="color:#FFD700" id="t-double">🔥 Կրկնապատկել Բալանսը</b><span>x2 Բալանս</span></div><button class="buy-btn" id="btn-doubleBal" onclick="handleTaskAd('doubleBal')">Դիտել</button></div>
-        <div class="card"><div class="card-info"><b style="color:#00E676" id="t-x2c">⚡ 2x Քլիքի Ուժ</b><span id="s-x2c">5 րոպեով</span></div><button class="buy-btn" id="btn-x2c" onclick="handleTaskAd('x2c')">Դիտել</button></div>
-        <div class="card"><div class="card-info"><b style="color:#FF3D00" id="t-x3c">💥 3x Քլիքի Ուժ</b><span id="s-x3c">5 րոպեով</span></div><button class="buy-btn" id="btn-x3c" onclick="handleTaskAd('x3c')">Դիտել</button></div>
+        <div class="sub-category" id="sc-cash">💸 Ակնթարթային Կանխիկ</div>
+        <div class="card"><div class="card-info"><b id="t-mic">🪙 Միկրո Պարգև</b><span>+500 ֏</span><div class="progress-bar"><div class="progress-fill" id="pb-mic"></div></div></div><button class="buy-btn" id="btn-mic" onclick="handleTaskAd('mic')">Դիտել</button></div>
+        <div class="card"><div class="card-info"><b id="t-r1k">💵 Փոքր Պարգև</b><span>+1,000 ֏</span><div class="progress-bar"><div class="progress-fill" id="pb-r1k"></div></div></div><button class="buy-btn" id="btn-r1k" onclick="handleTaskAd('r1k')">Դիտել</button></div>
+        <div class="card"><div class="card-info"><b id="t-r5k">💰 Միջին Պարգև</b><span>+5,000 ֏</span><div class="progress-bar"><div class="progress-fill" id="pb-r5k"></div></div></div><button class="buy-btn" id="btn-r5k" onclick="handleTaskAd('r5k')">Դիտել</button></div>
+        <div class="card glowing"><div class="card-info"><b id="t-r15k" style="color:var(--neon-blue)">💎 Մեծ Պարգև</b><span>+15,000 ֏</span><div class="progress-bar"><div class="progress-fill" id="pb-r15k"></div></div></div><button class="buy-btn" id="btn-r15k" onclick="handleTaskAd('r15k')">Դիտել</button></div>
+        <div class="card glowing"><div class="card-info"><b id="t-r50k" style="color:var(--neon-blue)">👑 Մեգա Պարգև</b><span>+50,000 ֏</span><div class="progress-bar"><div class="progress-fill" id="pb-r50k"></div></div></div><button class="buy-btn" id="btn-r50k" onclick="handleTaskAd('r50k')">Դիտել</button></div>
+        <div class="card epic"><div class="card-info"><b id="t-r100k" style="color:var(--neon-pink)">🔥 Հսկա Պարգև</b><span>+100,000 ֏</span><div class="progress-bar"><div class="progress-fill" id="pb-r100k"></div></div></div><button class="buy-btn" id="btn-r100k" onclick="handleTaskAd('r100k')">Դիտել</button></div>
+        <div class="card epic" style="border-color:var(--gold)"><div class="card-info"><b id="t-double" style="color:var(--gold); font-size:18px;">⚖️ Կրկնապատկել Բալանսը</b><span style="background:var(--gold); color:#000;">x2 Ամբողջ Բալանսը</span><div class="progress-bar"><div class="progress-fill" id="pb-doubleBal"></div></div></div><button class="buy-btn" id="btn-doubleBal" onclick="handleTaskAd('doubleBal')">Դիտել</button></div>
+
+        <div class="sub-category" id="sc-boxes">🎁 Առեղծվածային Արկղեր</div>
+        <div class="card"><div class="card-info"><b style="color:#b026ff" id="t-box1">📦 Արկղ 1 (Արծաթ)</b><span>20k - 100k ֏</span><div class="progress-bar"><div class="progress-fill" id="pb-box1"></div></div></div><button class="buy-btn" id="btn-box1" onclick="handleTaskAd('box1')">Դիտել</button></div>
+        <div class="card glowing"><div class="card-info"><b style="color:var(--neon-blue)" id="t-box2">💎 Արկղ 2 (Ադամանդ)</b><span>110k - 200k ֏</span><div class="progress-bar"><div class="progress-fill" id="pb-box2"></div></div></div><button class="buy-btn" id="btn-box2" onclick="handleTaskAd('box2')">Դիտել</button></div>
+        <div class="card epic"><div class="card-info"><b style="color:var(--gold)" id="t-box3">👑 Արկղ 3 (Ոսկի)</b><span style="background:rgba(255,0,234,0.2); color:#fff">500k - 1,000,000 ֏</span><div class="progress-bar"><div class="progress-fill" id="pb-box3"></div></div></div><button class="buy-btn" id="btn-box3" onclick="handleTaskAd('box3')">Դիտել</button></div>
+
+        <div class="sub-category" id="sc-boosts">⚡ Բազմապատկիչներ և Էներգիա</div>
+        <div class="card"><div class="card-info"><b style="color:#00E676" id="t-x2c">⚡ 2x Քլիք</b><span class="dur-5m">5 րոպեով</span><div class="progress-bar"><div class="progress-fill" id="pb-x2c"></div></div></div><button class="buy-btn" id="btn-x2c" onclick="handleTaskAd('x2c')">Դիտել</button></div>
+        <div class="card"><div class="card-info"><b style="color:#FF3D00" id="t-x3c">💥 3x Քլիք</b><span class="dur-5m">5 րոպեով</span><div class="progress-bar"><div class="progress-fill" id="pb-x3c"></div></div></div><button class="buy-btn" id="btn-x3c" onclick="handleTaskAd('x3c')">Դիտել</button></div>
+        <div class="card glowing"><div class="card-info"><b style="color:var(--neon-blue)" id="t-x5c">🚀 5x Քլիք</b><span class="dur-2m">2 րոպեով</span><div class="progress-bar"><div class="progress-fill" id="pb-x5c"></div></div></div><button class="buy-btn" id="btn-x5c" onclick="handleTaskAd('x5c')">Դիտել</button></div>
+        <div class="card epic"><div class="card-info"><b style="color:var(--neon-pink)" id="t-x10c">🌋 10x Քլիք</b><span class="dur-1m">1 րոպեով</span><div class="progress-bar"><div class="progress-fill" id="pb-x10c"></div></div></div><button class="buy-btn" id="btn-x10c" onclick="handleTaskAd('x10c')">Դիտել</button></div>
+        <div class="card glowing"><div class="card-info"><b style="color:#00FF00" id="t-maxE">🔋 +1000 Մաքս. Էներգիա</b><span>Ընդմիշտ</span><div class="progress-bar"><div class="progress-fill" id="pb-maxE"></div></div></div><button class="buy-btn" id="btn-maxE" onclick="handleTaskAd('maxE')">Դիտել</button></div>
+
+        <div class="sub-category" id="sc-passive">⏳ Պասիվ Եկամտի Բոնուսներ</div>
+        <div class="card glowing"><div class="card-info"><b style="color:#00E676" id="t-inc1h">⏱️ 1 Ժամվա Եկամուտ</b><span>Ակնթարթորեն</span><div class="progress-bar"><div class="progress-fill" id="pb-inc1h"></div></div></div><button class="buy-btn" id="btn-inc1h" onclick="handleTaskAd('inc1h')">Դիտել</button></div>
+        <div class="card epic"><div class="card-info"><b style="color:var(--neon-blue)" id="t-inc5h">⏳ 5 Ժամվա Եկամուտ</b><span>Ակնթարթորեն</span><div class="progress-bar"><div class="progress-fill" id="pb-inc5h"></div></div></div><button class="buy-btn" id="btn-inc5h" onclick="handleTaskAd('inc5h')">Դիտել</button></div>
+
     </div>
 
     <div class="nav">
         <button class="nav-btn active" id="nav-game" onclick="nav('game')"><i>🪙</i><span id="n-game">Խաղալ</span></button>
-        <button class="nav-btn" id="nav-shop" onclick="nav('shop')"><i>🛒</i><span id="n-shop">Խանութ</span></button>
-        <button class="nav-btn" id="nav-tasks" onclick="nav('tasks')"><i>🎁</i><span id="n-tasks">Պարգևներ</span></button>
+        <button class="nav-btn" id="nav-shop" onclick="nav('shop')"><i>🎁</i><span id="n-tasks">Պարգևներ</span></button>
     </div>
 
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.setHeaderColor('#0a0b10');
+        const tg = window.Telegram.WebApp; tg.expand(); tg.setHeaderColor('#050608'); tg.setBackgroundColor('#11131c');
 
         let AdController;
-        // ՉՄՈՌԱՆԱՍ ԱՅՍՏԵՂ ԴՆԵԼ ՔՈ ՆՈՐ UNIT ID-ն 👇
-        try { AdController = window.Adsgram.init({ blockId: "26344" }); } catch(e) {}
+        // ԴԻՐ ՔՈ UNIT ID-Ն ԱՅՍՏԵՂ 👇
+        try { AdController = window.Adsgram.init({ blockId: "26344" }); } catch(e) { console.error("Adsgram init error"); }
 
         let state = { 
-            bal:0, inc:0, energy:1000, maxE:1000, lvl:1, 
-            lastDaily:0, streak:1, dailyAdDone:0,
-            owned:{house:[], car:[], biz:[]}, 
-            tgSub:false, clickMult: 1, multExpiry: 0, lang: 'hy',
-            adCounts: { r1k:0, r5k:0, mystery:0, doubleBal:0, x2c:0, x3c:0 }
+            bal: 0, inc: 0, energy: 1000, maxE: 1000, lvl: 1, bonusMaxE: 0,
+            owned: { house: [], car: [], biz: [] }, 
+            tgSub: false, clickMult: 1, multExpiry: 0, lang: 'hy',
+            adCounts: { mic:0, r1k:0, r5k:0, r15k:0, r50k:0, r100k:0, doubleBal:0, box1:0, box2:0, box3:0, x2c:0, x3c:0, x5c:0, x10c:0, maxE:0, inc1h:0, inc5h:0 },
+            dailyAds: 0, dailyDate: new Date().toDateString(), claim30: false, claim50: false, claim100: false
         };
 
-        const AD_REQS = { r1k: 1, r5k: 3, mystery: 10, doubleBal: 15, x2c: 3, x3c: 5 };
+        // ԳՈՎԱԶԴՆԵՐԻ ՊԱՀԱՆՋՆԵՐ
+        const AD_REQS = { 
+            mic: 1, r1k: 1, r5k: 3, r15k: 5, r50k: 8, r100k: 12, doubleBal: 10,
+            box1: 10, box2: 15, box3: 25, 
+            x2c: 3, x3c: 5, x5c: 7, x10c: 10, maxE: 20, inc1h: 5, inc5h: 12 
+        };
+        const MULT_DURS = { x2c: 5, x3c: 5, x5c: 2, x10c: 1 }; // Րոպեներով
+
+        const db = { house: [], car: [], biz: [] };
+        function genItems(targetArr, startPrice, startInc, baseNames) {
+            let p = startPrice; let inc = startInc;
+            for(let i=0; i<50; i++) {
+                let nameIdx = Math.min(Math.floor(i / 5), baseNames.length - 1);
+                let tier = (i % 5) + 1;
+                targetArr.push({
+                    n: { hy: `${baseNames[nameIdx].hy} (T${tier})`, en: `${baseNames[nameIdx].en} (T${tier})`, ru: `${baseNames[nameIdx].ru} (T${tier})` },
+                    p: Math.floor(p), i: Math.floor(inc)
+                });
+                p *= 1.25; inc *= 1.23;
+            }
+        }
+        genItems(db.house, 1000, 2, [{hy:'Սենյակ',en:'Room',ru:'Комната'}, {hy:'Բնակարան',en:'Apartment',ru:'Квартира'}, {hy:'Տնակ',en:'Cabin',ru:'Домик'}, {hy:'Գյուղական տուն',en:'Country House',ru:'Дом'}, {hy:'Առանձնատուն',en:'Mansion',ru:'Особняк'}, {hy:'Վիլլա',en:'Villa',ru:'Вилла'}, {hy:'Պենտհաուս',en:'Penthouse',ru:'Пентхаус'}, {hy:'Ամրոց',en:'Castle',ru:'Замок'}, {hy:'Երկնաքեր',en:'Skyscraper',ru:'Небоскреб'}, {hy:'Կղզի',en:'Island',ru:'Остров'}]);
+        genItems(db.car, 500, 1, [{hy:'Հեծանիվ',en:'Bicycle',ru:'Велосипед'}, {hy:'Մոպեդ',en:'Moped',ru:'Мопед'}, {hy:'Սեդան',en:'Sedan',ru:'Седан'}, {hy:'Կուպե',en:'Coupe',ru:'Купе'}, {hy:'Ամենագնաց',en:'SUV',ru:'Внедорожник'}, {hy:'Սպորտային',en:'Sport Car',ru:'Спорткар'}, {hy:'Սուպերքար',en:'Supercar',ru:'Суперкар'}, {hy:'Ուղղաթիռ',en:'Helicopter',ru:'Вертолет'}, {hy:'Ինքնաթիռ',en:'Jet',ru:'Самолет'}, {hy:'Տիեզերանավ',en:'Spaceship',ru:'Корабль'}]);
+        genItems(db.biz, 2000, 5, [{hy:'Կրպակ',en:'Kiosk',ru:'Киоск'}, {hy:'Սրճարան',en:'Cafe',ru:'Кафе'}, {hy:'Խանութ',en:'Shop',ru:'Магазин'}, {hy:'Ռեստորան',en:'Restaurant',ru:'Ресторан'}, {hy:'Գործարան',en:'Factory',ru:'Завод'}, {hy:'Բանկ',en:'Bank',ru:'Банк'}, {hy:'Ավիաընկերություն',en:'Airline',ru:'Авиакомпания'}, {hy:'Նավթահոր',en:'Oil Well',ru:'Нефтевышка'}, {hy:'Տեխնո Հսկա',en:'Tech Giant',ru:'Тех Гигант'}, {hy:'Գլոբալ Ցանց',en:'Global Net',ru:'Глобал Сеть'}]);
 
         const dict = {
             hy: {
-                btnBuy: "Գնել", btnBought: "Ակտիվ է", close: "Ոչ, շնորհակալություն", watch: "Դիտել", get: "Ստանալ", done: "Արված է",
-                h: "🏠 Գույք", c: "🚗 Մեքենա", b: "🏢 Բիզնես",
-                nGame: "Խաղալ", nShop: "Խանութ", nTasks: "Պարգևներ",
-                tsoc: "🌟 Սոցիալական", tnews: "📢 Լուրերի Ալիք", tinv: "👥 Հրավիրել", tads: "🚀 Գովազդային Պարգևներ",
-                tr1k: "💵 Փոքր Պարգև", tr5k: "💰 Միջին Պարգև", tmystery: "🎁 Կախարդական Արկղ", 
-                tdouble: "🔥 Կրկնապատկել Բալանսը", tx2c: "⚡ 2x Քլիք", tx3c: "💥 3x Քլիք",
-                lvlText: "Լևլ", errEng: "⚡ Էներգիան Սպառվեց", errEngT: "Լիցքավորելու համար դիտիր գովազդ:",
-                adMsg: "Գովազդը բեռնվում է...",
-                min5: "5 րոպեով"
+                buy: "Գնել", act: "Ակտիվ", cls: "Փակել", wtch: "Դիտել", clm: "Ստանալ", dn: "Արված է",
+                h: "🏠 Գույք", c: "🚗 Մեքենա", b: "🏢 Բիզնես", ng: "Խաղալ", ns: "Խանութ", nt: "Պարգևներ",
+                lvl: "Լևլ", err: "⚡ Էներգիան Սպառվեց", errT: "Ցանկանո՞ւմ ես դիտել 1 գովազդ և ամբողջությամբ լիցքավորել էներգիան հենց հիմա:",
+                adM: "Գովազդը բեռնվում է...", t1: "Օրական Գովազդներ", dsc: "Յուրաքանչյուր ընկերոջ համար",
+                scCash: "💸 Ակնթարթային Կանխիկ", scBox: "🎁 Առեղծվածային Արկղեր", scBst: "⚡ Բազմապատկիչներ և Էներգիա", scPas: "⏳ Պասիվ Եկամուտ",
+                d5: "5 րոպեով", d2: "2 րոպեով", d1: "1 րոպեով"
             },
             en: {
-                btnBuy: "Buy", btnBought: "Active", close: "No, thanks", watch: "Watch", get: "Claim", done: "Done",
-                h: "🏠 Real Estate", c: "🚗 Cars", b: "🏢 Business",
-                nGame: "Play", nShop: "Shop", nTasks: "Rewards",
-                tsoc: "🌟 Social", tnews: "📢 News Channel", tinv: "👥 Invite", tads: "🚀 Ad Rewards",
-                tr1k: "💵 Small Reward", tr5k: "💰 Medium Reward", tmystery: "🎁 Mystery Box", 
-                tdouble: "🔥 Double Balance", tx2c: "⚡ 2x Click", tx3c: "💥 3x Click",
-                lvlText: "Level", errEng: "⚡ Out of Energy", errEngT: "Watch an ad to refill:",
-                adMsg: "Ad is loading...",
-                min5: "For 5 Min"
+                buy: "Buy", act: "Active", cls: "Close", wtch: "Watch", clm: "Claim", dn: "Done",
+                h: "🏠 Estate", c: "🚗 Cars", b: "🏢 Business", ng: "Play", ns: "Shop", nt: "Tasks",
+                lvl: "Lvl", err: "⚡ Energy Empty", errT: "Do you want to watch 1 ad to instantly and fully refill your energy?",
+                adM: "Ad loading...", t1: "Daily Ads", dsc: "For each friend",
+                scCash: "💸 Instant Cash", scBox: "🎁 Mystery Boxes", scBst: "⚡ Multipliers & Energy", scPas: "⏳ Passive Income",
+                d5: "For 5 Mins", d2: "For 2 Mins", d1: "For 1 Min"
             },
             ru: {
-                btnBuy: "Купить", btnBought: "Активно", close: "Нет, спасибо", watch: "Смотреть", get: "Получить", done: "Готово",
-                h: "🏠 Недвижимость", c: "🚗 Авто", b: "🏢 Бизнес",
-                nGame: "Играть", nShop: "Магазин", nTasks: "Награды",
-                tsoc: "🌟 Социальные", tnews: "📢 Новостной Канал", tinv: "👥 Пригласить", tads: "🚀 Награды",
-                tr1k: "💵 Малая Награда", tr5k: "💰 Средняя Награда", tmystery: "🎁 Тайный Ящик", 
-                tdouble: "🔥 Удвоить Баланс", tx2c: "⚡ 2x Клик", tx3c: "💥 3x Клик",
-                lvlText: "Уровень", errEng: "⚡ Энергия закончилась", errEngT: "Посмотрите рекламу для пополнения:",
-                adMsg: "Загрузка...",
-                min5: "на 5 мин"
+                buy: "Купить", act: "Актив", cls: "Закрыть", wtch: "Смотр.", clm: "Забрать", dn: "Готово",
+                h: "🏠 Жилье", c: "🚗 Авто", b: "🏢 Бизнес", ng: "Играть", ns: "Магазин", nt: "Задания",
+                lvl: "Ур.", err: "⚡ Нет Энергии", errT: "Хотите посмотреть 1 рекламу и полностью восстановить энергию прямо сейчас?",
+                adM: "Загрузка...", t1: "Ежедневная Реклама", dsc: "За каждого друга",
+                scCash: "💸 Мгновенные Деньги", scBox: "🎁 Тайные Ящики", scBst: "⚡ Множители и Энергия", scPas: "⏳ Пассивный Доход",
+                d5: "на 5 мин", d2: "на 2 мин", d1: "на 1 мин"
             }
         };
 
-        const db = {
-            house: [
-                {n:{hy:'Սենյակ',en:'Room',ru:'Комната'}, p:1000, i:2}, {n:{hy:'Բնակարան',en:'Apartment',ru:'Квартира'}, p:5000, i:12}, {n:{hy:'Տնակ',en:'Cabin',ru:'Домик'}, p:15000, i:40}, 
-                {n:{hy:'Գյուղական տուն',en:'Country House',ru:'Загородный дом'}, p:40000, i:110}, {n:{hy:'Առանձնատուն',en:'Mansion',ru:'Особняк'}, p:100000, i:300}, {n:{hy:'Դուպլեքս',en:'Duplex',ru:'Дуплекс'}, p:250000, i:800}, 
-                {n:{hy:'Վիլլա',en:'Villa',ru:'Вилла'}, p:600000, i:2000}, {n:{hy:'Smart Home',en:'Smart Home',ru:'Умный Дом'}, p:4000000, i:15000}, {n:{hy:'Ocean Villa',en:'Ocean Villa',ru:'Вилла у Океана'}, p:10000000, i:40000}, 
-                {n:{hy:'Պենտհաուս',en:'Penthouse',ru:'Пентхаус'}, p:25000000, i:110000}, {n:{hy:'Ամրոց',en:'Castle',ru:'Замок'}, p:70000000, i:350000}, {n:{hy:'Կղզի',en:'Island',ru:'Остров'}, p:200000000, i:1000000},
-                {n:{hy:'Երկնաքեր',en:'Skyscraper',ru:'Небоскреб'}, p:500000000, i:3000000}, {n:{hy:'Ստորջրյա Բազա',en:'Underwater Base',ru:'Подводная База'}, p:1500000000, i:10000000}, {n:{hy:'Մարսի Գաղութ',en:'Mars Colony',ru:'Колония на Марсе'}, p:5000000000, i:50000000}
-            ],
-            car: [
-                {n:{hy:'Հեծանիվ',en:'Bicycle',ru:'Велосипед'}, p:500, i:1}, {n:{hy:'Մոպեդ',en:'Moped',ru:'Мопед'}, p:1500, i:4}, {n:{hy:'VAZ 2107',en:'VAZ 2107',ru:'ВАЗ 2107'}, p:4000, i:10}, 
-                {n:{hy:'Opel Astra',en:'Opel Astra',ru:'Opel Astra'}, p:12000, i:35}, {n:{hy:'Toyota Camry',en:'Toyota Camry',ru:'Toyota Camry'}, p:35000, i:100}, {n:{hy:'Mercedes C',en:'Mercedes C',ru:'Mercedes C'}, p:90000, i:280}, 
-                {n:{hy:'Tesla Model 3',en:'Tesla Model 3',ru:'Tesla Model 3'}, p:200000, i:700}, {n:{hy:'BMW M5',en:'BMW M5',ru:'BMW M5'}, p:500000, i:1800}, {n:{hy:'Porsche 911',en:'Porsche 911',ru:'Porsche 911'}, p:1200000, i:4500}, 
-                {n:{hy:'Lamborghini',en:'Lamborghini',ru:'Lamborghini'}, p:4000000, i:16000}, {n:{hy:'Bugatti',en:'Bugatti',ru:'Bugatti'}, p:80000000, i:400000}, {n:{hy:'Rolls-Royce',en:'Rolls-Royce',ru:'Rolls-Royce'}, p:150000000, i:800000},
-                {n:{hy:'Ուղղաթիռ',en:'Helicopter',ru:'Вертолет'}, p:400000000, i:2500000}, {n:{hy:'Մասնավոր Ինքնաթիռ',en:'Private Jet',ru:'Частный Самолет'}, p:1200000000, i:8000000}, {n:{hy:'Տիեզերանավ',en:'Spaceship',ru:'Космический Корабль'}, p:8000000000, i:60000000}
-            ],
-            biz: [
-                {n:{hy:'Կրպակ',en:'Kiosk',ru:'Киоск'}, p:2000, i:5}, {n:{hy:'Ավտոլվացում',en:'Car Wash',ru:'Автомойка'}, p:8000, i:25}, {n:{hy:'Սրճարան',en:'Cafe',ru:'Кафе'}, p:25000, i:80}, 
-                {n:{hy:'Վարսավիրանոց',en:'Barbershop',ru:'Барбершоп'}, p:60000, i:200}, {n:{hy:'Մարզասրահ',en:'Gym',ru:'Спортзал'}, p:150000, i:550}, {n:{hy:'Ավտոսերվիս',en:'Auto Service',ru:'Автосервис'}, p:400000, i:1600}, 
-                {n:{hy:'Ռեստորան',en:'Restaurant',ru:'Ресторан'}, p:1000000, i:4500}, {n:{hy:'IT Բիզնես',en:'IT Business',ru:'IT Бизнес'}, p:18000000, i:100000}, {n:{hy:'Բանկ',en:'Bank',ru:'Банк'}, p:50000000, i:300000},
-                {n:{hy:'Գործարան',en:'Factory',ru:'Завод'}, p:120000000, i:700000}, {n:{hy:'Նավթային Հոր',en:'Oil Well',ru:'Нефтяная Вышка'}, p:350000000, i:2000000}, {n:{hy:'Ավիաընկերություն',en:'Airline',ru:'Авиакомпания'}, p:800000000, i:5000000},
-                {n:{hy:'Տեխնոլոգիական Հսկա',en:'Tech Giant',ru:'Тех Гигант'}, p:2000000000, i:15000000}, {n:{hy:'Էներգետիկ Ցանց',en:'Energy Grid',ru:'Энергосеть'}, p:6000000000, i:50000000}, {n:{hy:'Գլոբալ Կորպորացիա',en:'Global Corp',ru:'Глобальная Корп'}, p:15000000000, i:150000000}
-            ]
-        };
+        const levels = [ {l:1, n:{hy:"Անօթևան",en:"Homeless",ru:"Бездомный"}, m:0, e:1000}, {l:2, n:{hy:"Մուրացկան",en:"Beggar",ru:"Нищий"}, m:5000, e:2000}, {l:3, n:{hy:"Բանվոր",en:"Worker",ru:"Рабочий"}, m:25000, e:4000}, {l:4, n:{hy:"Արհեստավոր",en:"Craftsman",ru:"Ремесленник"}, m:100000, e:8000}, {l:5, n:{hy:"Խանութպան",en:"Shopkeeper",ru:"Лавочник"}, m:500000, e:15000}, {l:6, n:{hy:"Տնօրեն",en:"Director",ru:"Директор"}, m:2000000, e:30000}, {l:7, n:{hy:"Գործարար",en:"Businessman",ru:"Бизнесмен"}, m:10000000, e:60000}, {l:8, n:{hy:"Միլիոնատեր",en:"Millionaire",ru:"Миллионер"}, m:50000000, e:120000}, {l:9, n:{hy:"Միլիարդատեր",en:"Billionaire",ru:"Миллиардер"}, m:250000000, e:300000}, {l:10, n:{hy:"Մագնատ",en:"Magnate",ru:"Магнат"}, m:1000000000, e:600000}, {l:11, n:{hy:"Օլիգարխ",en:"Oligarch",ru:"Олигарх"}, m:5000000000, e:1500000}, {l:12, n:{hy:"Տիեզ. Օլիգարխ",en:"Space Oligarch",ru:"Космический"}, m:25000000000, e:5000000} ];
 
-        const levels = [
-            {l:1, n:{hy:"Անօթևան",en:"Homeless",ru:"Бездомный"}, m:0, e:1000}, {l:2, n:{hy:"Մուրացկան",en:"Beggar",ru:"Нищий"}, m:2000, e:2500}, 
-            {l:3, n:{hy:"Բանվոր",en:"Worker",ru:"Рабочий"}, m:10000, e:5000}, {l:4, n:{hy:"Արհեստավոր",en:"Craftsman",ru:"Ремесленник"}, m:50000, e:10000},
-            {l:5, n:{hy:"Խանութպան",en:"Shopkeeper",ru:"Лавочник"}, m:150000, e:25000}, {l:6, n:{hy:"Տնօրեն",en:"Director",ru:"Директор"}, m:400000, e:50000}, 
-            {l:7, n:{hy:"Գործարար",en:"Businessman",ru:"Бизнесмен"}, m:1000000, e:100000}, {l:8, n:{hy:"Միլիոնատեր",en:"Millionaire",ru:"Миллионер"}, m:2500000, e:250000},
-            {l:9, n:{hy:"Միլիարդատեր",en:"Billionaire",ru:"Миллиардер"}, m:5000000, e:500000}, {l:10, n:{hy:"Մագնատ",en:"Magnate",ru:"Магнат"}, m:15000000, e:1000000}, 
-            {l:11, n:{hy:"Օլիգարխ",en:"Oligarch",ru:"Олигарх"}, m:50000000, e:2000000}, {l:12, n:{hy:"Տիեզ. Օլիգարխ",en:"Space Oligarch",ru:"Космический Олигарх"}, m:5000000000, e:5000000}
-        ];
+        function toggleLang() { state.lang = state.lang === 'en' ? 'hy' : (state.lang === 'hy' ? 'ru' : 'en'); applyLang(); save(); setTab(curType); }
 
-        function toggleLang() {
-            if(state.lang === 'en') state.lang = 'hy';
-            else if(state.lang === 'hy') state.lang = 'ru';
-            else state.lang = 'en';
-            applyLang(); save(); setTab('house'); 
+        function checkDailyReset() {
+            let today = new Date().toDateString();
+            if (state.dailyDate !== today) { state.dailyAds = 0; state.claim30 = false; state.claim50 = false; state.claim100 = false; state.dailyDate = today; save(); }
         }
 
         function updateTasksUI() {
-            let t = dict[state.lang];
-            let now = Date.now();
-            ['r1k', 'r5k', 'mystery', 'doubleBal', 'x2c', 'x3c'].forEach(type => {
-                let req = AD_REQS[type];
-                let count = state.adCounts[type] || 0;
+            checkDailyReset(); let t = dict[state.lang]; let now = Date.now();
+            
+            document.getElementById('daily-count').innerText = `${state.dailyAds}/100`;
+            document.getElementById('daily-fill').style.width = Math.min(100, (state.dailyAds/100)*100) + '%';
+            
+            const handleMilestone = (id, req, flag, txt, rewStr) => {
+                let b = document.getElementById(id);
+                if(flag) { b.className = 'buy-btn bought milestone-btn'; b.innerText = t.dn; b.disabled = true; }
+                else if(state.dailyAds >= req) { b.className = 'buy-btn claim milestone-btn'; b.innerText = t.clm; b.disabled = false; }
+                else { b.className = 'buy-btn bought milestone-btn'; b.innerText = `${req} = ${rewStr}`; b.disabled = true; }
+            };
+            handleMilestone('btn-claim30', 30, state.claim30, t.dn, '1Մ');
+            handleMilestone('btn-claim50', 50, state.claim50, t.dn, '2Մ');
+            handleMilestone('btn-claim100', 100, state.claim100, t.dn, '5Մ');
+
+            Object.keys(AD_REQS).forEach(type => {
+                let req = AD_REQS[type]; let count = state.adCounts[type] || 0;
                 let btn = document.getElementById('btn-' + type);
+                let pb = document.getElementById('pb-' + type);
+                if (pb) pb.style.width = (count / req * 100) + '%';
                 if (btn) {
-                    if ((type === 'x2c' || type === 'x3c') && state.multExpiry > now) {
-                        let diff = Math.ceil((state.multExpiry - now) / 1000);
-                        btn.innerText = `${t.btnBought} (${diff}վ)`; btn.disabled = true; btn.className = "buy-btn bought";
+                    if (['x2c', 'x3c', 'x5c', 'x10c'].includes(type) && state.multExpiry > now) {
+                        let diff = Math.ceil((state.multExpiry - now) / 60000);
+                        btn.innerText = `${t.act} (${diff}ր)`; btn.disabled = true; btn.className = "buy-btn bought";
                     } else {
-                        btn.innerText = `${t.watch} (${count}/${req})`; btn.disabled = false; btn.className = "buy-btn";
+                        btn.innerText = `${t.wtch} (${count}/${req})`; btn.disabled = false; btn.className = "buy-btn";
                     }
                 }
             });
+        }
+
+        function claimDaily(ms) {
+            if(ms===30 && state.dailyAds>=30 && !state.claim30) { state.bal += 1000000; state.claim30=true; }
+            if(ms===50 && state.dailyAds>=50 && !state.claim50) { state.bal += 2000000; state.claim50=true; }
+            if(ms===100 && state.dailyAds>=100 && !state.claim100) { state.bal += 5000000; state.claim100=true; }
+            updateDisplay(); updateTasksUI(); save();
         }
 
         function applyLang() {
             let t = dict[state.lang];
-            let flag = { hy: '🇦🇲 HY', en: '🇬🇧 EN', ru: '🇷🇺 RU' };
-            document.getElementById('lang-btn').innerText = flag[state.lang];
+            document.getElementById('lang-btn').innerText = { hy: '🇦🇲 HY', en: '🇬🇧 EN', ru: '🇷🇺 RU' }[state.lang];
+            ['btn-house','btn-car','btn-biz'].forEach((id,i) => document.getElementById(id).innerText = [t.h,t.c,t.b][i]);
+            ['n-game','n-shop','n-tasks'].forEach((id,i) => document.getElementById(id).innerText = [t.ng,t.ns,t.nt][i]);
+            document.getElementById('t-daily-title').innerText = t.t1;
+            document.getElementById('d-invite').innerText = t.dsc;
+            document.getElementById('sc-cash').innerText = t.scCash; document.getElementById('sc-boxes').innerText = t.scBox;
+            document.getElementById('sc-boosts').innerText = t.scBst; document.getElementById('sc-passive').innerText = t.scPas;
             
-            document.getElementById('btn-house').innerText = t.h;
-            document.getElementById('btn-car').innerText = t.c;
-            document.getElementById('btn-biz').innerText = t.b;
-            document.getElementById('n-game').innerText = t.nGame;
-            document.getElementById('n-shop').innerText = t.nShop;
-            document.getElementById('n-tasks').innerText = t.nTasks;
-            
-            document.getElementById('t-social').innerText = t.tsoc;
-            document.getElementById('t-news').innerText = t.tnews;
-            document.getElementById('t-invite').innerText = t.tinv;
-            document.getElementById('t-ads-section').innerText = t.tads;
-            
-            document.getElementById('t-r1k').innerText = t.tr1k;
-            document.getElementById('t-r5k').innerText = t.tr5k;
-            document.getElementById('t-mystery').innerText = t.tmystery;
-            document.getElementById('t-double').innerText = t.tdouble;
-            document.getElementById('t-x2c').innerText = t.tx2c;
-            document.getElementById('t-x3c').innerText = t.tx3c;
-            
-            document.getElementById('s-x2c').innerText = t.min5;
-            document.getElementById('s-x3c').innerText = t.min5;
-            
-            document.getElementById('btn-tg').innerText = state.tgSub ? t.done : t.get;
-            updateTasksUI();
-            updateLvl();
+            document.querySelectorAll('.dur-5m').forEach(el => el.innerText = t.d5);
+            document.querySelectorAll('.dur-2m').forEach(el => el.innerText = t.d2);
+            document.querySelectorAll('.dur-1m').forEach(el => el.innerText = t.d1);
+            document.getElementById('btn-tg').innerText = state.tgSub ? t.dn : t.clm;
+            updateTasksUI(); updateLvl();
         }
 
         let curType = 'house';
         function setTab(type) {
-            curType = type;
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            curType = type; document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-' + type).classList.add('active');
-            renderList();
-        }
-
-        function renderList() {
-            const cont = document.getElementById('list-container');
-            cont.innerHTML = '';
+            const cont = document.getElementById('list-container'); cont.innerHTML = '';
             let t = dict[state.lang];
-            db[curType].forEach((item, index) => {
-                const isOwned = state.owned[curType].includes(index);
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <div class="card-info">
-                        <b>${item.n[state.lang]}</b>
-                        <span>+${item.i.toLocaleString()} ֏/s</span>
-                    </div>
-                    <button class="buy-btn ${isOwned ? 'bought' : ''}" 
-                        ${isOwned ? 'disabled' : ''} 
-                        onclick="buy('${curType}', ${index})">
-                        ${isOwned ? t.btnBought : item.p.toLocaleString() + ' ֏'}
-                    </button>
-                `;
+            db[curType].forEach((item, idx) => {
+                const isOwned = state.owned[curType].includes(idx);
+                const card = document.createElement('div'); card.className = `card ${idx > 40 ? 'epic' : (idx > 20 ? 'glowing' : '')}`;
+                card.innerHTML = `<div class="card-info"><b>${item.n[state.lang]}</b><span>+${item.i.toLocaleString()} ֏/s</span></div>
+                    <button class="buy-btn ${isOwned ? 'bought' : ''}" ${isOwned || state.bal < item.p ? 'disabled' : ''} onclick="buy('${curType}', ${idx})">
+                        ${isOwned ? t.act : item.p.toLocaleString() + ' ֏'}
+                    </button>`;
                 cont.appendChild(card);
             });
         }
 
-        function buy(type, idx) {
-            let item = db[type][idx];
-            if (state.bal >= item.p) {
-                state.bal -= item.p;
-                state.owned[type].push(idx);
-                calcInc();
-                save();
-                updateDisplay();
-                renderList();
-            }
-        }
-
-        function calcInc() {
-            let total = 0;
-            for (let type in state.owned) {
-                state.owned[type].forEach(idx => {
-                    total += db[type][idx].i;
-                });
-            }
-            state.inc = total;
-        }
+        function buy(type, idx) { if (state.bal >= db[type][idx].p && !state.owned[type].includes(idx)) { state.bal -= db[type][idx].p; state.owned[type].push(idx); calcInc(); save(); updateDisplay(); setTab(type); } }
+        function calcInc() { state.inc = ['house','car','biz'].reduce((sum, t) => sum + state.owned[t].reduce((s, i) => s + db[t][i].i, 0), 0); }
 
         function updateLvl() {
             let next = levels.find(l => state.bal < l.m) || levels[levels.length - 1];
             let cur = levels[levels.indexOf(next) - 1] || levels[0];
-            state.lvl = cur.l;
-            state.maxE = cur.e;
-            
-            let progress = 0;
-            if (next.l !== cur.l) {
-                progress = Math.min(100, Math.floor(((state.bal - cur.m) / (next.m - cur.m)) * 100));
-            } else {
-                progress = 100;
-            }
-
-            document.getElementById('lvl-fill').style.width = progress + '%';
-            document.getElementById('lvl-txt').innerText = `${dict[state.lang].lvlText} ${cur.l} | ${cur.n[state.lang]} (${progress}%)`;
+            state.lvl = cur.l; 
+            state.maxE = cur.e + (state.bonusMaxE || 0); // Apply permanent E boost
+            let prog = next.l !== cur.l ? Math.min(100, Math.floor(((state.bal - cur.m) / (next.m - cur.m)) * 100)) : 100;
+            document.getElementById('lvl-fill').style.width = prog + '%';
+            document.getElementById('lvl-txt').innerText = `${dict[state.lang].lvl} ${cur.l} | ${cur.n[state.lang]} (${prog}%)`;
         }
 
-        function nav(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.getElementById('nav-' + id).classList.add('active');
-            if(id === 'shop') renderList();
-            if(id === 'tasks') updateTasksUI();
-        }
+        function nav(id) { document.querySelectorAll('.screen, .nav-btn').forEach(el => el.classList.remove('active')); document.getElementById(id).classList.add('active'); document.getElementById('nav-' + id).classList.add('active'); if(id === 'shop') setTab(curType); if(id === 'tasks') updateTasksUI(); }
 
         async function handleTaskAd(type) {
-            if (!AdController) return;
-            let t = dict[state.lang];
-            showModal(t.adMsg, "", "");
-
+            if (!AdController) return alert("Ads system not initialized!");
+            let t = dict[state.lang]; showModal(t.adM, "Խնդրում ենք սպասել...", "");
             try {
-                const result = await AdController.show();
-                hideModal();
-                if (result.done) {
-                    state.adCounts[type] = (state.adCounts[type] || 0) + 1;
+                const res = await AdController.show(); hideModal();
+                if (res.done) {
+                    state.adCounts[type]++; state.dailyAds++; 
                     if (state.adCounts[type] >= AD_REQS[type]) {
-                        giveReward(type);
-                        state.adCounts[type] = 0;
+                        giveReward(type); state.adCounts[type] = 0;
+                        showModal("Պարգևը Տրված Է! 🎉", "Շնորհակալություն գովազդը դիտելու համար:", `<button class="modal-btn" onclick="hideModal()">${t.cls}</button>`);
                     }
-                    updateTasksUI();
-                    save();
+                    updateTasksUI(); save(); updateDisplay();
                 }
-            } catch (e) {
-                hideModal();
-            }
+            } catch (e) { hideModal(); showModal("Սխալ", "Գովազդը չբեռնվեց: Փորձեք նորից:", `<button class="modal-btn" onclick="hideModal()">${t.cls}</button>`); }
         }
 
         function giveReward(type) {
-            let t = dict[state.lang];
-            let bonus = 0;
-            if (type === 'r1k') bonus = 1000;
-            if (type === 'r5k') bonus = 5000;
-            if (type === 'mystery') bonus = Math.floor(Math.random() * 60000) + 20000;
+            if (type === 'mic') state.bal += 500;
+            if (type === 'r1k') state.bal += 1000;
+            if (type === 'r5k') state.bal += 5000;
+            if (type === 'r15k') state.bal += 15000;
+            if (type === 'r50k') state.bal += 50000;
+            if (type === 'r100k') state.bal += 100000;
             if (type === 'doubleBal') state.bal *= 2;
-            if (type === 'x2c') { state.clickMult = 2; state.multExpiry = Date.now() + 300000; }
-            if (type === 'x3c') { state.clickMult = 3; state.multExpiry = Date.now() + 300000; }
-            
-            state.bal += bonus;
-            updateDisplay();
-            save();
+            if (type === 'box1') state.bal += Math.floor(Math.random() * 80000) + 20000; // 20k-100k
+            if (type === 'box2') state.bal += Math.floor(Math.random() * 90000) + 110000; // 110k-200k
+            if (type === 'box3') state.bal += Math.floor(Math.random() * 500000) + 500000; // 500k-1M
+            if (['x2c','x3c','x5c','x10c'].includes(type)) { 
+                let m = parseInt(type.replace('x','').replace('c',''));
+                state.clickMult = m; state.multExpiry = Date.now() + (MULT_DURS[type] * 60000); 
+            }
+            if (type === 'maxE') { state.bonusMaxE += 1000; state.energy = state.maxE + 1000; }
+            if (type === 'inc1h') state.bal += state.inc * 3600;
+            if (type === 'inc5h') state.bal += state.inc * 18000;
         }
 
-        function showModal(title, text, actionHtml) {
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-text').innerText = text;
-            document.getElementById('modal-actions').innerHTML = actionHtml;
-            document.getElementById('modal-overlay').classList.add('show');
-        }
-
-        function hideModal() {
-            document.getElementById('modal-overlay').classList.remove('show');
-        }
+        function showModal(title, text, actionHtml) { document.getElementById('modal-title').innerText = title; document.getElementById('modal-text').innerText = text; document.getElementById('modal-actions').innerHTML = actionHtml; document.getElementById('modal-overlay').classList.add('show'); }
+        function hideModal() { document.getElementById('modal-overlay').classList.remove('show'); }
 
         function updateDisplay() {
             document.getElementById('bal').innerText = Math.floor(state.bal).toLocaleString() + ' ֏';
@@ -404,12 +388,7 @@
             updateLvl();
         }
 
-        document.getElementById('coin').addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            for (let i = 0; i < e.touches.length; i++) {
-                handleTap(e.touches[i].clientX, e.touches[i].clientY);
-            }
-        });
+        document.getElementById('coin').addEventListener('touchstart', (e) => { e.preventDefault(); for (let i = 0; i < e.touches.length; i++) handleTap(e.touches[i].clientX, e.touches[i].clientY); });
 
         function handleTap(x, y) {
             let now = Date.now();
@@ -417,56 +396,35 @@
             let power = state.lvl * currentMult;
 
             if (state.energy >= 1) {
-                state.energy -= 1;
-                state.bal += power;
-                spawnText(x, y, `+${power}`);
-                updateDisplay();
+                state.energy -= 1; state.bal += power; spawnText(x, y, `+${power}`); updateDisplay();
             } else {
                 let t = dict[state.lang];
-                showModal(t.errEng, t.errEngT, `<button class="modal-btn" onclick="refillEnergyAd()">${t.watch}</button><button class="modal-btn-close" onclick="hideModal()">${t.close}</button>`);
+                showModal(t.err, t.errT, `<button class="modal-btn" style="background:linear-gradient(135deg,#00E676,#00B8D4)" onclick="refillEnergyAd()">🎥 ${t.wtch} 1</button><button class="modal-btn-close" onclick="hideModal()">${t.cls}</button>`);
             }
         }
 
         async function refillEnergyAd() {
-            if (!AdController) return;
-            const result = await AdController.show();
-            if (result.done) {
-                state.energy = state.maxE;
-                hideModal();
-                updateDisplay();
-                save();
-            }
+            if (!AdController) return; showModal(dict[state.lang].adM, "", "");
+            try {
+                const res = await AdController.show(); hideModal();
+                if (res.done) { state.energy = state.maxE; state.dailyAds++; updateDisplay(); updateTasksUI(); save(); }
+            } catch(e) { hideModal(); }
         }
 
         function spawnText(x, y, txt) {
-            const el = document.createElement('div');
-            el.className = 'float-text';
-            el.innerText = txt;
-            el.style.left = `${x - 20}px`;
-            el.style.top = `${y - 40}px`;
-            el.style.color = (state.multExpiry > Date.now()) ? '#00E676' : '#FFD700';
-            document.body.appendChild(el);
-            setTimeout(() => el.remove(), 800);
+            const el = document.createElement('div'); el.className = 'float-text'; el.innerText = txt;
+            el.style.left = `${x - 20}px`; el.style.top = `${y - 40}px`;
+            el.style.color = (state.multExpiry > Date.now()) ? (state.clickMult > 3 ? '#ff00ea' : '#00f3ff') : '#FFD700';
+            document.body.appendChild(el); setTimeout(() => el.remove(), 1000);
         }
 
-        // ՓՈԽՎԵԼ Է ՀԻՇՈՂՈՒԹՅԱՆ ԲԱՆԱԼԻՆ՝ ՈՐՊԵՍԶԻ 1 ԱՆԳԱՄ ԶՐՈՅԱՑՎԻ
-        function save() { localStorage.setItem('dram_master_v2', JSON.stringify(state)); }
-        function load() {
-            let s = localStorage.getItem('dram_master_v2');
-            if (s) {
-                let saved = JSON.parse(s);
-                state = { ...state, ...saved };
-                calcInc();
-                applyLang();
-                updateDisplay();
-            }
-        }
+        function save() { localStorage.setItem('dram_master_v4', JSON.stringify(state)); }
+        function load() { let s = localStorage.getItem('dram_master_v4'); if (s) { state = { ...state, ...JSON.parse(s) }; calcInc(); applyLang(); updateDisplay(); } }
 
         setInterval(() => {
             state.bal += state.inc / 10;
-            if (state.energy < state.maxE) state.energy = Math.min(state.maxE, state.energy + (state.maxE / 1000));
-            updateDisplay();
-            if (Date.now() % 5000 < 100) save();
+            if (state.energy < state.maxE) state.energy = Math.min(state.maxE, state.energy + (state.maxE / 72000));
+            updateDisplay(); if (Date.now() % 5000 < 100) save();
         }, 100);
 
         window.onload = () => { load(); applyLang(); };
