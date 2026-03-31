@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dram Master</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+    <script src="https://sad.adsgram.ai/js/adsgram-adbox.js"></script>
     <style>
         :root { --gold: #FFD700; --bg-dark: #0a0b10; --mint: #00E676; --glass: rgba(255, 255, 255, 0.05); }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
@@ -75,7 +75,7 @@
     <div class="header">
         <div class="top-bar">
             <span style="font-weight: bold; color: #888;">Dram Master</span>
-            <button class="lang-btn" onclick="toggleLang()" id="lang-btn">🇬🇧 EN</button>
+            <button class="lang-btn" onclick="toggleLang()" id="lang-btn">🇦🇲 HY</button>
         </div>
         <div class="lvl-cont">
             <div class="lvl-fill" id="lvl-fill"></div>
@@ -96,33 +96,33 @@
 
     <div id="shop" class="screen">
         <div class="tabs">
-            <button class="tab-btn active" id="btn-house" onclick="setTab('house')">🏠 Real Estate</button>
-            <button class="tab-btn" id="btn-car" onclick="setTab('car')">🚗 Cars</button>
-            <button class="tab-btn" id="btn-biz" onclick="setTab('biz')">🏢 Business</button>
+            <button class="tab-btn active" id="btn-house" onclick="setTab('house')">🏠 Գույք</button>
+            <button class="tab-btn" id="btn-car" onclick="setTab('car')">🚗 Մեքենա</button>
+            <button class="tab-btn" id="btn-biz" onclick="setTab('biz')">🏢 Բիզնես</button>
         </div>
         <div id="list-container"></div>
     </div>
 
     <div id="tasks" class="screen">
-        <h3 class="section-title" id="t-social">🌟 Social</h3>
-        <div class="card"><div class="card-info"><b id="t-news">📢 News Channel</b><span>+10,000 ֏</span></div><button class="buy-btn" onclick="subTg()" id="btn-tg">Join</button></div>
-        <div class="card"><div class="card-info"><b id="t-invite">👥 Invite Friend</b><span>+5,000 ֏</span></div><button class="buy-btn" onclick="inviteFriend()" id="btn-inv">Invite</button></div>
+        <h3 class="section-title" id="t-social">🌟 Սոցիալական</h3>
+        <div class="card"><div class="card-info"><b id="t-news">📢 Լուրերի Ալիք</b><span>+10,000 ֏</span></div><button class="buy-btn" onclick="subTg()" id="btn-tg">Միանալ</button></div>
+        <div class="card"><div class="card-info"><b id="t-invite">👥 Հրավիրել Ընկեր</b><span>+5,000 ֏</span></div><button class="buy-btn" onclick="inviteFriend()" id="btn-inv">Հրավիրել</button></div>
 
-        <h3 class="section-title" id="t-ads-section">🚀 Ad Rewards</h3>
+        <h3 class="section-title" id="t-ads-section">🚀 Գովազդային Պարգևներ</h3>
         
-        <div class="card"><div class="card-info"><b id="t-r1k">💵 Small Reward</b><span>+1,000 ֏</span></div><button class="buy-btn" id="btn-r1k" onclick="handleTaskAd('r1k')">Watch</button></div>
-        <div class="card"><div class="card-info"><b id="t-r5k">💰 Medium Reward</b><span>+5,000 ֏</span></div><button class="buy-btn" id="btn-r5k" onclick="handleTaskAd('r5k')">Watch</button></div>
-        <div class="card"><div class="card-info"><b style="color:#b026ff" id="t-mystery">🎁 Mystery Box</b><span>20k-80k ֏</span></div><button class="buy-btn" id="btn-mystery" onclick="handleTaskAd('mystery')">Watch</button></div>
+        <div class="card"><div class="card-info"><b id="t-r1k">💵 Փոքր Պարգև</b><span>+1,000 ֏</span></div><button class="buy-btn" id="btn-r1k" onclick="handleTaskAd('r1k')">Դիտել</button></div>
+        <div class="card"><div class="card-info"><b id="t-r5k">💰 Միջին Պարգև</b><span>+5,000 ֏</span></div><button class="buy-btn" id="btn-r5k" onclick="handleTaskAd('r5k')">Դիտել</button></div>
+        <div class="card"><div class="card-info"><b style="color:#b026ff" id="t-mystery">🎁 Կախարդական Արկղ</b><span>20k-80k ֏</span></div><button class="buy-btn" id="btn-mystery" onclick="handleTaskAd('mystery')">Դիտել</button></div>
         
-        <div class="card"><div class="card-info"><b style="color:#FFD700" id="t-double">🔥 Double Balance</b><span>x2 Balance</span></div><button class="buy-btn" id="btn-doubleBal" onclick="handleTaskAd('doubleBal')">Watch</button></div>
-        <div class="card"><div class="card-info"><b style="color:#00E676" id="t-x2c">⚡ 2x Click Power</b><span id="s-x2c">For 5 Min</span></div><button class="buy-btn" id="btn-x2c" onclick="handleTaskAd('x2c')">Watch</button></div>
-        <div class="card"><div class="card-info"><b style="color:#FF3D00" id="t-x3c">💥 3x Click Power</b><span id="s-x3c">For 5 Min</span></div><button class="buy-btn" id="btn-x3c" onclick="handleTaskAd('x3c')">Watch</button></div>
+        <div class="card"><div class="card-info"><b style="color:#FFD700" id="t-double">🔥 Կրկնապատկել Բալանսը</b><span>x2 Բալանս</span></div><button class="buy-btn" id="btn-doubleBal" onclick="handleTaskAd('doubleBal')">Դիտել</button></div>
+        <div class="card"><div class="card-info"><b style="color:#00E676" id="t-x2c">⚡ 2x Քլիքի Ուժ</b><span id="s-x2c">5 րոպեով</span></div><button class="buy-btn" id="btn-x2c" onclick="handleTaskAd('x2c')">Դիտել</button></div>
+        <div class="card"><div class="card-info"><b style="color:#FF3D00" id="t-x3c">💥 3x Քլիքի Ուժ</b><span id="s-x3c">5 րոպեով</span></div><button class="buy-btn" id="btn-x3c" onclick="handleTaskAd('x3c')">Դիտել</button></div>
     </div>
 
     <div class="nav">
-        <button class="nav-btn active" id="nav-game" onclick="nav('game')"><i>🪙</i><span id="n-game">Play</span></button>
-        <button class="nav-btn" id="nav-shop" onclick="nav('shop')"><i>🛒</i><span id="n-shop">Shop</span></button>
-        <button class="nav-btn" id="nav-tasks" onclick="nav('tasks')"><i>🎁</i><span id="n-tasks">Rewards</span></button>
+        <button class="nav-btn active" id="nav-game" onclick="nav('game')"><i>🪙</i><span id="n-game">Խաղալ</span></button>
+        <button class="nav-btn" id="nav-shop" onclick="nav('shop')"><i>🛒</i><span id="n-shop">Խանութ</span></button>
+        <button class="nav-btn" id="nav-tasks" onclick="nav('tasks')"><i>🎁</i><span id="n-tasks">Պարգևներ</span></button>
     </div>
 
     <script>
@@ -131,14 +131,14 @@
         tg.setHeaderColor('#0a0b10');
 
         let AdController;
-        
-        try { AdController = window.Adsgram.init({ blockId: "26181" }); } catch(e) {}
+        // ՉՄՈՌԱՆԱՍ ԱՅՍՏԵՂ ԴՆԵԼ ՔՈ ՆՈՐ UNIT ID-ն 👇
+        try { AdController = window.Adsgram.init({ blockId: "26344" }); } catch(e) {}
 
         let state = { 
             bal:0, inc:0, energy:1000, maxE:1000, lvl:1, 
             lastDaily:0, streak:1, dailyAdDone:0,
             owned:{house:[], car:[], biz:[]}, 
-            tgSub:false, clickMult: 1, multExpiry: 0, lang: 'en',
+            tgSub:false, clickMult: 1, multExpiry: 0, lang: 'hy',
             adCounts: { r1k:0, r5k:0, mystery:0, doubleBal:0, x2c:0, x3c:0 }
         };
 
@@ -151,7 +151,7 @@
                 nGame: "Խաղալ", nShop: "Խանութ", nTasks: "Պարգևներ",
                 tsoc: "🌟 Սոցիալական", tnews: "📢 Լուրերի Ալիք", tinv: "👥 Հրավիրել", tads: "🚀 Գովազդային Պարգևներ",
                 tr1k: "💵 Փոքր Պարգև", tr5k: "💰 Միջին Պարգև", tmystery: "🎁 Կախարդական Արկղ", 
-                tdouble: "🔥 Կրկնապատկել Բալանսը", tx2c: "⚡ 2x Քլիք (5 րոպե)", tx3c: "💥 3x Քլիք (5 րոպե)",
+                tdouble: "🔥 Կրկնապատկել Բալանսը", tx2c: "⚡ 2x Քլիք", tx3c: "💥 3x Քլիք",
                 lvlText: "Լևլ", errEng: "⚡ Էներգիան Սպառվեց", errEngT: "Լիցքավորելու համար դիտիր գովազդ:",
                 adMsg: "Գովազդը բեռնվում է...",
                 min5: "5 րոպեով"
@@ -162,7 +162,7 @@
                 nGame: "Play", nShop: "Shop", nTasks: "Rewards",
                 tsoc: "🌟 Social", tnews: "📢 News Channel", tinv: "👥 Invite", tads: "🚀 Ad Rewards",
                 tr1k: "💵 Small Reward", tr5k: "💰 Medium Reward", tmystery: "🎁 Mystery Box", 
-                tdouble: "🔥 Double Balance", tx2c: "⚡ 2x Click (5 Min)", tx3c: "💥 3x Click (5 Min)",
+                tdouble: "🔥 Double Balance", tx2c: "⚡ 2x Click", tx3c: "💥 3x Click",
                 lvlText: "Level", errEng: "⚡ Out of Energy", errEngT: "Watch an ad to refill:",
                 adMsg: "Ad is loading...",
                 min5: "For 5 Min"
@@ -171,11 +171,11 @@
                 btnBuy: "Купить", btnBought: "Активно", close: "Нет, спасибо", watch: "Смотреть", get: "Получить", done: "Готово",
                 h: "🏠 Недвижимость", c: "🚗 Авто", b: "🏢 Бизнес",
                 nGame: "Играть", nShop: "Магазин", nTasks: "Награды",
-                tsoc: "🌟 Социальные", tnews: "📢 Новостной Канал", tinv: "👥 Пригласить", tads: "🚀 Награды за рекламу",
+                tsoc: "🌟 Социальные", tnews: "📢 Новостной Канал", tinv: "👥 Пригласить", tads: "🚀 Награды",
                 tr1k: "💵 Малая Награда", tr5k: "💰 Средняя Награда", tmystery: "🎁 Тайный Ящик", 
-                tdouble: "🔥 Удвоить Баланс", tx2c: "⚡ 2x Клик (5 Мин)", tx3c: "💥 3x Клик (5 Мин)",
+                tdouble: "🔥 Удвоить Баланс", tx2c: "⚡ 2x Клик", tx3c: "💥 3x Клик",
                 lvlText: "Уровень", errEng: "⚡ Энергия закончилась", errEngT: "Посмотрите рекламу для пополнения:",
-                adMsg: "Реклама загружается...",
+                adMsg: "Загрузка...",
                 min5: "на 5 мин"
             }
         };
@@ -213,12 +213,6 @@
             {l:11, n:{hy:"Օլիգարխ",en:"Oligarch",ru:"Олигарх"}, m:50000000, e:2000000}, {l:12, n:{hy:"Տիեզ. Օլիգարխ",en:"Space Oligarch",ru:"Космический Олигарх"}, m:5000000000, e:5000000}
         ];
 
-        const dailyConfig = {
-            1: { ads: 1, prize: 20000 }, 2: { ads: 3, prize: 60000 }, 3: { ads: 5, prize: 150000 },
-            4: { ads: 5, prize: 400000 }, 5: { ads: 5, prize: 1000000 }, 6: { ads: 7, prize: 3000000 },
-            7: { ads: 7, prize: 10000000 }
-        };
-
         function toggleLang() {
             if(state.lang === 'en') state.lang = 'hy';
             else if(state.lang === 'hy') state.lang = 'ru';
@@ -236,7 +230,7 @@
                 if (btn) {
                     if ((type === 'x2c' || type === 'x3c') && state.multExpiry > now) {
                         let diff = Math.ceil((state.multExpiry - now) / 1000);
-                        btn.innerText = `${t.btnBought} (${diff}s)`; btn.disabled = true; btn.className = "buy-btn bought";
+                        btn.innerText = `${t.btnBought} (${diff}վ)`; btn.disabled = true; btn.className = "buy-btn bought";
                     } else {
                         btn.innerText = `${t.watch} (${count}/${req})`; btn.disabled = false; btn.className = "buy-btn";
                     }
@@ -270,202 +264,212 @@
             
             document.getElementById('s-x2c').innerText = t.min5;
             document.getElementById('s-x3c').innerText = t.min5;
-
-            if(state.tgSub) { document.getElementById('btn-tg').innerText = t.done; }
-            else { document.getElementById('btn-tg').innerText = t.btnBuy; }
-            document.getElementById('btn-inv').innerText = t.btnBuy;
             
-            updateTasksUI(); update();
+            document.getElementById('btn-tg').innerText = state.tgSub ? t.done : t.get;
+            updateTasksUI();
+            updateLvl();
         }
 
-        function showModal(title, text, btnText, onBtnClick) {
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-text').innerText = text;
-            let actions = document.getElementById('modal-actions');
-            actions.innerHTML = '';
-            
-            if(btnText) {
-                let mainBtn = document.createElement('button'); mainBtn.className = 'modal-btn';
-                mainBtn.innerText = btnText; mainBtn.onclick = onBtnClick; actions.appendChild(mainBtn);
-            }
-            
-            let closeBtn = document.createElement('button'); closeBtn.className = 'modal-btn-close';
-            closeBtn.innerText = dict[state.lang].close; 
-            closeBtn.onclick = () => document.getElementById('modal-overlay').classList.remove('show');
-            actions.appendChild(closeBtn);
-            
-            document.getElementById('modal-overlay').classList.add('show');
+        let curType = 'house';
+        function setTab(type) {
+            curType = type;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + type).classList.add('active');
+            renderList();
         }
 
-        // --- ՈՒՂՂՎԱԾ ՖՈՒՆԿՑԻԱ ---
-        function playDirectAd(onSuccess) {
-            if (!AdController && window.Adsgram) {
-                try { AdController = window.Adsgram.init({ blockId: "26119" }); } catch(e) {}
-            }
-            
-            if (!AdController) {
-                tg.showAlert(dict[state.lang].adMsg || "Գովազդը բեռնվում է...");
-                return;
-            }
-            
-            AdController.show().then(() => { 
-                onSuccess(); 
-            }).catch((e) => {
-                let err = state.lang === 'hy' ? "Գովազդ այս պահին չկա, կամ փակել եք այն: Փորձեք մի փոքր ուշ:" : 
-                         (state.lang === 'ru' ? "Рекламы пока нет, или вы ее закрыли. Попробуйте позже." : 
-                         "No ads available right now, or you closed it. Try again later.");
-                tg.showAlert(err);
+        function renderList() {
+            const cont = document.getElementById('list-container');
+            cont.innerHTML = '';
+            let t = dict[state.lang];
+            db[curType].forEach((item, index) => {
+                const isOwned = state.owned[curType].includes(index);
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="card-info">
+                        <b>${item.n[state.lang]}</b>
+                        <span>+${item.i.toLocaleString()} ֏/s</span>
+                    </div>
+                    <button class="buy-btn ${isOwned ? 'bought' : ''}" 
+                        ${isOwned ? 'disabled' : ''} 
+                        onclick="buy('${curType}', ${index})">
+                        ${isOwned ? t.btnBought : item.p.toLocaleString() + ' ֏'}
+                    </button>
+                `;
+                cont.appendChild(card);
             });
         }
-        // ------------------------
 
-        function update() {
-            let current = levels[0];
-            for(let lv of levels) { if(state.bal >= lv.m) current = lv; }
-            state.lvl = current.l; state.maxE = current.e;
-
-            document.getElementById('bal').innerText = Math.floor(state.bal).toLocaleString() + ' ֏';
-            document.getElementById('inc').innerText = state.inc.toLocaleString() + ' ֏/s';
-            document.getElementById('energy').innerText = `⚡ ${Math.floor(state.energy)}/${state.maxE}`;
-            
-            let nxt = levels.find(x => x.l === current.l + 1);
-            let prg = nxt ? ((state.bal - current.m) / (nxt.m - current.m)) * 100 : 100;
-            document.getElementById('lvl-fill').style.width = Math.min(prg, 100) + '%';
-            document.getElementById('lvl-txt').innerText = `${dict[state.lang].lvlText} ${current.l} (${current.n[state.lang]}) | ${Math.floor(prg)}%`;
-        }
-
-        function checkDailyBonus() {
-            let now = Date.now();
-            let diff = now - state.lastDaily;
-            if (diff > 86400000) {
-                if (diff > 172800000) { state.streak = 1; state.dailyAdDone = 0; }
-                let config = dailyConfig[state.streak];
-                let remainingAds = config.ads - state.dailyAdDone;
-                
-                let t = dict[state.lang];
-                let title = state.lang === 'hy' ? `🎁 Օր ${state.streak}-ի Բոնուս` : (state.lang === 'ru' ? `🎁 Бонус дня ${state.streak}` : `🎁 Day ${state.streak} Bonus`);
-                let desc = state.lang === 'hy' 
-                    ? (remainingAds > 0 ? `Դիտիր ${config.ads} գովազդ՝ ${config.prize.toLocaleString()} ֏ ստանալու համար: (Մնաց՝ ${remainingAds})` : "Պարգևը պատրաստ է:")
-                    : (state.lang === 'ru' ? (remainingAds > 0 ? `Посмотри ${config.ads} рекламы для ${config.prize.toLocaleString()} ֏: (Осталось: ${remainingAds})` : "Награда готова!") 
-                    : (remainingAds > 0 ? `Watch ${config.ads} ads to get ${config.prize.toLocaleString()} ֏: (Left: ${remainingAds})` : "Reward ready!"));
-                
-                let btnTxt = remainingAds > 0 ? `${t.watch} (${state.dailyAdDone}/${config.ads})` : t.get;
-
-                showModal(
-                    title, desc, btnTxt,
-                    function() {
-                        if (remainingAds > 0) {
-                            playDirectAd(() => { state.dailyAdDone++; save(); checkDailyBonus(); });
-                        } else {
-                            state.bal += config.prize; state.lastDaily = Date.now(); state.dailyAdDone = 0;
-                            state.streak = state.streak >= 7 ? 1 : state.streak + 1; save(); update();
-                            document.getElementById('modal-overlay').classList.remove('show');
-                        }
-                    }
-                );
+        function buy(type, idx) {
+            let item = db[type][idx];
+            if (state.bal >= item.p) {
+                state.bal -= item.p;
+                state.owned[type].push(idx);
+                calcInc();
+                save();
+                updateDisplay();
+                renderList();
             }
         }
 
-        window.handleTaskAd = function(type) {
-            playDirectAd(() => {
-                if(typeof state.adCounts[type] === 'undefined') state.adCounts[type] = 0;
-                state.adCounts[type]++;
-                
-                if (state.adCounts[type] >= AD_REQS[type]) {
-                    if(type === 'r1k') state.bal += 1000;
-                    if(type === 'r5k') state.bal += 5000;
-                    if(type === 'mystery') state.bal += Math.floor(Math.random()*60000)+20000;
-                    if(type === 'doubleBal') state.bal *= 2;
-                    
-                    if(type === 'x2c') { 
-                        state.clickMult = 2; 
-                        state.multExpiry = Date.now() + (5 * 60 * 1000); 
-                    }
-                    if(type === 'x3c') { 
-                        state.clickMult = 3; 
-                        state.multExpiry = Date.now() + (5 * 60 * 1000); 
-                    }
-                    
-                    state.adCounts[type] = 0;
-                }
-                updateTasksUI(); update(); save();
-            });
-        };
+        function calcInc() {
+            let total = 0;
+            for (let type in state.owned) {
+                state.owned[type].forEach(idx => {
+                    total += db[type][idx].i;
+                });
+            }
+            state.inc = total;
+        }
 
-        window.nav = function(id) {
+        function updateLvl() {
+            let next = levels.find(l => state.bal < l.m) || levels[levels.length - 1];
+            let cur = levels[levels.indexOf(next) - 1] || levels[0];
+            state.lvl = cur.l;
+            state.maxE = cur.e;
+            
+            let progress = 0;
+            if (next.l !== cur.l) {
+                progress = Math.min(100, Math.floor(((state.bal - cur.m) / (next.m - cur.m)) * 100));
+            } else {
+                progress = 100;
+            }
+
+            document.getElementById('lvl-fill').style.width = progress + '%';
+            document.getElementById('lvl-txt').innerText = `${dict[state.lang].lvlText} ${cur.l} | ${cur.n[state.lang]} (${progress}%)`;
+        }
+
+        function nav(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            document.getElementById('nav-'+id).classList.add('active');
-            if(id === 'shop') setTab('house');
-        };
-
-        window.setTab = function(t) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('btn-'+t).classList.add('active');
-            let c = document.getElementById('list-container'); c.innerHTML = '';
-            let langDb = db[t];
-            langDb.forEach((item, index) => {
-                let bought = state.owned[t].includes(index);
-                let btnText = bought ? dict[state.lang].btnBought : dict[state.lang].btnBuy;
-                let btnClass = bought ? "buy-btn bought" : "buy-btn";
-                let disabled = bought ? "disabled" : (state.bal < item.p ? "disabled" : "");
-                
-                c.innerHTML += `<div class="card"><div class="card-info"><b>${item.n[state.lang]}</b><span>${item.p.toLocaleString()} ֏ | +${item.i}/s</span></div>
-                <button class="${btnClass}" ${disabled} onclick="buy('${t}', ${index})">${btnText}</button></div>`;
-            });
-        };
-
-        window.buy = function(t, i) {
-            let item = db[t][i];
-            if(state.bal >= item.p && !state.owned[t].includes(i)) {
-                state.bal -= item.p; state.inc += item.i; state.owned[t].push(i);
-                update(); setTab(t); save();
-            }
-        };
-
-        window.subTg = function() { tg.openTelegramLink('https://t.me/drammasternews'); setTimeout(() => { if(!state.tgSub) { state.bal += 10000; state.tgSub = true; update(); save(); applyLang(); } }, 3000); };
-        window.inviteFriend = function() { tg.openTelegramLink(`https://t.me/share/url?url=https://t.me/DramMasterBot`); state.bal += 5000; update(); save(); };
-
-        document.getElementById('coin').onpointerdown = function(e) {
-            let currentMult = 1;
-            if (state.multExpiry > Date.now()) {
-                currentMult = state.clickMult || 1;
-            } else {
-                state.clickMult = 1;
-            }
-
-            let earn = Math.pow(2, state.lvl - 1) * currentMult;
-            if(state.energy < earn) {
-                showModal(dict[state.lang].errEng, dict[state.lang].errEngT, dict[state.lang].watch, () => { playDirectAd(() => { state.energy = state.maxE; document.getElementById('modal-overlay').classList.remove('show'); update(); }); });
-                return;
-            }
-            state.energy -= earn; state.bal += earn;
-            tg.HapticFeedback.impactOccurred('light');
-            let cx = e.clientX || (e.touches && e.touches[0].clientX);
-            let cy = e.clientY || (e.touches && e.touches[0].clientY);
-            let f = document.createElement('div'); f.className = 'float-text'; f.innerText = '+' + earn;
-            f.style.left = cx - 20 + 'px'; f.style.top = cy - 40 + 'px';
-            document.body.appendChild(f); setTimeout(() => f.remove(), 700); update();
-        };
-
-        function save() { localStorage.setItem('DramMaster_SecureSave', JSON.stringify(state)); }
-        function load() {
-            try { let s = localStorage.getItem('DramMaster_SecureSave'); if(s) { state = { ...state, ...JSON.parse(s) }; } } catch(e) {}
-            if(!state.lang) state.lang = 'en';
-            if(!state.adCounts) state.adCounts = { r1k:0, r5k:0, mystery:0, doubleBal:0, x2c:0, x3c:0 };
-            if(!state.clickMult) state.clickMult = 1;
-            if(!state.multExpiry) state.multExpiry = 0;
-            applyLang(); update(); setTimeout(checkDailyBonus, 1000);
+            document.getElementById('nav-' + id).classList.add('active');
+            if(id === 'shop') renderList();
+            if(id === 'tasks') updateTasksUI();
         }
 
-        setInterval(() => { 
-            state.bal += state.inc; 
-            if(state.energy < state.maxE) state.energy = Math.min(state.maxE, state.energy + (state.maxE/3600)); 
-            update();
-            updateTasksUI();
-        }, 1000);
-        setInterval(save, 5000); load();
+        async function handleTaskAd(type) {
+            if (!AdController) return;
+            let t = dict[state.lang];
+            showModal(t.adMsg, "", "");
+
+            try {
+                const result = await AdController.show();
+                hideModal();
+                if (result.done) {
+                    state.adCounts[type] = (state.adCounts[type] || 0) + 1;
+                    if (state.adCounts[type] >= AD_REQS[type]) {
+                        giveReward(type);
+                        state.adCounts[type] = 0;
+                    }
+                    updateTasksUI();
+                    save();
+                }
+            } catch (e) {
+                hideModal();
+            }
+        }
+
+        function giveReward(type) {
+            let t = dict[state.lang];
+            let bonus = 0;
+            if (type === 'r1k') bonus = 1000;
+            if (type === 'r5k') bonus = 5000;
+            if (type === 'mystery') bonus = Math.floor(Math.random() * 60000) + 20000;
+            if (type === 'doubleBal') state.bal *= 2;
+            if (type === 'x2c') { state.clickMult = 2; state.multExpiry = Date.now() + 300000; }
+            if (type === 'x3c') { state.clickMult = 3; state.multExpiry = Date.now() + 300000; }
+            
+            state.bal += bonus;
+            updateDisplay();
+            save();
+        }
+
+        function showModal(title, text, actionHtml) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-text').innerText = text;
+            document.getElementById('modal-actions').innerHTML = actionHtml;
+            document.getElementById('modal-overlay').classList.add('show');
+        }
+
+        function hideModal() {
+            document.getElementById('modal-overlay').classList.remove('show');
+        }
+
+        function updateDisplay() {
+            document.getElementById('bal').innerText = Math.floor(state.bal).toLocaleString() + ' ֏';
+            document.getElementById('inc').innerText = state.inc.toLocaleString() + ' ֏/s';
+            document.getElementById('energy').innerText = `⚡ ${Math.floor(state.energy)}/${state.maxE}`;
+            updateLvl();
+        }
+
+        document.getElementById('coin').addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            for (let i = 0; i < e.touches.length; i++) {
+                handleTap(e.touches[i].clientX, e.touches[i].clientY);
+            }
+        });
+
+        function handleTap(x, y) {
+            let now = Date.now();
+            let currentMult = (state.multExpiry > now) ? state.clickMult : 1;
+            let power = state.lvl * currentMult;
+
+            if (state.energy >= 1) {
+                state.energy -= 1;
+                state.bal += power;
+                spawnText(x, y, `+${power}`);
+                updateDisplay();
+            } else {
+                let t = dict[state.lang];
+                showModal(t.errEng, t.errEngT, `<button class="modal-btn" onclick="refillEnergyAd()">${t.watch}</button><button class="modal-btn-close" onclick="hideModal()">${t.close}</button>`);
+            }
+        }
+
+        async function refillEnergyAd() {
+            if (!AdController) return;
+            const result = await AdController.show();
+            if (result.done) {
+                state.energy = state.maxE;
+                hideModal();
+                updateDisplay();
+                save();
+            }
+        }
+
+        function spawnText(x, y, txt) {
+            const el = document.createElement('div');
+            el.className = 'float-text';
+            el.innerText = txt;
+            el.style.left = `${x - 20}px`;
+            el.style.top = `${y - 40}px`;
+            el.style.color = (state.multExpiry > Date.now()) ? '#00E676' : '#FFD700';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 800);
+        }
+
+        // ՓՈԽՎԵԼ Է ՀԻՇՈՂՈՒԹՅԱՆ ԲԱՆԱԼԻՆ՝ ՈՐՊԵՍԶԻ 1 ԱՆԳԱՄ ԶՐՈՅԱՑՎԻ
+        function save() { localStorage.setItem('dram_master_v2', JSON.stringify(state)); }
+        function load() {
+            let s = localStorage.getItem('dram_master_v2');
+            if (s) {
+                let saved = JSON.parse(s);
+                state = { ...state, ...saved };
+                calcInc();
+                applyLang();
+                updateDisplay();
+            }
+        }
+
+        setInterval(() => {
+            state.bal += state.inc / 10;
+            if (state.energy < state.maxE) state.energy = Math.min(state.maxE, state.energy + (state.maxE / 1000));
+            updateDisplay();
+            if (Date.now() % 5000 < 100) save();
+        }, 100);
+
+        window.onload = () => { load(); applyLang(); };
     </script>
 </body>
 </html>
