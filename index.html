@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dram Master Pro - Full Version</title>
+    <title>Dram Master Pro - MultiLang</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://sad.adsgram.ai/js/adsgram-adbox.js"></script>
     <style>
@@ -11,10 +11,9 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         body { background: radial-gradient(circle at top, #11131c, var(--bg-dark)); color: #fff; font-family: 'Segoe UI', Roboto, sans-serif; overflow: hidden; user-select: none; }
         
-        /* Modals */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); z-index: 9999; display: none; align-items: center; justify-content: center; }
         .modal-overlay.show { display: flex; }
-        .modal-box { background: #171924; padding: 25px; border-radius: 24px; border: 1px solid var(--gold); width: 85%; max-width: 350px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .modal-box { background: #171924; padding: 25px; border-radius: 24px; border: 1px solid var(--gold); width: 85%; max-width: 350px; text-align: center; }
         .modal-btn { background: var(--gold); color: #000; border: none; padding: 14px; border-radius: 12px; font-weight: 900; width: 100%; margin-top: 10px; cursor: pointer; font-size: 16px; transition: 0.2s; }
         .modal-btn:active { transform: scale(0.95); }
 
@@ -24,24 +23,20 @@
         .screen { display: none; padding: 15px 15px 100px; height: calc(100vh - 180px); overflow-y: auto; }
         .screen.active { display: block; }
 
-        /* 7-Day Rewards */
         .streak-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 20px; }
         .day-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px 5px; text-align: center; font-size: 12px; transition: 0.3s; position: relative; }
-        .day-card.active { border-color: var(--gold); background: rgba(255,215,0,0.15); box-shadow: 0 0 10px rgba(255,215,0,0.2); animation: pulse 2s infinite; cursor: pointer; }
+        .day-card.active { border-color: var(--gold); background: rgba(255,215,0,0.15); cursor: pointer; }
         .day-card.claimed { opacity: 0.4; filter: grayscale(1); }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-        /* Main Coin */
         .coin-area { height: 60%; display: flex; align-items: center; justify-content: center; position: relative; }
         .main-coin { width: 260px; height: 260px; background: radial-gradient(circle, #ffd700, #d4af37, #b8860b); border-radius: 50%; box-shadow: 0 10px 40px rgba(255,215,0,0.3), inset 0 -10px 20px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 120px; cursor: pointer; transition: transform 0.05s ease; border: 4px solid #fff3a0; }
-        .main-coin:active { transform: scale(0.9); box-shadow: 0 5px 20px rgba(255,215,0,0.2); }
+        .main-coin:active { transform: scale(0.9); }
 
-        /* Cards & Ads */
         .card { background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01)); border-radius: 18px; padding: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.08); }
         .card-info b { display: block; font-size: 15px; margin-bottom: 5px; color: #fff; }
         .card-info span { color: var(--gold); font-weight: 800; font-size: 13px; }
-        .buy-btn { background: var(--gold); color: #000; border: none; padding: 12px 18px; border-radius: 12px; font-weight: 900; font-size: 13px; cursor: pointer; box-shadow: 0 4px 10px rgba(255,215,0,0.2); }
-        .buy-btn:disabled { opacity: 0.3; cursor: not-allowed; box-shadow: none; }
+        .buy-btn { background: var(--gold); color: #000; border: none; padding: 12px 18px; border-radius: 12px; font-weight: 900; font-size: 13px; cursor: pointer; }
+        .buy-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
         .section-title { font-size: 20px; font-weight: 900; margin: 25px 0 15px; color: #fff; display: flex; align-items: center; }
         .section-title::before { content: ''; width: 5px; height: 20px; background: var(--gold); margin-right: 12px; border-radius: 3px; }
@@ -67,18 +62,18 @@
 
     <div class="header">
         <div style="display:flex; justify-content: space-between; font-size:13px; color:#aaa; font-weight:800;">
-            <span id="lvl-txt">ՄԱԿԱՐԴԱԿ 1</span>
-            <span>🇦🇲 ՀԱՅԵՐԵՆ</span>
+            <span id="lvl-txt">LEVEL 1</span>
+            <span id="lang-btn" onclick="toggleLang()" style="cursor:pointer; color:var(--gold); background:rgba(255,215,0,0.1); padding:4px 8px; border-radius:8px;">🇦🇲 HY</span>
         </div>
         <div class="balance-val" id="bal">0 ֏</div>
         <div style="display:flex; justify-content: space-between; font-size:14px; font-weight:700;">
-            <span id="inc">0 ֏/վրկ</span>
+            <span id="inc">0 ֏/s</span>
             <span id="energy">⚡ 1000/1000</span>
         </div>
     </div>
 
     <div id="game" class="screen active">
-        <h3 class="section-title">📅 Օրական Բոնուս</h3>
+        <h3 class="section-title" id="t-daily">📅 Օրական Բոնուս</h3>
         <div class="streak-container" id="streak-cont"></div>
         
         <div class="coin-area">
@@ -87,56 +82,79 @@
     </div>
 
     <div id="shop" class="screen">
-        <h3 class="section-title">🛒 Բիզնեսներ (Պասիվ եկամուտ)</h3>
+        <h3 class="section-title" id="t-shop-title">🛒 Բիզնեսներ (Պասիվ եկամուտ)</h3>
         <div id="shop-list"></div>
     </div>
 
     <div id="tasks" class="screen">
-        <h3 class="section-title">👥 Հրավիրել Ընկերների</h3>
+        <h3 class="section-title" id="t-friends">👥 Հրավիրել Ընկերների</h3>
         <div class="card" style="border-color: var(--neon-blue);">
-            <div class="card-info"><b>Հրավիրել և Վաստակել</b><span>+50,000 ֏ յուրաքանչյուրի համար</span></div>
-            <button class="buy-btn" style="background: var(--neon-blue);" onclick="shareRef()">Հրավիրել</button>
+            <div class="card-info"><b id="t-invite-title">Հրավիրել և Վաստակել</b><span id="t-invite-reward">+50,000 ֏ յուրաքանչյուրի համար</span></div>
+            <button class="buy-btn" style="background: var(--neon-blue);" onclick="shareRef()" id="t-invite-btn">Հրավիրել</button>
         </div>
 
-        <h3 class="section-title">🚀 Գովազդային Պարգևներ (20 Հատ)</h3>
+        <h3 class="section-title" id="t-ads-title">🚀 Գովազդային Պարգևներ</h3>
         <div id="ads-list"></div>
     </div>
 
     <div class="nav">
-        <button class="nav-btn active" onclick="nav('game', this)"><i>🪙</i>Խաղալ</button>
-        <button class="nav-btn" onclick="nav('shop', this)"><i>🛒</i>Խանութ</button>
-        <button class="nav-btn" onclick="nav('tasks', this)"><i>🎁</i>Պարգևներ</button>
+        <button class="nav-btn active" onclick="nav('game', this)"><i id="n-play-i">🪙</i><span id="n-play">Խաղալ</span></button>
+        <button class="nav-btn" onclick="nav('shop', this)"><i id="n-shop-i">🛒</i><span id="n-shop">Խանութ</span></button>
+        <button class="nav-btn" onclick="nav('tasks', this)"><i id="n-tasks-i">🎁</i><span id="n-tasks">Պարգևներ</span></button>
     </div>
 
     <script>
-        // ==========================================
-        // ԿԱՐԵՎՈՐ ԿԱՐԳԱՎՈՐՈՒՄՆԵՐ
-        // ==========================================
-        const MY_ADSGRAM_BLOCK_ID = "26344"; // Օրինակ՝ "2846"
-        
+        const MY_ADSGRAM_BLOCK_ID = "26344"; 
         const tg = window.Telegram.WebApp; 
         tg.expand();
 
-        // Ակտիվացնում ենք Adsgram-ը
         let AdController = null;
-        try { 
-            AdController = window.Adsgram.init({ blockId: 26344 }); 
-        } catch(e) { 
-            console.error("Adsgram init error:", e); 
-        }
+        try { AdController = window.Adsgram.init({ blockId: 26344 }); } catch(e) {}
 
-        // ==========================================
-        // ԽԱՂԻ ՏՎՅԱԼՆԵՐ ԵՎ ԿԱՌՈՒՑՎԱԾՔ
-        // ==========================================
         let state = {
             bal: 0, inc: 0, energy: 1000, maxE: 1000, 
-            streak: 0, lastClaim: 0, 
-            adCounts: {}, lastTime: Date.now()
+            streak: 0, lastClaim: 0, adCounts: {}, lastTime: Date.now(),
+            lang: 'hy' // Նախնական լեզուն հայերենն է
+        };
+
+        // Բառարան 3 լեզուների համար
+        const i18n = {
+            hy: {
+                flag: "🇦🇲 HY", daily: "📅 Օրական Բոնուս", shopTitle: "🛒 Բիզնեսներ (Պասիվ եկամուտ)", 
+                friends: "👥 Հրավիրել Ընկերների", invTitle: "Հրավիրել և Վաստակել", invReward: "+50,000 ֏ յուրաքանչյուրի համար",
+                invBtn: "Հրավիրել", adsTitle: "🚀 Գովազդային Պարգևներ", play: "Խաղալ", shop: "Խանութ", tasks: "Պարգևներ",
+                day: "Օր", buy: "Գնել", watch: "Դիտել", reqAd: "Պահանջվում է", adDone: "Արված է", sec: "վրկ",
+                close: "Լավ", loading: "Բեռնում...", searching: "Փնտրում ենք գովազդ... Խնդրում ենք սպասել:",
+                noAds: "Այս պահին գովազդ չկա 😔", noAdsText: "Այս պահին հասանելի գովազդներ չեն գտնվել: Խնդրում ենք փորձել մի փոքր ուշ կամ միացնել VPN:",
+                energyEmpty: "Էներգիան Սպառվեց 🔋", energyPrompt: "Ցանկանո՞ւմ ես դիտել 1 կարճ գովազդ և ամբողջությամբ լիցքավորել էներգիան:",
+                btnWatch: "🎥 Դիտել Գովազդ", btnLater: "Ոչ հիմա",
+                items: ['Ավտոմատ Քլիքեր', 'Փոքր Բիզնես', 'Սրճարան', 'Ռեստորան', 'Խանութների Ցանց', 'Գործարան', 'Բանկ', 'Նավթային Ընկերություն']
+            },
+            ru: {
+                flag: "🇷🇺 RU", daily: "📅 Ежедневный Бонус", shopTitle: "🛒 Бизнесы (Пассивный доход)", 
+                friends: "👥 Пригласить Друзей", invTitle: "Пригласи и Заработай", invReward: "+50,000 ֏ за каждого",
+                invBtn: "Пригласить", adsTitle: "🚀 Рекламные Награды", play: "Играть", shop: "Магазин", tasks: "Награды",
+                day: "День", buy: "Купить", watch: "Смотреть", reqAd: "Требуется", adDone: "Сделано", sec: "сек",
+                close: "ОК", loading: "Загрузка...", searching: "Ищем рекламу... Пожалуйста, подождите:",
+                noAds: "Сейчас нет рекламы 😔", noAdsText: "На данный момент реклама недоступна. Попробуйте позже или включите VPN.",
+                energyEmpty: "Энергия закончилась 🔋", energyPrompt: "Хотите посмотреть рекламу и полностью восстановить энергию?",
+                btnWatch: "🎥 Смотреть", btnLater: "Позже",
+                items: ['Автокликер', 'Малый Бизнес', 'Кафе', 'Ресторан', 'Сеть Магазинов', 'Завод', 'Банк', 'Нефтяная Компания']
+            },
+            en: {
+                flag: "🇬🇧 EN", daily: "📅 Daily Bonus", shopTitle: "🛒 Businesses (Passive Income)", 
+                friends: "👥 Invite Friends", invTitle: "Invite & Earn", invReward: "+50,000 ֏ for each",
+                invBtn: "Invite", adsTitle: "🚀 Ad Rewards", play: "Play", shop: "Shop", tasks: "Rewards",
+                day: "Day", buy: "Buy", watch: "Watch", reqAd: "Requires", adDone: "Done", sec: "sec",
+                close: "OK", loading: "Loading...", searching: "Searching for ads... Please wait:",
+                noAds: "No ads right now 😔", noAdsText: "No ads are currently available. Please try again later or turn on a VPN.",
+                energyEmpty: "Out of Energy 🔋", energyPrompt: "Do you want to watch a short ad to fully refill your energy?",
+                btnWatch: "🎥 Watch Ad", btnLater: "Not now",
+                items: ['Auto Clicker', 'Small Business', 'Cafe', 'Restaurant', 'Retail Chain', 'Factory', 'Bank', 'Oil Company']
+            }
         };
 
         const STREAK_REWARDS = [1000, 5000, 15000, 50000, 200000, 1000000, 10000000];
-        
-        // 20 ԳՈՎԱԶԴԱՅԻՆ ՀԱՆՁՆԱՐԱՐՈՒԹՅՈՒՆՆԵՐ
         const ADS_CONFIG = [
             { id: 'ad1', n: 'Միկրո Դրամ', r: 1000, req: 1 },
             { id: 'ad2', n: 'Փոքր Դրամ', r: 2500, req: 1 },
@@ -144,48 +162,56 @@
             { id: 'ad4', n: 'Լավ Դրամ', r: 10000, req: 2 },
             { id: 'ad5', n: 'Մեծ Դրամ', r: 25000, req: 3 },
             { id: 'ad6', n: 'Խոշոր Դրամ', r: 50000, req: 5 },
-            { id: 'ad7', n: 'Հսկա Դրամ', r: 100000, req: 6 },
-            { id: 'ad8', n: 'Վիթխարի Դրամ', r: 250000, req: 8 },
-            { id: 'ad9', n: 'Մեգա Դրամ', r: 500000, req: 10 },
-            { id: 'ad10', n: 'Ջեկպոտ Միլիոն', r: 1000000, req: 15 },
             { id: 'ad11', n: 'Էներգիա +100', type: 'energy', val: 100, req: 1 },
             { id: 'ad12', n: 'Էներգիա +250', type: 'energy', val: 250, req: 1 },
-            { id: 'ad13', n: 'Էներգիա +500', type: 'energy', val: 500, req: 2 },
             { id: 'ad14', n: 'Ամբողջական Էներգիա', type: 'full_energy', req: 3 },
             { id: 'ad15', n: 'Բազմապատկիչ x2', type: 'double', req: 5 },
-            { id: 'ad16', n: 'Բազմապատկիչ x3', type: 'triple', req: 10 },
-            { id: 'ad17', n: 'Բրոնզե Արկղ', type: 'box', val: 20000, req: 3 },
-            { id: 'ad18', n: 'Արծաթե Արկղ', type: 'box', val: 75000, req: 5 },
-            { id: 'ad19', n: 'Ոսկե Արկղ', type: 'box', val: 300000, req: 8 },
-            { id: 'ad20', n: 'Ադամանդե Արկղ', type: 'box', val: 2000000, req: 20 }
+            { id: 'ad17', n: 'Բրոնզե Արկղ', type: 'box', val: 20000, req: 3 }
         ];
 
-        const SHOP_ITEMS = [
-            { n: 'Ավտոմատ Քլիքեր', p: 500, i: 2 },
-            { n: 'Փոքր Բիզնես', p: 2500, i: 10 },
-            { n: 'Սրճարան', p: 15000, i: 50 },
-            { n: 'Ռեստորան', p: 50000, i: 200 },
-            { n: 'Խանութների Ցանց', p: 250000, i: 1000 },
-            { n: 'Գործարան', p: 1000000, i: 5000 },
-            { n: 'Բանկ', p: 5000000, i: 30000 },
-            { n: 'Նավթային Ընկերություն', p: 25000000, i: 200000 }
+        const SHOP_BASE = [
+            { p: 500, i: 2 }, { p: 2500, i: 10 }, { p: 15000, i: 50 }, { p: 50000, i: 200 },
+            { p: 250000, i: 1000 }, { p: 1000000, i: 5000 }, { p: 5000000, i: 30000 }, { p: 25000000, i: 200000 }
         ];
 
-        // ==========================================
-        // UI և ՖՈՒՆԿՑԻԱՆԵՐ
-        // ==========================================
+        function toggleLang() {
+            const langs = ['hy', 'ru', 'en'];
+            let currentIdx = langs.indexOf(state.lang);
+            state.lang = langs[(currentIdx + 1) % langs.length];
+            applyTranslations();
+            save();
+        }
+
+        function applyTranslations() {
+            const t = i18n[state.lang];
+            document.getElementById('lang-btn').innerText = t.flag;
+            document.getElementById('t-daily').innerText = t.daily;
+            document.getElementById('t-shop-title').innerText = t.shopTitle;
+            document.getElementById('t-friends').innerText = t.friends;
+            document.getElementById('t-invite-title').innerText = t.invTitle;
+            document.getElementById('t-invite-reward').innerText = t.invReward;
+            document.getElementById('t-invite-btn').innerText = t.invBtn;
+            document.getElementById('t-ads-title').innerText = t.adsTitle;
+            document.getElementById('n-play').innerText = t.play;
+            document.getElementById('n-shop').innerText = t.shop;
+            document.getElementById('n-tasks').innerText = t.tasks;
+            
+            initStreak();
+            renderShop();
+            renderAds();
+        }
+
         function initStreak() {
             const cont = document.getElementById('streak-cont');
             cont.innerHTML = '';
             const now = Date.now();
-            const oneDay = 24 * 60 * 60 * 1000;
-            
+            const t = i18n[state.lang];
             for(let i=0; i<7; i++) {
-                const canClaim = (i === state.streak) && (now - state.lastClaim > oneDay);
+                const canClaim = (i === state.streak) && (now - state.lastClaim > 86400000);
                 const isClaimed = i < state.streak;
                 const div = document.createElement('div');
                 div.className = `day-card ${canClaim ? 'active' : ''} ${isClaimed ? 'claimed' : ''}`;
-                div.innerHTML = `<b>Օր ${i+1}</b><br>${STREAK_REWARDS[i].toLocaleString()}`;
+                div.innerHTML = `<b>${t.day} ${i+1}</b><br>${STREAK_REWARDS[i].toLocaleString()}`;
                 if(canClaim) div.onclick = () => claimStreak(i);
                 cont.appendChild(div);
             }
@@ -196,36 +222,44 @@
             state.streak = (state.streak + 1) % 7;
             state.lastClaim = Date.now();
             save(); updateUI(); initStreak();
-            showModal("Շնորհավոր!", `Դուք ստացաք օրական բոնուսը՝ ${STREAK_REWARDS[day].toLocaleString()} ֏:`);
+            showModal("Շնորհավոր!", `+${STREAK_REWARDS[day].toLocaleString()} ֏`);
         }
 
-        function renderAds() {
-            const cont = document.getElementById('ads-list');
+        function renderShop() {
+            const cont = document.getElementById('shop-list');
             cont.innerHTML = '';
-            ADS_CONFIG.forEach(ad => {
-                const count = state.adCounts[ad.id] || 0;
+            const t = i18n[state.lang];
+            SHOP_BASE.forEach((item, idx) => {
                 const div = document.createElement('div');
                 div.className = 'card';
                 div.innerHTML = `
-                    <div class="card-info"><b>${ad.n}</b><span>Պահանջվում է ${ad.req} գովազդ (Արված է՝ ${count}/${ad.req})</span></div>
-                    <button class="buy-btn" onclick="watchAd('${ad.id}')">Դիտել</button>
+                    <div class="card-info"><b>${t.items[idx]}</b><span>+${item.i.toLocaleString()} ֏/${t.sec}</span></div>
+                    <button class="buy-btn" onclick="buy(${idx})" ${state.bal < item.p ? 'disabled' : ''}>${item.p.toLocaleString()} ֏</button>
                 `;
                 cont.appendChild(div);
             });
         }
 
-        // ==========================================
-        // ԳՈՎԱԶԴԱՅԻՆ ՀԱՄԱԿԱՐԳ (ADSGRAM)
-        // ==========================================
+        function renderAds() {
+            const cont = document.getElementById('ads-list');
+            cont.innerHTML = '';
+            const t = i18n[state.lang];
+            ADS_CONFIG.forEach(ad => {
+                const count = state.adCounts[ad.id] || 0;
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.innerHTML = `
+                    <div class="card-info"><b>${ad.n}</b><span>${t.reqAd} ${ad.req} (${t.adDone}: ${count}/${ad.req})</span></div>
+                    <button class="buy-btn" onclick="watchAd('${ad.id}')">${t.watch}</button>
+                `;
+                cont.appendChild(div);
+            });
+        }
+
         async function watchAd(id) {
-            if(MY_ADSGRAM_BLOCK_ID === "ՏԵՂԱԴՐԻՐ_ՔՈ_ԱԿՏԻՎ_ԿՈԴԸ_ԱՅՍՏԵՂ") {
-                return showModal("Ուշադրություն", "Կոդի մեջ դեռ չես տեղադրել քո Adsgram Block ID-ն:");
-            }
-            if(!AdController) {
-                return showModal("Սխալ", "Գովազդային համակարգը չի բեռնվել: Ստուգեք ձեր ինտերնետը:");
-            }
-            
-            showModal("Բեռնում...", "Փնտրում ենք գովազդ... Խնդրում ենք սպասել:", "");
+            const t = i18n[state.lang];
+            if(!AdController) return showModal("Սխալ", "Անջատված է / Offline");
+            showModal(t.loading, t.searching, "");
             
             try {
                 const res = await AdController.show();
@@ -235,17 +269,15 @@
                     const ad = ADS_CONFIG.find(a => a.id === id);
                     if(state.adCounts[id] >= ad.req) {
                         applyAdReward(ad);
-                        state.adCounts[id] = 0; // Զրոյացնում ենք՝ նորից անելու համար
+                        state.adCounts[id] = 0;
                     } else {
                         save(); updateUI(); renderAds();
-                        showModal("Արձանագրվեց!", `Գովազդը դիտված է: Մնաց ${ad.req - state.adCounts[id]} հատ՝ պարգևը ստանալու համար:`);
+                        showModal("Արձանագրվեց!", `Մնաց ${ad.req - state.adCounts[id]}`);
                     }
                 }
             } catch(e) {
                 hideModal();
-                console.error("Ad show error:", e);
-                // Եթե սխալ է տալիս, նշանակում է այս պահին ցանցում գովազդ չկա
-                showModal("Այս պահին գովազդ չկա 😔", "Այս պահին հասանելի գովազդներ չեն գտնվել: Խնդրում ենք փորձել մի փոքր ուշ:");
+                showModal(t.noAds, t.noAdsText);
             }
         }
 
@@ -254,58 +286,13 @@
             if(ad.type === 'energy') state.energy = Math.min(state.maxE, state.energy + ad.val);
             if(ad.type === 'full_energy') state.energy = state.maxE;
             if(ad.type === 'double') state.bal *= 2;
-            if(ad.type === 'triple') state.bal *= 3;
-            if(ad.type === 'box') {
-                const bonus = ad.val + Math.floor(Math.random() * (ad.val / 2)); // Պատահական բոնուս արկղից
-                state.bal += bonus;
-                showModal("Արկղը Բացվեց 🎁", `Դուք գտաք ${bonus.toLocaleString()} ֏!`);
-            } else {
-                showModal("Պարգևը Տրված է! 🎉", `${ad.n} ակտիվացված է:`);
-            }
+            if(ad.type === 'box') state.bal += ad.val;
+            showModal("Պարգև!", `Ակտիվացված է:`);
             save(); updateUI(); renderAds();
         }
 
-        async function refillEnergyAd() {
-            if(!AdController) return;
-            try {
-                const res = await AdController.show();
-                hideModal();
-                if(res.done) { 
-                    state.energy = state.maxE; 
-                    updateUI(); save(); 
-                    showModal("Հաջողվեց! ⚡", "Քո էներգիան ամբողջությամբ լիցքավորվեց:");
-                }
-            } catch(e) {
-                hideModal();
-                showModal("Այս պահին գովազդ չկա 😔", "Չկարողացանք գովազդ բեռնել: Խնդրում ենք մի փոքր սպասել:");
-            }
-        }
-
-        // ==========================================
-        // ԽԱՆՈՒԹ ԵՎ ՀՐԱՎԵՐՆԵՐ
-        // ==========================================
-        function shareRef() {
-            const userId = tg.initDataUnsafe?.user?.id || 'TEST_ID';
-            const refLink = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`;
-            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=Միացիր ինձ Dram Master-ում և դարձիր միլիոնատեր! 💸`);
-        }
-
-        function renderShop() {
-            const cont = document.getElementById('shop-list');
-            cont.innerHTML = '';
-            SHOP_ITEMS.forEach((item, idx) => {
-                const div = document.createElement('div');
-                div.className = 'card';
-                div.innerHTML = `
-                    <div class="card-info"><b>${item.n}</b><span>+${item.i.toLocaleString()} ֏/վրկ</span></div>
-                    <button class="buy-btn" onclick="buy(${idx})" ${state.bal < item.p ? 'disabled' : ''}>${item.p.toLocaleString()} ֏</button>
-                `;
-                cont.appendChild(div);
-            });
-        }
-
         function buy(idx) {
-            const item = SHOP_ITEMS[idx];
+            const item = SHOP_BASE[idx];
             if(state.bal >= item.p) {
                 state.bal -= item.p;
                 state.inc += item.i;
@@ -313,23 +300,42 @@
             }
         }
 
-        // ==========================================
-        // ՄԵԽԱՆԻԿԱ (TAP, OFFLINE)
-        // ==========================================
         function handleTap(e) {
             e.preventDefault();
             const touches = e.changedTouches;
+            const t = i18n[state.lang];
             for(let i=0; i<touches.length; i++) {
                 if(state.energy >= 1) {
                     state.energy--;
-                    state.bal += 1; // Ամեն քլիքը 1 դրամ (կարող ես փոխել)
+                    state.bal += 1;
                     spawnText(touches[i].clientX, touches[i].clientY, "+1");
                 } else {
-                    showModal("Էներգիան Սպառվեց 🔋", "Ցանկանո՞ւմ ես դիտել 1 կարճ գովազդ և ամբողջությամբ լիցքավորել էներգիան:", `<button class="modal-btn" onclick="refillEnergyAd()">🎥 Դիտել Գովազդ</button><button class="modal-btn" style="background:#333;color:#fff;" onclick="hideModal()">Ոչ հիմա</button>`);
+                    showModal(t.energyEmpty, t.energyPrompt, `<button class="modal-btn" onclick="refillEnergyAd()">${t.btnWatch}</button><button class="modal-btn" style="background:#333;color:#fff;" onclick="hideModal()">${t.btnLater}</button>`);
                     break;
                 }
             }
             updateUI();
+        }
+
+        async function refillEnergyAd() {
+            if(!AdController) return;
+            const t = i18n[state.lang];
+            try {
+                const res = await AdController.show();
+                hideModal();
+                if(res.done) { 
+                    state.energy = state.maxE; 
+                    updateUI(); save(); 
+                }
+            } catch(e) {
+                hideModal();
+                showModal(t.noAds, t.noAdsText);
+            }
+        }
+
+        function shareRef() {
+            const refLink = `https://t.me/YOUR_BOT_USERNAME?start=${tg.initDataUnsafe?.user?.id || 'TEST_ID'}`;
+            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=Միացիր ինձ!`);
         }
 
         function spawnText(x, y, txt) {
@@ -338,13 +344,11 @@
             document.body.appendChild(el); setTimeout(() => el.remove(), 800);
         }
 
-        // ==========================================
-        // ԸՆԴՀԱՆՈՒՐ ՕԺԱՆԴԱԿ ՖՈՒՆԿՑԻԱՆԵՐ
-        // ==========================================
-        function showModal(title, text, action = `<button class="modal-btn" onclick="hideModal()">Լավ</button>`) {
+        function showModal(title, text, action) {
+            const t = i18n[state.lang];
             document.getElementById('modal-title').innerText = title;
             document.getElementById('modal-text').innerText = text;
-            document.getElementById('modal-actions').innerHTML = action;
+            document.getElementById('modal-actions').innerHTML = action || `<button class="modal-btn" onclick="hideModal()">${t.close}</button>`;
             document.getElementById('modal-overlay').classList.add('show');
         }
         function hideModal() { document.getElementById('modal-overlay').classList.remove('show'); }
@@ -359,58 +363,40 @@
         }
 
         function updateUI() {
+            const t = i18n[state.lang];
             document.getElementById('bal').innerText = Math.floor(state.bal).toLocaleString() + ' ֏';
-            document.getElementById('inc').innerText = state.inc.toLocaleString() + ' ֏/վրկ';
+            document.getElementById('inc').innerText = state.inc.toLocaleString() + ` ֏/${t.sec}`;
             document.getElementById('energy').innerText = `⚡ ${Math.floor(state.energy)}/${state.maxE}`;
         }
 
         function save() { 
             state.lastTime = Date.now();
-            localStorage.setItem('dram_master_final_pro', JSON.stringify(state)); 
+            localStorage.setItem('dram_master_pro_v7', JSON.stringify(state)); 
         }
         
         function load() {
-            const s = localStorage.getItem('dram_master_final_pro');
+            const s = localStorage.getItem('dram_master_pro_v7');
             if(s) {
                 let savedState = JSON.parse(s);
                 state = { ...state, ...savedState };
-                
-                // ՕՖԼԱՅՆ ԱՌԱՋԸՆԹԱՑԻ ՀԱՇՎԱՐԿ
                 if (state.lastTime) {
                     const elapsedSecs = Math.floor((Date.now() - state.lastTime) / 1000);
-                    
-                    // Օֆլայն Էներգիա (Ամեն 2 վայրկյանը 1 էներգիա)
-                    const offlineEnergy = Math.floor(elapsedSecs / 2); 
-                    state.energy = Math.min(state.maxE, state.energy + offlineEnergy);
-                    
-                    // Օֆլայն Եկամուտ (Max 24 ժամ = 86400 վայրկյան)
+                    state.energy = Math.min(state.maxE, state.energy + Math.floor(elapsedSecs / 2));
                     const validSecs = Math.min(elapsedSecs, 86400);
-                    if(state.inc > 0 && validSecs > 0) {
-                        const earned = state.inc * validSecs;
-                        state.bal += earned;
-                        if(earned > 100) { // Եթե շատ է հավաքվել, ցույց տանք պատուհան
-                            setTimeout(() => {
-                                showModal("Բարի վերադարձ! 👋", `Դուք բացակայում էիք, բայց ձեր բիզնեսները աշխատում էին: Ավելացավ՝ ${earned.toLocaleString()} ֏!`);
-                            }, 1000);
-                        }
-                    }
+                    if(state.inc > 0 && validSecs > 0) state.bal += state.inc * validSecs;
                 }
             }
-            updateUI(); initStreak();
+            applyTranslations();
+            updateUI(); 
         }
 
         document.getElementById('coin').addEventListener('touchstart', handleTap, {passive: false});
-        
-        // Խաղի գլխավոր ցիկլը (ամեն 0.1 վրկ)
         setInterval(() => { 
             state.bal += state.inc / 10; 
-            if(state.energy < state.maxE) {
-                state.energy += 0.05; // Էներգիայի ավտո վերականգնում մնալու ժամանակ
-            }
+            if(state.energy < state.maxE) state.energy += 0.05; 
             updateUI(); 
         }, 100);
-        
-        setInterval(save, 5000); // Ավտո-պահպանում 5 վայրկյանը մեկ
+        setInterval(save, 5000);
         window.onload = load;
     </script>
 </body>
