@@ -112,7 +112,7 @@
         // ==========================================
         // ԿԱՐԵՎՈՐ ԿԱՐԳԱՎՈՐՈՒՄՆԵՐ
         // ==========================================
-        const MY_ADSGRAM_BLOCK_ID = "ՏԵՂԱԴՐԻՐ_ՔՈ_ԱԿՏԻՎ_ԿՈԴԸ_ԱՅՍՏԵՂ"; // Օրինակ՝ "2846"
+        const MY_ADSGRAM_BLOCK_ID = "26344"; // Օրինակ՝ "2846"
         
         const tg = window.Telegram.WebApp; 
         tg.expand();
@@ -120,7 +120,7 @@
         // Ակտիվացնում ենք Adsgram-ը
         let AdController = null;
         try { 
-            AdController = window.Adsgram.init({ blockId: MY_ADSGRAM_BLOCK_ID }); 
+            AdController = window.Adsgram.init({ blockId: 26344 }); 
         } catch(e) { 
             console.error("Adsgram init error:", e); 
         }
